@@ -194,10 +194,12 @@ app.all('*', (c) => {
 
 // --- 5. Worker Export (Required by Cloudflare) ---
 // FIX: Export Hono's fetch handler explicitly for maximum stability
-export default {
-    fetch: app.fetch,
-};
-
+// export default {
+//     fetch: app.fetch,
+// };
+// --- 5. Worker Export (Required by Cloudflare) ---
+// REVERT to the standard Hono export. This should fix the 405 error.
+export default app;
 // --- Separate function for cleaner, readable email logic (Remains the same) ---
 async function sendAdminNotification(bookingData: BookingRequest, env: Env) {
     const subject = `NEW ROAD ROAM BOOKING: ${bookingData.rentalServiceName}`;
