@@ -1,7 +1,33 @@
+// user-frontend/tsconfig.json (COMBINED CONFIGURATION)
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    
+    /* Ensure Vite types are found */
+    "types": ["vite/client"], 
+
+    /* Linting/Strictness */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  
+  // Define what files to include
+  "include": ["src"],
+  
+  // Reference the Vite config file
+  "references": [{ "path": "./vite.config.ts" }] 
 }
