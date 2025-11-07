@@ -1,7 +1,7 @@
 // user-frontend/src/App.tsx
 // This is your new homepage, assembling all the components.
 
-import React from 'react';
+// import React from 'react';
 import { BookingForm } from './BookingForm';
 import { 
   Header, 
