@@ -11,7 +11,8 @@ compatibility_date = "2024-05-18"
 # entrypoint = "src/index.ts"
 
 # --- Data Bindings (Add these after you create the resource in the dashboard/CLI) ---
-
+[log]
+log_level = "info"
 # Example D1 binding (for your scraped relational data)
  [[d1_databases]]
  binding = "DB"
