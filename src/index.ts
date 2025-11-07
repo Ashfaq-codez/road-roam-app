@@ -1,25 +1,48 @@
-// src/index.tsx (FINAL TRACER VERSION)
+// src/index.tsx (Using Hono Router - FINAL ROUTE ORDER)
+
 import { Hono } from 'hono';
 import { cors } from 'hono/cors'; 
 
-// ... (All interfaces: BookingRequest, BookingRecord, Env, etc. remain the same) ...
+// --- 1. INTERFACES (Must be kept) ---
 interface BookingRequest {
-  fullName: string; email: string; phoneNumber: string; aadharNumber?: string; 
-  rentalServiceName: string; pickupDate: string; returnDate: string; pickupLocation: string;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  aadharNumber?: string; 
+  rentalServiceName: string; 
+  pickupDate: string;
+  returnDate: string;
+  pickupLocation: string;
 }
+
 interface BookingRecord {
-  id: number; full_name: string; email: string; phone_number: string; aadhar_number: string | null;
-  rental_service_name: string; pickup_date: string; return_date: string; pickup_location: string;
-  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED'; created_at: string;
+  id: number;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  aadhar_number: string | null;
+  rental_service_name: string;
+  pickup_date: string;
+  return_date: string;
+  pickup_location: string;
+  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
+  created_at: string;
 }
-interface BookingUpdateData extends Partial<BookingRequest> { status?: BookingRecord['status']; }
-interface Env { DB: D1Database; RESEND_API_KEY: string; }
-// ... (Interfaces end) ...
 
+interface BookingUpdateData extends Partial<BookingRequest> {
+    status?: BookingRecord['status'];
+}
 
+interface Env {
+  DB: D1Database;
+  RESEND_API_KEY: string;
+}
+
+// --- 2. Hono Setup ---
 type HonoEnv = { Bindings: Env };
 const app = new Hono<HonoEnv>();
 
+// --- 3. CORS Middleware (Must be first) ---
 app.use('*', cors({
     origin: '*', 
     allowMethods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -27,25 +50,9 @@ app.use('*', cors({
     maxAge: 600,
 }));
 
-// --- 
-// --- NEW TRACER ROUTE (CATCH-ALL) ---
-// This will intercept ALL requests to any path and log them
-app.all('*', (c) => {
-    console.log(`TRACER LOG: Received ${c.req.method} request for ${c.req.path}`);
-    
-    // This will check if the POST route *should* have been matched
-    if (c.req.path === '/api/bookings' && c.req.method === 'POST') {
-        console.log("TRACER LOG: This was a POST to /api/bookings but it failed to route!");
-        // We return a 405 manually to show the tracer caught it
-        return c.text('Tracer caught 405 for /api/bookings POST', 405);
-    }
+// --- 4. Hono Routing (Specific routes MUST come first) ---
 
-    // If it's not the POST, just log it and move on
-    // Hono will continue to the next matching route
-});
-// --- END TRACER ROUTE ---
-// --- 
-
+// Handler for the base path
 app.get('/', (c) => {
     return c.text('Road Roam API is running.', 200);
 });
@@ -91,7 +98,7 @@ app.get('/api/admin/bookings', async (c) => {
     }
 });
 
-// ... (Rest of Admin routes: app.get, app.patch, app.delete for /api/admin/bookings/:id) ...
+// C. ADMIN ROUTES: Dynamic GET, PATCH, DELETE
 app.get('/api/admin/bookings/:id', async (c) => {
     const env = c.env; const bookingId = c.req.param('id');
     try {
@@ -100,6 +107,7 @@ app.get('/api/admin/bookings/:id', async (c) => {
         return c.json(booking);
     } catch (error) { console.error(`Error fetching booking ${bookingId}:`, error); return c.text('Internal Server Error.', 500); }
 });
+
 app.patch('/api/admin/bookings/:id', async (c) => {
     const env = c.env; const bookingId = parseInt(c.req.param('id')!);
     try {
@@ -118,6 +126,7 @@ app.patch('/api/admin/bookings/:id', async (c) => {
         return c.json({ message: `Booking ${bookingId} details updated.` }, 200);
     } catch (error) { console.error(`Error updating booking ${bookingId}:`, error); return c.text('Invalid data or update error.', 400); }
 });
+
 app.delete('/api/admin/bookings/:id', async (c) => {
     const env = c.env; const bookingId = c.req.param('id');
     try {
@@ -126,12 +135,18 @@ app.delete('/api/admin/bookings/:id', async (c) => {
         return c.json({ message: `Booking ${bookingId} permanently deleted.` }, 200);
     } catch (error) { console.error(`Error deleting booking ${bookingId}:`, error); return c.text('Internal Server Error during deletion.', 500); }
 });
-// ... (End of Admin routes) ...
+
+// D. Fallback 404 Handler (MUST BE LAST)
+app.all('*', (c) => {
+    console.log(`TRACER LOG: 404 Not Found for ${c.req.method} ${c.req.path}`);
+    return c.text('API Route Not Found', 404);
+});
+
 
 // --- 5. Worker Export (Using the most standard export) ---
 export default app;
 
-// ... (sendAdminNotification function remains the same) ...
+// --- Separate function for cleaner, readable email logic (Remains the same) ---
 async function sendAdminNotification(bookingData: BookingRequest, env: Env) {
     const subject = `NEW ROAD ROAM BOOKING: ${bookingData.rentalServiceName}`;
     const body = `<h1>New Booking Received!</h1><p>Service: <strong>${bookingData.rentalServiceName}</strong></p><p>Name: ${bookingData.fullName}</p><p>Email: ${bookingData.email}</p><p>Phone: ${bookingData.phoneNumber}</p><p>Dates: ${bookingData.pickupDate} to ${bookingData.returnDate}</p><p>Location: ${bookingData.pickupLocation}</p>${bookingData.aadharNumber ? `<p>Aadhar: ${bookingData.aadharNumber}</p>` : ''}`;
