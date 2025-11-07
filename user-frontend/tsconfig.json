@@ -1,4 +1,4 @@
-// user-frontend/tsconfig.json (COMBINED CONFIGURATION)
+// user-frontend/tsconfig.json (Final Production Version)
 {
   "compilerOptions": {
     "target": "ES2022",
@@ -28,6 +28,6 @@
   // Define what files to include
   "include": ["src"],
   
-  // Reference the Vite config file
-  "references": [{ "path": "./vite.config.ts" }] 
+  // CRITICAL FIX: REMOVE THE "references" BLOCK ENTIRELY
+  // "references": [{ "path": "./vite.config.ts" }] 
 }
