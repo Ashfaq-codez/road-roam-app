@@ -1,0 +1,50 @@
+# dependencies (bun install)
+node_modules
+
+# output
+out
+dist
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+_.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# Cloudflare / Sensitive Files
+.dev.vars
+
+# Dependency folders
+/node_modules
+/admin-frontend/node_modules
+/user-frontend/node_modules
+/admin-frontend/dist
+/user-frontend/dist
+
+# Cloudflare/Wrangler specific files
+/.wrangler             # Local D1 database and Worker build cache
+.dev.vars              # CRITICAL: Contains local secrets (like RESEND_API_KEY)
+/package.json.bak
+/bun.lockb

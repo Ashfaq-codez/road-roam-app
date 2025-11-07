@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    // --- Environment setup & latest features (Keep these, they are great for Bun/Workers) ---
+    "lib": ["ESNext"],
+    "target": "ESNext",
+    "module": "Preserve",
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+    "allowJs": true,
+    
+    // --- Bundler mode (Keep these) ---
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+
+    // --- CRITICAL ADDITION FOR CLOUDFLARE WORKERS ---
+    "types": ["@cloudflare/workers-types"],
+    
+    // --- Best practices (Keep these, they improve readability and safety) ---
+    "strict": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true
+    
+    // ... (rest of the file)
+  }
+}
