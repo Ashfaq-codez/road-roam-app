@@ -3,7 +3,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
-// 1. FIX: BookingSummary Interface (was missing, causing errors)
+// --- PRODUCTION CONFIGURATION ---
+// In a production setup, VITE_API_ROOT will be set in the Cloudflare Pages dashboard.
+// If it's not set (e.g., during local testing or if the variable is missed), 
+// we fall back to your deployed Worker URL.
+const API_ROOT = import.meta.env.VITE_API_ROOT || 'https://road-roam-api.ashrahman777.workers.dev';
+// --------------------------------
+
+// 1. FIX: BookingSummary Interface 
 interface BookingSummary {
   id: number;
   full_name: string;
@@ -37,15 +44,17 @@ function AdminDashboard() {
     setLoading(true);
     setError(null);
     try {
-      // API Call: Using the security header placeholder
-      const response = await fetch('/api/admin/bookings', {
+      // FIX: Use the ABSOLUTE API_ROOT URL for the live deployment
+      const endpoint = `${API_ROOT}/api/admin/bookings`;
+      
+      const response = await fetch(endpoint, {
           headers: ADMIN_AUTH_HEADER, 
       }); 
       
       if (!response.ok) {
         if (response.status === 403) {
-            // This error is expected until we disable the Worker's security check for local testing
-            throw new Error("Unauthorized: Worker rejected access (403). Check Worker security logic.");
+            // If we get 403, we still set loading=false, but display the error message
+            throw new Error(`Unauthorized (403): Please ensure Worker security check is disabled for testing.`);
         }
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -53,18 +62,16 @@ function AdminDashboard() {
       const json: BookingSummary[] = await response.json();
       setBookings(json);
     } catch (e) {
-      // Catch any errors (e.g., network, JSON parsing, API status errors)
       setError(e instanceof Error ? e.message : "An unknown error occurred during fetch.");
     } finally {
-      // CRITICAL: Always resolve the loading state
       setLoading(false); 
     }
-  }, []); // Function definition is stable
+  }, []); 
 
   // 3. FIX: Call the fetch logic using useEffect
   useEffect(() => {
     fetchBookings();
-  }, [fetchBookings]); // Calls fetchBookings once on mount
+  }, [fetchBookings]); 
 
   if (loading) return <h1 className="text-center mt-20 text-xl font-semibold">Loading Admin Dashboard...</h1>;
   if (error) return <h1 style={{color: 'red'}} className="text-center mt-20 text-xl font-semibold">Error: {error}</h1>;
