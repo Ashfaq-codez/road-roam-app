@@ -1,4 +1,4 @@
-// src/index.tsx (Using Hono Router)
+// src/index.tsx (Using Hono Router - FINAL STABLE VERSION)
 
 import { Hono } from 'hono';
 import { cors } from 'hono/cors'; 
@@ -52,6 +52,12 @@ app.use('*', cors({
 
 // --- 4. Hono Routing ---
 
+// Handler for the base path: https://road-roam-api.ashrahman777.workers.dev/
+app.get('/', (c) => {
+    return c.text('Road Roam API is running.', 200);
+});
+
+
 // A. USER ROUTE: POST /api/bookings (Booking Submission)
 app.post('/api/bookings', async (c) => {
     const env = c.env; 
@@ -78,7 +84,6 @@ app.post('/api/bookings', async (c) => {
 
     } catch (error) {
         console.error("Booking submission error:", error);
-        // Hono's c.json correctly adds the content-type header
         return c.json({ message: "Invalid booking data submitted. Please check all fields.", status: "error" }, 400);
     }
 });
@@ -95,7 +100,8 @@ app.get('/api/admin/bookings', async (c) => {
         return c.json(results); 
     } catch (error) {
         console.error("Error fetching admin bookings:", error);
-        return c.text("Internal Server Error fetching bookings.", 500);
+        // Note: This error is often a D1 binding issue if the code is correct
+        return c.text("Internal Server Error fetching bookings.", 500); 
     }
 });
 
@@ -187,7 +193,10 @@ app.all('*', (c) => {
 
 
 // --- 5. Worker Export (Required by Cloudflare) ---
-export default app;
+// FIX: Export Hono's fetch handler explicitly for maximum stability
+export default {
+    fetch: app.fetch,
+};
 
 // --- Separate function for cleaner, readable email logic (Remains the same) ---
 async function sendAdminNotification(bookingData: BookingRequest, env: Env) {
