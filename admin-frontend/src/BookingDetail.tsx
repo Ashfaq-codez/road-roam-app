@@ -1,9 +1,13 @@
-// admin-frontend/src/BookingDetail.tsx (Fully Polished Code)
+// admin-frontend/src/BookingDetail.tsx (Fully Polished & Fixed Code)
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-// Reusing interfaces from the Worker (Best Practice)
+// --- CRITICAL FIX: DEFINE THE API_ROOT ---
+// This reads the variable from your Cloudflare Pages environment
+const API_ROOT = import.meta.env.VITE_API_ROOT || 'https://road-roam-api.ashrahman777.workers.dev';
+
+// --- INTERFACES (Remain the same) ---
 interface BookingRecord {
   id: number;
   full_name: string;
@@ -18,13 +22,12 @@ interface BookingRecord {
   created_at: string;
 }
 
-// Define the allowed rental services for the dropdown
 const rentalServices = [
   "Airport Pickup", "In-City Rental", "Outstation Rental", 
   "Corporate Rentals", "Event Rentals"
 ];
 
-// Placeholder for Admin Auth Header (needed for all admin API calls)
+// Placeholder for Admin Auth Header
 const ADMIN_AUTH_HEADER = { 'Authorization': 'Bearer VALID_ADMIN_TOKEN' }; 
 
 const BookingDetail: React.FC = () => {
@@ -32,13 +35,12 @@ const BookingDetail: React.FC = () => {
   const navigate = useNavigate();
 
   const [booking, setBooking] = useState<BookingRecord | null>(null);
-  const [formData, setFormData] = useState<Partial<BookingRecord>>({}); // Holds editable form data
+  const [formData, setFormData] = useState<Partial<BookingRecord>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   
-  // --- Utility Functions ---
-
+  // --- Utility Functions (Remain the same) ---
   const getStatusBadge = (status: BookingRecord['status']) => {
     switch (status) {
       case 'CONFIRMED': return 'bg-green-100 text-green-800 border-green-400';
@@ -55,7 +57,8 @@ const BookingDetail: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`/api/admin/bookings/${id}`, { headers: ADMIN_AUTH_HEADER });
+      // --- CRITICAL FIX: Use absolute API_ROOT URL ---
+      const response = await fetch(`${API_ROOT}/api/admin/bookings/${id}`, { headers: ADMIN_AUTH_HEADER });
       
       if (response.status === 404) throw new Error("Booking not found.");
       if (!response.ok) throw new Error(`Failed to fetch booking: ${response.status}`);
@@ -74,12 +77,9 @@ const BookingDetail: React.FC = () => {
     fetchBooking();
   }, [fetchBooking]);
 
-  // --- Form Change Handler ---
+  // --- Form Change Handler (Remains the same) ---
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   // --- Core Action 1: Update Booking Details (PATCH) ---
@@ -89,7 +89,8 @@ const BookingDetail: React.FC = () => {
     
     setIsSaving(true);
     try {
-      const response = await fetch(`/api/admin/bookings/${id}`, {
+      // --- CRITICAL FIX: Use absolute API_ROOT URL ---
+      const response = await fetch(`${API_ROOT}/api/admin/bookings/${id}`, {
         method: 'PATCH',
         headers: {
             ...ADMIN_AUTH_HEADER,
@@ -114,14 +115,13 @@ const BookingDetail: React.FC = () => {
   // --- Core Action 2: Delete Booking (DELETE) ---
   const handleDeleteBooking = async () => {
     if (!booking) return;
-
-    const confirmed = confirm(`Are you sure you want to permanently delete Booking #${booking.id} (${booking.full_name})? This action cannot be undone.`);
-    
+    const confirmed = confirm(`Are you sure you want to permanently delete Booking #${booking.id} (${booking.full_name})?`);
     if (!confirmed) return;
 
     setIsSaving(true); 
     try {
-      const response = await fetch(`/api/admin/bookings/${id}`, {
+      // --- CRITICAL FIX: Use absolute API_ROOT URL ---
+      const response = await fetch(`${API_ROOT}/api/admin/bookings/${id}`, {
         method: 'DELETE',
         headers: ADMIN_AUTH_HEADER,
       });
@@ -137,12 +137,14 @@ const BookingDetail: React.FC = () => {
     }
   };
 
+  // --- JSX (Polished) ---
+  // (All the JSX from your polished 'BookingDetail.tsx' remains exactly the same)
+  // ...
   if (loading) return <h1 className="text-center mt-20 text-xl font-semibold">Loading Booking Details...</h1>;
   if (error) return <h1 style={{color: 'red'}} className="text-center mt-20 text-xl font-semibold">Error: {error}</h1>;
   if (!booking || !formData) return <h1 className="text-center mt-20 text-xl font-semibold">Booking Not Found.</h1>;
 
   return (
-    // POLISH: Main container setup
     <div className="min-h-screen bg-gray-50 p-6 md:p-10">
       <div className="max-w-4xl mx-auto bg-white shadow-2xl rounded-2xl p-8">
       
@@ -156,7 +158,6 @@ const BookingDetail: React.FC = () => {
         </h1>
         <p className="text-lg text-gray-600 mb-6">Booked On: {new Date(booking.created_at).toLocaleString()}</p>
         
-        {/* Status Management */}
         <div className="flex items-center justify-between p-4 mb-8 bg-indigo-50 border-l-4 border-indigo-500 rounded-lg">
           <h2 className="text-xl font-semibold text-gray-800">Current Status: 
             <span className={`ml-3 px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full border ${getStatusBadge(booking.status)}`}>
@@ -181,19 +182,13 @@ const BookingDetail: React.FC = () => {
         </div>
       
         <form onSubmit={handleUpdateBooking} className="space-y-8">
-            
-            {/* Full Details Edit Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                 <h2 className="col-span-full text-2xl font-bold border-b pb-3 mb-4 text-indigo-700">Customer Information</h2>
-                
                 <InputField label="Full Name" type="text" name="full_name" value={formData.full_name || ''} onChange={handleChange} />
                 <InputField label="Email" type="email" name="email" value={formData.email || ''} onChange={handleChange} />
                 <InputField label="Phone Number" type="tel" name="phone_number" value={formData.phone_number || ''} onChange={handleChange} />
                 <InputField label="Aadhar Number" type="text" name="aadhar_number" value={formData.aadhar_number || ''} onChange={handleChange} />
-
                 <h2 className="col-span-full text-2xl font-bold border-b pb-3 mb-4 pt-6 text-indigo-700">Rental & Timing</h2>
-
-                {/* Rental Service Dropdown */}
                 <div>
                   <label htmlFor="rental_service_name" className="block text-sm font-medium text-gray-700 mb-1">Rental Service</label>
                   <select
@@ -208,13 +203,11 @@ const BookingDetail: React.FC = () => {
                     ))}
                   </select>
                 </div>
-                
                 <InputField label="Pick-up Location" type="text" name="pickup_location" value={formData.pickup_location || ''} onChange={handleChange} />
                 <InputField label="Pick-up Date" type="date" name="pickup_date" value={formData.pickup_date || ''} onChange={handleChange} />
                 <InputField label="Return Date" type="date" name="return_date" value={formData.return_date || ''} onChange={handleChange} />
             </div>
 
-            {/* Action Buttons */}
             <div className="flex justify-between items-center pt-8 border-t border-gray-200 mt-8">
                 <button
                     type="submit"
@@ -227,7 +220,6 @@ const BookingDetail: React.FC = () => {
                 >
                     {isSaving ? 'Saving Changes...' : 'Save All Changes'}
                 </button>
-                
                 <button
                     type="button" 
                     onClick={handleDeleteBooking}
@@ -245,7 +237,7 @@ const BookingDetail: React.FC = () => {
   );
 };
 
-// --- InputField Helper Component (Reused and Updated) ---
+// --- InputField Helper Component ---
 interface InputFieldProps {
   label: string;
   type: string;
@@ -265,7 +257,6 @@ const InputField: React.FC<InputFieldProps> = ({ label, type, name, value, onCha
       name={name}
       value={value === null || value === undefined ? '' : value}
       onChange={onChange}
-      // POLISH: Applied professional input styles
       className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
     />
   </div>
