@@ -1,33 +1,35 @@
-// user-frontend/tsconfig.json (Final Production Version)
 {
   "compilerOptions": {
+    // --- Project Setup ---
     "target": "ES2022",
-    "useDefineForClassFields": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
+    "useDefineForClassFields": true,
     "skipLibCheck": true,
 
-    /* Bundler mode */
+    // --- Module Resolution (Crucial for Vite/Bun) ---
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
+    "noEmit": true, // Vite handles emission
+
+    // --- React/JSX ---
     "jsx": "react-jsx",
     
-    /* Ensure Vite types are found */
-    "types": ["vite/client"], 
-
-    /* Linting/Strictness */
+    // --- Type Safety & Linting ---
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    
+    // --- Environment Types ---
+    // This allows TypeScript to find types for fetch, Worker environment, and Vite
+    "types": ["vite/client"] 
   },
   
-  // Define what files to include
-  "include": ["src"],
+  // Define what files to include for compilation/checking
+  "include": ["src"]
   
-  // CRITICAL FIX: REMOVE THE "references" BLOCK ENTIRELY
-  // "references": [{ "path": "./vite.config.ts" }] 
+  // NOTE: The 'references' block has been permanently removed to fix the build error.
 }
