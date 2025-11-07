@@ -1,9 +1,9 @@
-// src/index.ts (Hono Routing)
+// src/index.tsx (Using Hono Router)
 
 import { Hono } from 'hono';
-import { cors } from 'hono/cors'; // Hono's official CORS middleware
+import { cors } from 'hono/cors'; 
 
-// --- 1. INTERFACES (Remain the same) ---
+// --- 1. INTERFACES (Must be kept) ---
 interface BookingRequest {
   fullName: string;
   email: string;
@@ -17,9 +17,20 @@ interface BookingRequest {
 
 interface BookingRecord {
   id: number;
-  // ... (Full record fields) ...
+  full_name: string;
+  email: string;
+  phone_number: string;
+  aadhar_number: string | null;
+  rental_service_name: string;
+  pickup_date: string;
+  return_date: string;
+  pickup_location: string;
   status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
   created_at: string;
+}
+
+interface BookingUpdateData extends Partial<BookingRequest> {
+    status?: BookingRecord['status'];
 }
 
 interface Env {
@@ -31,9 +42,9 @@ interface Env {
 type HonoEnv = { Bindings: Env };
 const app = new Hono<HonoEnv>();
 
-// --- 3. CORS and Middleware ---
+// --- 3. CORS Middleware (Fixes all CORS errors) ---
 app.use('*', cors({
-    origin: '*', // Allows all origins (all your Pages sites)
+    origin: '*', 
     allowMethods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],
     maxAge: 600,
@@ -41,10 +52,9 @@ app.use('*', cors({
 
 // --- 4. Hono Routing ---
 
-// A. USER ROUTE: POST /api/bookings
+// A. USER ROUTE: POST /api/bookings (Booking Submission)
 app.post('/api/bookings', async (c) => {
-    const env = c.env; // Access environment bindings via Hono's context
-    
+    const env = c.env; 
     try {
         const bookingData: BookingRequest = await c.req.json(); 
 
@@ -68,6 +78,7 @@ app.post('/api/bookings', async (c) => {
 
     } catch (error) {
         console.error("Booking submission error:", error);
+        // Hono's c.json correctly adds the content-type header
         return c.json({ message: "Invalid booking data submitted. Please check all fields.", status: "error" }, 400);
     }
 });
@@ -81,14 +92,14 @@ app.get('/api/admin/bookings', async (c) => {
           `SELECT id, full_name, rental_service_name, pickup_date, status, created_at FROM bookings ORDER BY created_at DESC`
         ).all<BookingRecord>(); 
 
-        return c.json(results); // Hono defaults to status 200
+        return c.json(results); 
     } catch (error) {
         console.error("Error fetching admin bookings:", error);
         return c.text("Internal Server Error fetching bookings.", 500);
     }
 });
 
-// C. ADMIN ROUTES: /api/admin/bookings/:id (GET, PATCH, DELETE)
+// C. ADMIN ROUTES: Dynamic GET, PATCH, DELETE
 app.get('/api/admin/bookings/:id', async (c) => {
     const env = c.env;
     const bookingId = c.req.param('id');
@@ -108,14 +119,66 @@ app.get('/api/admin/bookings/:id', async (c) => {
 });
 
 app.patch('/api/admin/bookings/:id', async (c) => {
-    // ... (Your PATCH logic from the previous block using c.req.json() and c.env) ...
-    return c.text('Update logic successfully reached', 200); // REPLACE with full PATCH logic
+    const env = c.env;
+    const bookingId = parseInt(c.req.param('id')!);
+
+    try {
+        const updateData: BookingUpdateData = await c.req.json();
+        
+        const existingBooking = await env.DB.prepare(`SELECT * FROM bookings WHERE id = ?`).bind(bookingId).first<BookingRecord>();
+        if (!existingBooking) return c.text('Booking Not Found', 404);
+
+        const updateQuery = `
+            UPDATE bookings 
+            SET full_name = ?, email = ?, phone_number = ?, aadhar_number = ?, 
+                rental_service_name = ?, pickup_date = ?, return_date = ?, 
+                pickup_location = ?, status = ?
+            WHERE id = ?
+        `;
+        
+        const result = await env.DB.prepare(updateQuery).bind(
+            updateData.fullName ?? existingBooking.full_name,
+            updateData.email ?? existingBooking.email,
+            updateData.phoneNumber ?? existingBooking.phone_number,
+            updateData.aadharNumber ?? existingBooking.aadhar_number, 
+            updateData.rentalServiceName ?? existingBooking.rental_service_name,
+            updateData.pickupDate ?? existingBooking.pickup_date,
+            updateData.returnDate ?? existingBooking.return_date,
+            updateData.pickupLocation ?? existingBooking.pickup_location,
+            updateData.status ?? existingBooking.status, 
+            bookingId 
+        ).run();
+        
+        if (result.meta.rows_affected === 0) return c.text('No changes made.', 200);
+
+        return c.json({ message: `Booking ${bookingId} details updated.` }, 200);
+
+    } catch (error) {
+        console.error(`Error updating booking ${bookingId}:`, error);
+        return c.text('Invalid data or update error.', 400);
+    }
 });
 
 app.delete('/api/admin/bookings/:id', async (c) => {
-    // ... (Your DELETE logic from the previous block using c.env) ...
-    return c.text('Delete logic successfully reached', 200); // REPLACE with full DELETE logic
+    const env = c.env;
+    const bookingId = c.req.param('id');
+    
+    try {
+        const result = await env.DB.prepare(
+            `DELETE FROM bookings WHERE id = ?`
+        ).bind(bookingId)
+        .run();
+        
+        if (result.meta.rows_affected === 0) return c.text('Booking Not Found', 404);
+
+        return c.json({ message: `Booking ${bookingId} permanently deleted.` }, 200);
+
+    } catch (error) {
+        console.error(`Error deleting booking ${bookingId}:`, error);
+        return c.text('Internal Server Error during deletion.', 500);
+    }
 });
+
 
 // D. Fallback 404 Handler (Hono handles this cleanly)
 app.all('*', (c) => {
@@ -127,7 +190,30 @@ app.all('*', (c) => {
 export default app;
 
 // --- Separate function for cleaner, readable email logic (Remains the same) ---
-// Note: This function is now accessed via c.executionCtx.waitUntil(sendAdminNotification(bookingData, env))
 async function sendAdminNotification(bookingData: BookingRequest, env: Env) {
-    // ... (logic remains the same) ...
+    const subject = `NEW ROAD ROAM BOOKING: ${bookingData.rentalServiceName}`;
+    const body = `
+      <h1>New Booking Received!</h1>
+      <p>Service: <strong>${bookingData.rentalServiceName}</strong></p>
+      <p>Name: ${bookingData.fullName}</p>
+      <p>Email: ${bookingData.email}</p>
+      <p>Phone: ${bookingData.phoneNumber}</p>
+      <p>Dates: ${bookingData.pickupDate} to ${bookingData.returnDate}</p>
+      <p>Location: ${bookingData.pickupLocation}</p>
+      ${bookingData.aadharNumber ? `<p>Aadhar: ${bookingData.aadharNumber}</p>` : ''}
+    `;
+    
+    await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${env.RESEND_API_KEY}`, 
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            from: 'bookings@road-roam.com',
+            to: 'admin@road-roam.com', 
+            subject: subject,
+            html: body,
+        }),
+    });
 }
