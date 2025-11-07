@@ -3,12 +3,11 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
-  
-"scripts": {
+  "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
     "start": "bun run dev"
-},
+  },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20251106.1",
     "@types/bun": "latest",
@@ -16,5 +15,8 @@
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "hono": "^4.10.4"
   }
 }
