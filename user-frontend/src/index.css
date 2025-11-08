@@ -24,6 +24,7 @@
     min-height: 100vh;
     min-width: 320px;
     color: #3d1717; 
+    overflow-x: hidden;
   }
 
   :root {
