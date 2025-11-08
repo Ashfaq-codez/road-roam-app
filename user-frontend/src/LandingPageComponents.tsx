@@ -94,12 +94,12 @@ const MobileNavLink: React.FC<{ href: string, onClick: () => void, children: Rea
 export const Hero = () => (
   <div 
     className="relative min-h-[70vh] py-20 flex items-center justify-center bg-cover bg-center" 
-    style={{ backgroundImage: "url('https://images.unsplash.com/photo-1517524008697-84bbe3c3afd9?q=80&w=2070')" }}
+    style={{ backgroundImage: "url('https://ackodrive.com/car-guide/competitors-of-land-rover-defender/')" }}
   >
     <div className="absolute inset-0 bg-black opacity-60"></div>
     <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
       <h1 className="text-5xl md:text-7xl font-extrabold mb-4 drop-shadow-lg">
-        Your Journey, Your <span className="text-red-500">Car</span>, Your Way
+        Your Journey, Our <span className="text-red-500">Wheels</span>, Explore With Ease.
       </h1>
       <p className="text-xl md:text-2xl font-light mb-8 drop-shadow-md">
         Explore Bangalore and beyond with Road Roam's reliable rental fleet.
@@ -221,14 +221,13 @@ export const Packages = () => (
     <div className="container mx-auto">
       <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">City Tour Packages</h2>
       <div className="flex flex-col md:flex-row justify-center gap-8">
-        <PackageCard 
+        {/* <PackageCard 
           title="Half-Day City Tour" 
-          price="₹1,500" 
           details="4 Hours / 40 KMs. Covers 2-3 major spots."
-        />
+        /> */}
         <PackageCard 
           title="Full-Day City Tour" 
-          price="₹2,500" 
+          // price="₹2,500" 
           details="8 Hours / 80 KMs. Explore all of Bangalore's highlights."
         />
       </div>
@@ -237,10 +236,10 @@ export const Packages = () => (
 );
 
 // Helper for Package Card (Updated with Red Theme)
-const PackageCard: React.FC<{title: string, price: string, details: string}> = ({ title, price, details }) => (
+const PackageCard: React.FC<{title: string, details: string}> = ({ title, details }) => (
   <div className="bg-white p-8 rounded-xl shadow-lg border-2 border-red-600 text-center w-full md:w-96 transform hover:scale-105 transition duration-300">
     <h3 className="text-2xl font-bold text-gray-900 mb-3">{title}</h3>
-    <p className="text-4xl font-extrabold text-red-600 mb-4">{price}</p>
+    {/* <p className="text-4xl font-extrabold text-red-600 mb-4">{price}</p> */}
     <p className="text-gray-600 mb-6">{details}</p>
     <a 
       href="#booking-form" 
