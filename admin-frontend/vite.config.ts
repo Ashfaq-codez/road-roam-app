@@ -1,21 +1,22 @@
-// admin-frontend/vite.config.ts
+// admin-frontend/vite.config.ts - CLEANED CONFIG
 
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+// NO external imports for Tailwind or PostCSS
+
 export default defineConfig({
   plugins: [react()],
   
-  // Proxy for local development to route API calls to the Worker
+  // This block is for your local dev server to talk to your Worker
   server: {
-    // Run the frontend on a unique port
-    port: 5174, 
     proxy: {
-      // All requests starting with /api will be sent to the Worker
       '/api': {
         target: 'http://127.0.0.1:8787',
         changeOrigin: true,
       },
     },
   },
+  
+  // CRITICAL: Ensure no 'css' or 'resolve' blocks are present here to prevent conflicts.
 });

@@ -4,13 +4,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
 // --- PRODUCTION CONFIGURATION ---
-// In a production setup, VITE_API_ROOT will be set in the Cloudflare Pages dashboard.
-// If it's not set (e.g., during local testing or if the variable is missed), 
-// we fall back to your deployed Worker URL.
 const API_ROOT = import.meta.env.VITE_API_ROOT || 'https://road-roam-api.ashrahman777.workers.dev';
 // --------------------------------
 
-// 1. FIX: BookingSummary Interface 
+// 1. INTERFACE
 interface BookingSummary {
   id: number;
   full_name: string;
@@ -20,7 +17,7 @@ interface BookingSummary {
   created_at: string;
 }
 
-// Placeholder for Admin Auth Header (KEEP THIS FOR SECURITY LATER)
+// Placeholder for Admin Auth Header
 const ADMIN_AUTH_HEADER = { 'Authorization': 'Bearer VALID_ADMIN_TOKEN' }; 
 
 function AdminDashboard() {
@@ -28,33 +25,31 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Function to determine badge color based on status (Polished Styling)
+  // Function to determine badge color (High Contrast Styling)
   const getStatusBadge = (status: BookingSummary['status']) => {
     switch (status) {
-      case 'CONFIRMED': return 'bg-green-100 text-green-800 border-green-400';
-      case 'CANCELLED': return 'bg-red-100 text-red-800 border-red-400';
-      case 'COMPLETED': return 'bg-blue-100 text-blue-800 border-blue-400';
-      case 'PENDING': return 'bg-yellow-100 text-yellow-800 border-yellow-400';
-      default: return 'bg-gray-100 text-gray-800';
+      // High-contrast colors against a dark background
+      case 'CONFIRMED': return 'bg-green-600 text-white font-bold';
+      case 'CANCELLED': return 'bg-red-600 text-white font-bold';
+      case 'COMPLETED': return 'bg-blue-600 text-white font-bold';
+      case 'PENDING': return 'bg-yellow-500 text-gray-900 font-bold';
+      default: return 'bg-gray-600 text-white';
     }
   };
 
-  // 2. FIX: Define the complete fetch logic using useCallback
+  // 2. DATA FETCHING LOGIC (remains the same)
   const fetchBookings = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true); setError(null);
     try {
-      // FIX: Use the ABSOLUTE API_ROOT URL for the live deployment
       const endpoint = `${API_ROOT}/api/admin/bookings`;
-      
-      const response = await fetch(endpoint, {
-          headers: ADMIN_AUTH_HEADER, 
-      }); 
+      const response = await fetch(endpoint, { headers: ADMIN_AUTH_HEADER }); 
       
       if (!response.ok) {
         if (response.status === 403) {
-            // If we get 403, we still set loading=false, but display the error message
-            throw new Error(`Unauthorized (403): Please ensure Worker security check is disabled for testing.`);
+            throw new Error(`Unauthorized (403): Check Worker security logic.`);
+        }
+        if (response.headers.get('content-type')?.includes('text/html')) {
+            throw new Error(`Failed to load JSON: Server sent HTML instead (check URL: ${endpoint})`);
         }
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -68,60 +63,102 @@ function AdminDashboard() {
     }
   }, []); 
 
-  // 3. FIX: Call the fetch logic using useEffect
+  // 3. LIFECYCLE HOOK (remains the same)
   useEffect(() => {
     fetchBookings();
   }, [fetchBookings]); 
 
-  if (loading) return <h1 className="text-center mt-20 text-xl font-semibold">Loading Admin Dashboard...</h1>;
-  if (error) return <h1 style={{color: 'red'}} className="text-center mt-20 text-xl font-semibold">Error: {error}</h1>;
+  // Polished Loading State
+  if (loading) return (
+    <div className="flex justify-center items-center min-h-screen bg-gray-900">
+      <h1 className="text-xl font-semibold text-white">Loading Admin Dashboard...</h1>
+    </div>
+  );
+  
+  // Polished Error State
+  if (error) return (
+    <div className="flex justify-center items-center min-h-screen bg-gray-900">
+      <div className="bg-gray-800 p-8 rounded-lg shadow-xl border border-red-600">
+        <h1 className="text-2xl font-bold text-red-500 mb-4">Error Loading Bookings</h1>
+        <p className="text-gray-300 font-mono bg-gray-900 p-4 rounded">{error}</p>
+      </div>
+    </div>
+  );
 
   return (
-    // Polished Layout Starts Here
-    <div className="min-h-screen bg-gray-50 p-6 md:p-10">
-      <div className="max-w-7xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden p-8">
+    // Polished Layout: Dark background 
+    <div className="min-h-screen bg-gray-900 p-6 md:p-10">
+      <div className="max-w-7xl mx-auto">
         
-        <h2 className="text-4xl font-extrabold mb-8 text-gray-900 border-b pb-4">
-          🚗 Road Roam Admin Dashboard
-        </h2>
-        <p className="text-lg text-gray-600 mb-6">
-            Showing {bookings.length} Total Bookings
-        </p>
+        {/* Header section with Logo and Title */}
+        <div className="mb-8">
+          <h1 className="text-5xl font-extrabold text-white mb-2">
+            <span className="text--200">Road</span>
+            <span className="text-red-600">Roam</span> Admin
+          </h1>
+          <p className="text-lg text-gray-400">
+              {bookings.length} Total Bookings - Data Management Console
+          </p>
+        </div>
 
-        {/* Responsive Table Wrapper */}
-        <div className="overflow-x-auto border border-gray-200 rounded-xl">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-indigo-600">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">ID</th>
-                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Service</th>
-                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Booked On</th>
-                <th className="px-6 py-3 text-center text-xs font-bold text-white uppercase tracking-wider">Action</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-100">
-              {bookings.map(booking => (
-                <tr key={booking.id} className="hover:bg-blue-50 transition duration-150">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{booking.id}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{booking.full_name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{booking.rental_service_name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border ${getStatusBadge(booking.status)}`}>
-                          {booking.status}
-                      </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(booking.created_at).toLocaleDateString()}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
-                      <Link to={`/booking/${booking.id}`} className="text-indigo-600 hover:text-indigo-800 font-semibold transition">
-                          View / Edit
-                      </Link>
-                  </td>
+        {/* Main Content Card (Dark, sharp edges) */}
+        <div className="bg-gray-800 shadow-2xl rounded-lg overflow-hidden border border-gray-700">
+          <div className="p-6">
+            {/* Red accent border for visual separation */}
+            <h2 className="text-3xl font-bold text-white mb-1 border-b border-red-600 pb-2">Booking List</h2>
+          </div>
+          
+          {/* Responsive Table Wrapper */}
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-700">
+              {/* Table Head (Darker than the body) */}
+              <thead className="bg-gray-900">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Customer / ID</th>
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Service</th>
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Booked On</th>
+                  <th className="px-6 py-3 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              {/* Table Body */}
+              <tbody className="bg-gray-800 divide-y divide-gray-700">
+                {bookings.map(booking => (
+                  <tr key={booking.id} className="hover:bg-gray-700 transition duration-150">
+                    
+                    {/* Customer Name and ID */}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-white">{booking.full_name}</div>
+                      <div className="text-xs text-gray-400">Booking ID: {booking.id}</div>
+                    </td>
+                    
+                    {/* Service */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{booking.rental_service_name}</td>
+                    
+                    {/* Status Badge (High Contrast) */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${getStatusBadge(booking.status)}`}>
+                            {booking.status}
+                        </span>
+                    </td>
+                    
+                    {/* Date */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{new Date(booking.created_at).toLocaleDateString()}</td>
+                    
+                    {/* Action Button (Red contrast) */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
+                        <Link 
+                          to={`/booking/${booking.id}`} 
+                          className="text-red-500 hover:text-red-400 font-semibold transition"
+                        >
+                            View / Edit
+                        </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

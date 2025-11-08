@@ -3,9 +3,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import './index.css';
 import AdminDashboard from './App.tsx'; // Your current list component
 import BookingDetail from './BookingDetail.tsx'; // Component we will create
-import './index.css';
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

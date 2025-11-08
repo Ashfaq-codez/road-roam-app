@@ -1,9 +1,9 @@
 // user-frontend/src/BookingForm.tsx
-// This is your *existing* form logic, now in its own file.
+// This file is now updated to use the red/black theme.
 
 import React, { useState } from 'react';
 
-// --- (Interfaces and consts) ---
+// --- (Interfaces and consts remain the same) ---
 interface BookingRequest {
   fullName: string;
   email: string;
@@ -36,28 +36,25 @@ export function BookingForm() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
 
+  // ... (handleChange and handleSubmit logic remains exactly the same) ...
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
     setMessage('');
-
     try {
       if (!formData.fullName || !formData.email || !formData.pickupDate) {
         setStatus('error');
         setMessage("❌ Please fill out all required fields.");
         return; 
       }
-      
       const response = await fetch(`${API_ROOT}/api/bookings`, { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData), 
       });
-
       if (response.ok) { 
         setStatus('success');
         setMessage('✅ Your booking request was successfully submitted! An admin will contact you shortly.');
@@ -66,7 +63,6 @@ export function BookingForm() {
         const errorData = await response.json(); 
         throw new Error(errorData.message || 'Booking submission failed on the server.');
       }
-      
     } catch (error) {
       setStatus('error');
       setMessage(`❌ Submission Error: ${error instanceof Error ? error.message : 'Unknown network error.'}`);
@@ -75,13 +71,13 @@ export function BookingForm() {
   
   const buttonDisabled = status === 'loading';
 
+
   return (
-    // This is the form, ready to be placed anywhere
     <div 
       id="booking-form" // Anchor link
       className="w-full max-w-4xl mx-auto p-8 md:p-12 bg-white rounded-xl shadow-2xl relative z-20"
     >
-      <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
+      <h2 className="text-3xl font-bold mb-8 text-center text-gray-900">
         Reserve Your Vehicle
       </h2>
       
@@ -101,7 +97,7 @@ export function BookingForm() {
               <InputField label="Full Name *" type="text" name="fullName" value={formData.fullName} onChange={handleChange} required />
               <InputField label="Email *" type="email" name="email" value={formData.email} onChange={handleChange} required />
               <InputField label="Phone Number" type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
-              <InputField label="Aadhar Number (Optional)" type="text" name="aadharNumber" value={formData.aadharNumber} onChange={handleChange} />
+              <InputField label="Aadhar Number" type="text" name="aadharNumber" value={formData.aadharNumber} onChange={handleChange} />
           </div>
           
           <h3 className="text-xl font-semibold border-b pb-2 mb-4 pt-4 text-gray-800">Rental Details</h3>
@@ -113,7 +109,8 @@ export function BookingForm() {
               value={formData.rentalServiceName}
               onChange={handleChange}
               required
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+              // UPDATED: Focus ring is now red
+              className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 transition duration-150"
             >
               {rentalServices.map(service => (
                 <option key={service} value={service}>{service}</option>
@@ -129,8 +126,9 @@ export function BookingForm() {
           <button
             type="submit"
             disabled={buttonDisabled}
+            // UPDATED: Button is now red
             className={`w-full py-4 px-4 rounded-lg shadow-lg text-xl font-bold text-white transition duration-300 ease-in-out transform hover:scale-105 ${
-              buttonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300'}`
+              buttonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300'}`
             }
           >
             {status === 'loading' ? 'Submitting Reservation...' : 'Submit Reservation'}
@@ -162,7 +160,8 @@ const InputField: React.FC<InputFieldProps> = ({ label, type, name, value, onCha
       value={value || ''}
       onChange={onChange}
       required={required}
-      className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+      // UPDATED: Focus ring is now red
+      className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 transition duration-150"
     />
   </div>
 );
