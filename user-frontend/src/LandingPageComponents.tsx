@@ -1,30 +1,42 @@
 // user-frontend/src/LandingPageComponents.tsx
-// This file contains all the new sections you requested.
+// user-frontend/src/LandingPageComponents.tsx
 
-import React, { useState } from 'react'; // <-- useState is needed for the mobile menu
+import React, { useState } from 'react'; 
 
-// --- 1. Header Component (Responsive with Hamburger) ---
+// --- 1. Header Component (Updated with Sub-Logo) ---
 export const Header = () => {
-  // State to control the mobile menu visibility
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
         
-        {/* Logo (Always Visible) */}
-        <div className="text-3xl font-extrabold z-50">
-          <span className="text-black">Road</span>
-          <span className="text-red-600">Roam</span>
+        {/* NEW LOGO STRUCTURE (FIXED: Alignment) */}
+        <div className="flex flex-col h-10 -space-y-1 z-50">
+          <div className="text-3xl font-extrabold flex">
+            
+            {/* CRITICAL FIX: Add conditional class here */}
+            <span className={isOpen ? 'text-white' : 'text-gray-900'}>Road</span>
+            
+            {/* Roam (Red) - This part is fine */}
+            <span className="text-red-600 relative">Roam</span>
+          </div>
+          
+          {/* Subtext (This alignment is a separate, persistent issue we've been fighting) */}
+          <span className="text-gray-600 text-xs font-semibold tracking-tight self-end mr-0.5">
+            Car Rentals
+          </span>
         </div>
         
-        {/* 1. Mobile Menu Button (Visible only on small screens) */}
+        {/* ... (Mobile Menu Button Logic) ... */}
         <button 
           className="md:hidden text-2xl p-2 focus:outline-none focus:ring-2 focus:ring-red-500 rounded z-50"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {/* Toggle between hamburger and close icon */}
-          {isOpen ? '✕' : '☰'} 
+          {/* This part must also be conditional for the X icon */}
+          <span className={isOpen ? 'text-white' : 'text-gray-800'}>
+              {isOpen ? '✕' : '☰'} 
+          </span>
         </button>
         
         {/* 2. Desktop Navigation (Visible on md screens and up) */}
@@ -43,12 +55,12 @@ export const Header = () => {
         </div>
       </nav>
 
-      {/* 3. Mobile Dropdown Menu (Conditionally Renders) */}
+      {/* Mobile Dropdown Menu (Overlay) */}
       <div 
-        className={`fixed top-0 left-0 w-full h-full bg-black bg-opacity-90 transition-transform duration-300 transform md:hidden ${
-          isOpen ? 'translate-x-0' : '-translate-x-full' // Slide in/out transition
+        // Overlay is dark (bg-black)
+        className={`fixed top-0 left-0 w-full h-full bg-black transition-transform duration-300 transform md:hidden ${
+          isOpen ? 'translate-x-0' : '-translate-x-full' 
         } z-40 p-6`}
-        // Ensure the screen doesn't scroll when the menu is open
         style={{ overflowY: 'auto' }}
       >
         <div className="flex flex-col space-y-6 pt-20">
@@ -71,15 +83,15 @@ export const Header = () => {
   );
 };
 
-// --- Helper Components ---
-// Desktop Link
+// ... (All other components and helpers remain the same) ...
+
+// --- Helper Components (Remain the same) ---
 const NavLink: React.FC<{ href: string, children: React.ReactNode }> = ({ href, children }) => (
   <a href={href} className="text-gray-600 hover:text-red-600 font-medium transition-colors">
     {children}
   </a>
 );
 
-// Mobile Link (Full width, white text for dark overlay)
 const MobileNavLink: React.FC<{ href: string, onClick: () => void, children: React.ReactNode }> = ({ href, onClick, children }) => (
   <a 
     href={href} 
@@ -90,13 +102,18 @@ const MobileNavLink: React.FC<{ href: string, onClick: () => void, children: Rea
   </a>
 );
 
+// ... (Rest of LandingPageComponents.tsx remains the same) ...
+
 // --- 2. Hero Component (Adjusted for Mobile Safety) ---
 export const Hero = () => (
-  <div 
-    className="relative min-h-[70vh] py-20 flex items-center justify-center bg-cover bg-center" 
-    style={{ backgroundImage: "url('https://ackodrive.com/car-guide/competitors-of-land-rover-defender/')" }}
-  >
-    <div className="absolute inset-0 bg-black opacity-60"></div>
+  <div className="relative min-h-[70vh] py-20 flex items-center justify-center overflow-hidden">
+  {/* Blurred Background */}
+  <div
+    className="absolute inset-0 bg-cover bg-center blur-[5px] scale-105"
+    style={{ backgroundImage: "url('/images/main_1.jpg')" }}
+  />
+
+    <div className="absolute inset-0 bg-black opacity-60 "></div>
     <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
       <h1 className="text-5xl md:text-7xl font-extrabold mb-4 drop-shadow-lg">
         Your Journey, Our <span className="text-red-500">Wheels</span>, Explore With Ease.
@@ -117,7 +134,7 @@ export const Hero = () => (
 // --- 3. Services Component ---
 export const Services = () => (
   <section id="services" className="container mx-auto px-6 py-20">
-    <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">Our Services</h2>
+    <h2 className="text-4xl font-extrabold text-center text-yellow-400 mb-12">Our Services</h2>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       <ServiceCard 
         title="In-City Rentals" 
@@ -151,22 +168,32 @@ const ServiceCard: React.FC<{title: string, description: string}> = ({ title, de
 export const Fleet = () => (
   <section id="fleet" className="bg-gray-100 px-6 py-20">
     <div className="container mx-auto">
-      <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">Our Fleet</h2>
+      <h2 className="text-4xl font-extrabold text-center text-red-600 mb-12">Our Fleet</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <FleetCard 
-          name="Sedans (Etios, Dzire)" 
+          name="Dzire" 
           description="Comfortable and economical for city rides and small families." 
-          imgSrc="https://images.unsplash.com/photo-1616455579100-2ceaa4eb2d36?q=80&w=600&h=400" 
+          imgSrc="/images/swift.jpg" 
         />
         <FleetCard 
-          name="SUVs (Innova, Ertiga)" 
+          name="Ciaz" 
+          description="Comfortable and economical for city rides and small families." 
+          imgSrc="/images/ciaz.png" 
+        />
+        <FleetCard 
+          name="Ertiga" 
           description="Spacious, powerful, and perfect for outstation trips or large groups." 
-          imgSrc="https://images.unsplash.com/photo-1588440787334-b38122c3b246?q=80&w=600&h=400" 
+          imgSrc="/images/ertiga.jpeg" 
         />
         <FleetCard 
-          name="Luxury (BMW, Mercedes)" 
-          description="Arrive in style. Our luxury fleet is available for corporate and special events." 
-          imgSrc="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=600&h=400" 
+          name="Innova" 
+          description="Spacious, powerful, and perfect for outstation trips or large groups." 
+          imgSrc="/images/main.jpg" 
+        />
+        <FleetCard 
+          name="Crysta" 
+          description="Arrive in style. Our luxury fleet is available for the journey." 
+          imgSrc="/images/crysta.jpeg" 
         />
       </div>
     </div>
@@ -174,9 +201,20 @@ export const Fleet = () => (
 );
 
 // Helper for Fleet Card
+// Helper for Fleet Card (Updated for Aspect Ratio)
 const FleetCard: React.FC<{name: string, description: string, imgSrc: string}> = ({ name, description, imgSrc }) => (
   <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-    <img src={imgSrc} alt={name} className="w-full h-48 object-cover" />
+    
+    {/* CRITICAL FIX: Use padding-top to define a 4:3 landscape ratio */}
+    <div className="relative pt-[50%] overflow-hidden">
+      <img 
+        src={imgSrc} 
+        alt={name} 
+        // Image now fills the relative container and uses object-cover without cropping vital parts
+        className="absolute inset-0 w-full h-full object-cover" 
+      />
+    </div>
+    
     <div className="p-6">
       <h3 className="text-2xl font-bold text-gray-900 mb-3">{name}</h3>
       <p className="text-gray-600">{description}</p>
@@ -187,20 +225,20 @@ const FleetCard: React.FC<{name: string, description: string, imgSrc: string}> =
 // --- 5. Destinations (Bangalore) Component ---
 export const Destinations = () => (
   <section id="destinations" className="container mx-auto px-6 py-20">
-    <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-4">Explore Bangalore</h2>
-    <p className="text-xl text-center text-gray-600 mb-12">Must-visit places for your in-city tour.</p>
+    <h2 className="text-4xl font-extrabold text-center text-yellow-400 mb-4">Explore Bangalore</h2>
+    <p className="text-xl text-center text-gray-300 mb-12">Must-visit places for your in-city tour.</p>
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
       <DestinationCard 
         name="Bangalore Palace" 
-        imgSrc="https://images.unsplash.com/photo-1574041355655-27a3c3b52e39?q=80&w=600&h=400" 
+        imgSrc="/images/palace.jpg" 
       />
       <DestinationCard 
         name="Lalbagh Botanical Garden" 
-        imgSrc="https://images.unsplash.com/photo-1600201923483-c2c6a0b4d4f2?q=80&w=600&h=400" 
+        imgSrc="/images/Lalbagh-Bangalore.jpg" 
       />
       <DestinationCard 
         name="Cubbon Park" 
-        imgSrc="https://images.unsplash-com/photo-1627895431533-21b91e0a29c1?q=80&w=600&h=400" 
+        imgSrc="/images/cubbon-park.jpg" 
       />
     </div>
   </section>
@@ -219,7 +257,7 @@ const DestinationCard: React.FC<{name: string, imgSrc: string}> = ({ name, imgSr
 export const Packages = () => (
   <section id="packages" className="bg-gray-100 px-6 py-20">
     <div className="container mx-auto">
-      <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">City Tour Packages</h2>
+      <h2 className="text-4xl font-extrabold text-center text-red-600 mb-12">City Tour Packages</h2>
       <div className="flex flex-col md:flex-row justify-center gap-8">
         {/* <PackageCard 
           title="Half-Day City Tour" 
@@ -251,12 +289,21 @@ const PackageCard: React.FC<{title: string, details: string}> = ({ title, detail
 );
 
 // --- 7. Contact Component (Updated with Red Theme) ---
+// user-frontend/src/LandingPageComponents.tsx (Contact component)
+
 export const Contact = () => (
   <section id="contact" className="container mx-auto px-6 py-20 text-center">
-    <h2 className="text-4xl font-extrabold text-gray-900 mb-8">Get in Touch</h2>
-    <p className="text-xl text-gray-600 mb-4">Have questions? We're here to help.</p>
-    <p className="text-2xl font-semibold text-red-600">Email: roadroamcarrentals@gmail.com</p>
-    <p className="text-2xl font-semibold text-red-600">Phone: +91 7411243463</p>
+    <h2 className="text-4xl font-extrabold text-gray-300 mb-8">Get in Touch</h2>
+    <p className="text-xl text-gray-500 mb-4">Have questions? We're here to help.</p>
+    
+    {/* FIX: Use 'break-words' and 'text-wrap' to force long URLs/emails to break */}
+    <p className="text-[20px] font-semibold text-red-600 break-words text-wrap">
+      Email: roadroamcarrentals@gmail.com
+    </p>
+    
+    <p className="text-[20px] font-semibold text-red-600 break-words text-wrap">
+      phone: +91 7411243463
+    </p>
   </section>
 );
 

@@ -1,15 +1,19 @@
 // user-frontend/src/BookingForm.tsx
-// This file is now updated to use the red/black theme.
+// Includes professional integration of react-datepicker.
 
 import { useState } from 'react';
+import DatePicker from 'react-datepicker'; // <-- NEW
+import { format } from 'date-fns';        // <-- NEW
+import "react-datepicker/dist/react-datepicker.css"; // <-- NEW: Global DatePicker CSS
 
-// --- (Interfaces and consts remain the same) ---
+// --- INTERFACES AND CONSTANTS (Retained) ---
 interface BookingRequest {
   fullName: string;
   email: string;
   phoneNumber: string;
   aadharNumber?: string; 
   rentalServiceName: string; 
+  carModel: string;
   pickupDate: string;
   returnDate: string;
   pickupLocation: string;
@@ -17,17 +21,58 @@ interface BookingRequest {
 
 const rentalServices = [
   "Airport Pickup", "In-City Rental", "Outstation Rental",
-  "Corporate Rentals", "Event Rentals"
+  "Corporate Rentals", "Event Rentals", "Full-Day City Tour"
+];
+
+
+const carModels = [
+    "Dzire", "Ciaz",
+    "Ertiga", 
+    "Innova", "Crysta"
 ];
 
 const initialFormState: BookingRequest = {
   fullName: '', email: '', phoneNumber: '', aadharNumber: '',
   rentalServiceName: rentalServices[0], 
+  carModel: carModels[0],
   pickupDate: '', returnDate: '', pickupLocation: '',
 };
 
 const API_ROOT = import.meta.env.VITE_API_ROOT || ''; 
-// --- (End of setup) ---
+// ---------------------------------------------
+
+
+// --- Helper Component: Date Input ---
+// This handles the complexity of the DatePicker library
+const DateInput: React.FC<{ label: string; name: keyof BookingRequest; value: string; onChange: (date: Date | null, name: string) => void; required?: boolean }> = ({ label, name, value, onChange, required }) => {
+    
+    // Convert the stored ISO string (YYYY-MM-DD) back to a Date object for the DatePicker
+    const selectedDate = value ? new Date(value.replace(/-/g, '/')) : null;
+
+    return (
+      <div>
+        <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
+          {label}
+        </label>
+        
+        <DatePicker
+          selected={selectedDate}
+          // When the date changes, call the main form handler
+          onChange={(date: Date | null) => onChange(date, name)}
+          dateFormat="dd/MM/yyyy"
+          required={required}
+          minDate={new Date()} // Prevent booking in the past
+          placeholderText="DD/MM/YYYY"
+          showTimeSelect={false}
+          
+          // Apply your standard input styling
+          className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 transition duration-150"
+          id={name}
+        />
+      </div>
+    );
+  };
+// --------------------------------------
 
 
 // Main Component
@@ -36,10 +81,22 @@ export function BookingForm() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
 
-  // ... (handleChange and handleSubmit logic remains exactly the same) ...
+  // Handler for standard text/select inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  
+  // Handler for date picker changes (converts Date object to ISO string for storage)
+  const handleDateChange = (date: Date | null, name: string) => {
+    // We format the date to a simple ISO-like string (e.g., 2025-11-09) for submission
+    const formattedDate = date ? format(date, 'yyyy-MM-dd') : ''; 
+    setFormData((prev) => ({
+      ...prev,
+      [name]: formattedDate,
+    }));
+  };
+  
+  // Submission logic (remains the same)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
@@ -74,7 +131,7 @@ export function BookingForm() {
 
   return (
     <div 
-      id="booking-form" // Anchor link
+      id="booking-form"
       className="w-full max-w-4xl mx-auto p-8 md:p-12 bg-white rounded-xl shadow-2xl relative z-20"
     >
       <h2 className="text-3xl font-bold mb-8 text-center text-gray-900">
@@ -109,7 +166,6 @@ export function BookingForm() {
               value={formData.rentalServiceName}
               onChange={handleChange}
               required
-              // UPDATED: Focus ring is now red
               className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 transition duration-150"
             >
               {rentalServices.map(service => (
@@ -117,16 +173,44 @@ export function BookingForm() {
               ))}
             </select>
           </div>
-          <div className="grid grid-cols-2 gap-6">
-            <InputField label="Pick-up Date *" type="date" name="pickupDate" value={formData.pickupDate} onChange={handleChange} required />
-            <InputField label="Return Date *" type="date" name="returnDate" value={formData.returnDate} onChange={handleChange} required />
+
+          <div>
+  <label htmlFor="carModel" className="block text-sm font-medium text-gray-700 mb-1">Car Model *</label>
+  <select
+    id="carModel"
+    name="carModel"
+    value={formData.carModel}
+    onChange={handleChange}
+    required
+    className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 transition duration-150"
+  >
+    {carModels.map(model => (
+      <option key={model} value={model}>{model}</option>
+    ))}
+  </select>
+</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* NEW: Use the reliable DateInput component */}
+            <DateInput 
+              label="Pick-up Date *" 
+              name="pickupDate" 
+              value={formData.pickupDate} 
+              onChange={handleDateChange} 
+              required 
+            />
+            <DateInput 
+              label="Return Date *" 
+              name="returnDate" 
+              value={formData.returnDate} 
+              onChange={handleDateChange} 
+              required 
+            />
           </div>
           <InputField label="Pick-up Location" type="text" name="pickupLocation" value={formData.pickupLocation} onChange={handleChange} />
 
           <button
             type="submit"
             disabled={buttonDisabled}
-            // UPDATED: Button is now red
             className={`w-full py-4 px-4 rounded-lg shadow-lg text-xl font-bold text-white transition duration-300 ease-in-out transform hover:scale-105 ${
               buttonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300'}`
             }
@@ -138,7 +222,7 @@ export function BookingForm() {
   );
 }
 
-// --- InputField Helper Component ---
+// --- InputField Helper Component (For non-date fields) ---
 interface InputFieldProps {
   label: string;
   type: string;
@@ -160,7 +244,6 @@ const InputField: React.FC<InputFieldProps> = ({ label, type, name, value, onCha
       value={value || ''}
       onChange={onChange}
       required={required}
-      // UPDATED: Focus ring is now red
       className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 transition duration-150"
     />
   </div>

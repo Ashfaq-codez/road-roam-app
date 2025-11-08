@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     -- MODIFIED: Stores the user's selected service name as plain text
     rental_service_name TEXT NOT NULL, 
     
+    car_model TEXT NOT NULL,
     -- Booking details
     pickup_date TEXT NOT NULL, -- Stored as ISO 8601 string (e.g., '2025-12-01')
     return_date TEXT NOT NULL,

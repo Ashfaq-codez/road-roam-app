@@ -10,6 +10,7 @@
 /* 3. Set the base font and background for the site */
 @layer base {
   html {
+    scroll-behavior: smooth;
     /* Apply the Poppins font */
     font-family: 'Poppins', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -31,5 +32,49 @@
     color-scheme: dark; 
     color: #f0f0f0;
     background-color: #1a1a1a;
+
+    
   }
+  .react-datepicker {
+  /* Gives the calendar a clean shadow and rounded corners */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-family: 'Poppins', sans-serif;
+}
+
+/* 2. Header (Month/Year View) */
+.react-datepicker__header {
+  /* Uses a light brand color for the header background */
+  background-color: #f7fafc; 
+  border-bottom: 1px solid #ddd;
+  padding-top: 8px;
+}
+
+/* 3. Day Titles (Mon, Tue, Wed, etc.) */
+.react-datepicker__day-name {
+  /* Uses dark text for day names */
+  color: #333;
+  font-weight: 600;
+}
+
+/* 4. Selected Day (The brand accent color) */
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  /* Uses your red brand accent color */
+  background-color: #dc2626 !important; /* Red-600 */
+  color: white !important;
+  border-radius: 50%;
+  font-weight: 500;
+}
+
+/* 5. Day Hover State */
+.react-datepicker__day:hover {
+  /* Light hover effect */
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+
+
 }

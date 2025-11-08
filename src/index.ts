@@ -10,6 +10,7 @@ interface BookingRequest {
   phoneNumber: string;
   aadharNumber?: string; 
   rentalServiceName: string; 
+  carModel: string;
   pickupDate: string;
   returnDate: string;
   pickupLocation: string;
@@ -22,6 +23,7 @@ interface BookingRecord {
   phone_number: string;
   aadhar_number: string | null;
   rental_service_name: string;
+  car_model: string;
   pickup_date: string;
   return_date: string;
   pickup_location: string;
@@ -63,7 +65,7 @@ app.post('/api/bookings', async (c) => {
     try {
         const bookingData: BookingRequest = await c.req.json(); 
         const result = await env.DB.prepare(
-          `INSERT INTO bookings (full_name, email, phone_number, aadhar_number, rental_service_name, pickup_date, return_date, pickup_location)
+          `INSERT INTO bookings (full_name, email, phone_number, aadhar_number, rental_service_name, car_model, pickup_date, return_date, pickup_location)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
         ).bind(
           bookingData.fullName,
@@ -71,6 +73,7 @@ app.post('/api/bookings', async (c) => {
           bookingData.phoneNumber,
           bookingData.aadharNumber || null, 
           bookingData.rentalServiceName,
+          bookingData.carModel, // <-- NEW BINDING
           bookingData.pickupDate,
           bookingData.returnDate,
           bookingData.pickupLocation
@@ -114,11 +117,12 @@ app.patch('/api/admin/bookings/:id', async (c) => {
         const updateData: BookingUpdateData = await c.req.json();
         const existingBooking = await env.DB.prepare(`SELECT * FROM bookings WHERE id = ?`).bind(bookingId).first<BookingRecord>();
         if (!existingBooking) return c.text('Booking Not Found', 404);
-        const updateQuery = `UPDATE bookings SET full_name = ?, email = ?, phone_number = ?, aadhar_number = ?, rental_service_name = ?, pickup_date = ?, return_date = ?, pickup_location = ?, status = ? WHERE id = ?`;
+        const updateQuery = `UPDATE bookings SET full_name = ?, email = ?, phone_number = ?, aadhar_number = ?, rental_service_name = ?,car_model = ?, pickup_date = ?, return_date = ?, pickup_location = ?, status = ? WHERE id = ?`;
         const result = await env.DB.prepare(updateQuery).bind(
             updateData.fullName ?? existingBooking.full_name, updateData.email ?? existingBooking.email,
             updateData.phoneNumber ?? existingBooking.phone_number, updateData.aadharNumber ?? existingBooking.aadhar_number, 
-            updateData.rentalServiceName ?? existingBooking.rental_service_name, updateData.pickupDate ?? existingBooking.pickup_date,
+            updateData.rentalServiceName ?? existingBooking.rental_service_name,
+            updateData.carModel ?? existingBooking.car_model, updateData.pickupDate ?? existingBooking.pickup_date,
             updateData.returnDate ?? existingBooking.return_date, updateData.pickupLocation ?? existingBooking.pickup_location,
             updateData.status ?? existingBooking.status, bookingId 
         ).run();
