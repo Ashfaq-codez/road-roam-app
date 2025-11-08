@@ -1,7 +1,7 @@
 // user-frontend/src/BookingForm.tsx
 // This file is now updated to use the red/black theme.
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // --- (Interfaces and consts remain the same) ---
 interface BookingRequest {

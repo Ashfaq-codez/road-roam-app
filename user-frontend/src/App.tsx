@@ -1,6 +1,6 @@
 // user-frontend/src/App.tsx
 
-import React from 'react';
+// import React from 'react';
 // BookingForm is used for the booking section logic
 import { BookingForm } from './BookingForm'; 
 import { 

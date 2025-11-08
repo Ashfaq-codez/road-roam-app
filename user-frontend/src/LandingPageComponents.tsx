@@ -1,7 +1,7 @@
 // user-frontend/src/LandingPageComponents.tsx
 // This file contains all the new sections you requested.
 
-import React from 'react';
+// import React from 'react';
 
 // --- 1. Header Component ---
 export const Header = () => (
