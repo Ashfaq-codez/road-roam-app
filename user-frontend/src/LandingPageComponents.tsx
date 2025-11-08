@@ -1,42 +1,98 @@
 // user-frontend/src/LandingPageComponents.tsx
 // This file contains all the new sections you requested.
 
-// import React from 'react';
+import React, { useState } from 'react'; // <-- useState is needed for the mobile menu
 
-// --- 1. Header Component ---
-export const Header = () => (
-  <header className="bg-white shadow-md sticky top-0 z-50">
-    <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-      
-      {/* NEW LOGO: "Road" is black, "Roam" is red */}
-      <div className="text-3xl font-extrabold">
-        <span className="text-black">Road</span>
-        <span className="text-red-600">Roam</span>
-      </div>
-      
-      <div className="space-x-4">
-        {/* Navigation links with red hover */}
-        <a href="#services" className="text-gray-600 hover:text-red-600 font-medium transition-colors">Services</a>
-        <a href="#fleet" className="text-gray-600 hover:text-red-600 font-medium transition-colors">Our Fleet</a>
-        <a href="#destinations" className="text-gray-600 hover:text-red-600 font-medium transition-colors">Destinations</a>
-        <a href="#contact" className="text-gray-600 hover:text-red-600 font-medium transition-colors">Contact</a>
+// --- 1. Header Component (Responsive with Hamburger) ---
+export const Header = () => {
+  // State to control the mobile menu visibility
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <header className="bg-white shadow-md sticky top-0 z-50">
+      <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
         
-        {/* "Book Now" button with red theme */}
-        <a 
-          href="#booking-form" 
-          className="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 transition-all duration-300 transform hover:scale-105"
+        {/* Logo (Always Visible) */}
+        <div className="text-3xl font-extrabold z-50">
+          <span className="text-black">Road</span>
+          <span className="text-red-600">Roam</span>
+        </div>
+        
+        {/* 1. Mobile Menu Button (Visible only on small screens) */}
+        <button 
+          className="md:hidden text-2xl p-2 focus:outline-none focus:ring-2 focus:ring-red-500 rounded z-50"
+          onClick={() => setIsOpen(!isOpen)}
         >
-          Book Now
-        </a>
+          {/* Toggle between hamburger and close icon */}
+          {isOpen ? '✕' : '☰'} 
+        </button>
+        
+        {/* 2. Desktop Navigation (Visible on md screens and up) */}
+        <div className="hidden md:flex space-x-4 items-center">
+          <NavLink href="#services">Services</NavLink>
+          <NavLink href="#fleet">Our Fleet</NavLink>
+          <NavLink href="#destinations">Destinations</NavLink>
+          <NavLink href="#contact">Contact</NavLink>
+          
+          <a 
+            href="#booking-form" 
+            className="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 transition-all duration-300 transform hover:scale-105"
+          >
+            Book Now
+          </a>
+        </div>
+      </nav>
+
+      {/* 3. Mobile Dropdown Menu (Conditionally Renders) */}
+      <div 
+        className={`fixed top-0 left-0 w-full h-full bg-black bg-opacity-90 transition-transform duration-300 transform md:hidden ${
+          isOpen ? 'translate-x-0' : '-translate-x-full' // Slide in/out transition
+        } z-40 p-6`}
+        // Ensure the screen doesn't scroll when the menu is open
+        style={{ overflowY: 'auto' }}
+      >
+        <div className="flex flex-col space-y-6 pt-20">
+          <MobileNavLink href="#services" onClick={() => setIsOpen(false)}>Services</MobileNavLink>
+          <MobileNavLink href="#fleet" onClick={() => setIsOpen(false)}>Our Fleet</MobileNavLink>
+          <MobileNavLink href="#destinations" onClick={() => setIsOpen(false)}>Destinations</MobileNavLink>
+          <MobileNavLink href="#contact" onClick={() => setIsOpen(false)}>Contact</MobileNavLink>
+          
+          <a 
+            href="#booking-form" 
+            onClick={() => setIsOpen(false)}
+            className="mt-4 bg-red-600 text-white font-bold py-3 px-6 text-center rounded-lg hover:bg-red-700 transition"
+          >
+            Book Now
+          </a>
+        </div>
       </div>
-    </nav>
-  </header>
+
+    </header>
+  );
+};
+
+// --- Helper Components ---
+// Desktop Link
+const NavLink: React.FC<{ href: string, children: React.ReactNode }> = ({ href, children }) => (
+  <a href={href} className="text-gray-600 hover:text-red-600 font-medium transition-colors">
+    {children}
+  </a>
+);
+
+// Mobile Link (Full width, white text for dark overlay)
+const MobileNavLink: React.FC<{ href: string, onClick: () => void, children: React.ReactNode }> = ({ href, onClick, children }) => (
+  <a 
+    href={href} 
+    onClick={onClick}
+    className="text-white text-3xl font-extrabold hover:text-red-500 transition-colors block border-b border-gray-700 pb-3"
+  >
+    {children}
+  </a>
 );
 
 // --- 2. Hero Component (Adjusted for Mobile Safety) ---
 export const Hero = () => (
   <div 
-    // FIX: Using min-h-[70vh] and py-20 makes it safer than h-screen on mobile
     className="relative min-h-[70vh] py-20 flex items-center justify-center bg-cover bg-center" 
     style={{ backgroundImage: "url('https://images.unsplash.com/photo-1517524008697-84bbe3c3afd9?q=80&w=2070')" }}
   >
