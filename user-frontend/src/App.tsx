@@ -1,8 +1,8 @@
 // user-frontend/src/App.tsx
-// This is your new homepage, assembling all the components.
 
-// import React from 'react';
-import { BookingForm } from './BookingForm';
+import React from 'react';
+// BookingForm is used for the booking section logic
+import { BookingForm } from './BookingForm'; 
 import { 
   Header, 
   Hero, 
@@ -16,7 +16,8 @@ import {
 
 function App() {
   return (
-    <div className="font-poppins"> {/* Font is applied from index.css */}
+    // FINAL FIX: Add overflow-x-hidden to prevent the horizontal scroll bar on mobile
+    <div className="font-poppins overflow-x-hidden"> 
       
       {/* 1. Sticky Header */}
       <Header />
