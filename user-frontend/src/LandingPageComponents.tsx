@@ -255,8 +255,8 @@ export const Contact = () => (
   <section id="contact" className="container mx-auto px-6 py-20 text-center">
     <h2 className="text-4xl font-extrabold text-gray-900 mb-8">Get in Touch</h2>
     <p className="text-xl text-gray-600 mb-4">Have questions? We're here to help.</p>
-    <p className="text-2xl font-semibold text-red-600">Email: support@roadroam.com</p>
-    <p className="text-2xl font-semibold text-red-600">Phone: +91 98765 43210</p>
+    <p className="text-2xl font-semibold text-red-600">Email: roadroamcarrentals@gmail.com</p>
+    <p className="text-2xl font-semibold text-red-600">Phone: +91 7411243463</p>
   </section>
 );
 
