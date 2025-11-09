@@ -6,6 +6,7 @@ import { BookingForm } from './BookingForm';
 import { 
   Header, 
   Hero, 
+  AboutUs,
   Services, 
   Fleet, 
   Destinations, 
@@ -25,6 +26,9 @@ function App() {
       <main>
         {/* 2. Full-screen Hero Image */}
         <Hero />
+        
+        {/* 2. NEW: About Us / Value Proposition */}
+        <AboutUs />
         
         {/* 3. Our Services Section */}
         <Services />

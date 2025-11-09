@@ -132,6 +132,108 @@ export const Hero = () => (
   </div>
 );
 
+// --- NEW COMPONENT: About Us Section ---
+export const AboutUs = () => (
+  <section id="about" className="bg-white px-6 py-20 shadow-inner">
+    <div className="container mx-auto max-w-5xl">
+      <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12 border-b pb-4">
+        Why Choose <span className="text-red-600">Road Roam</span>?
+      </h2>
+      
+      {/* Container for the 3 cards (responsive grid) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        
+        {/* Card 1: Certified Safety & Tracking (Remains ValueCard) */}
+        <ValueCard 
+          imgSrc="/images/certified.jpg" 
+          title="Certified Safety & Tracking" 
+          description="All vehicles are equipped with real-time GPS tracking. We prioritize the safety of women and solo travelers with 24/7 monitoring."
+        />
+        
+        {/* CRITICAL FIX: Use the new ChauffeurCard for this entry */}
+        <ChauffeurCard 
+          imgSrc="/images/chauffeur.jpg" 
+          title="Expert Chauffeur Driven" 
+          description="Travel stress-free with our vetted, professional drivers. Focus on your journey while we handle the traffic and navigation."
+        />
+        
+        {/* Card 3: Best Value Guaranteed (Remains ValueCard) */}
+        <ValueCard 
+          imgSrc="/images/rupee.jpg" // Using the direct Rupee symbol
+          title="Best Value Guaranteed" 
+          description="Premium, well-maintained cars at the most competitive rates in the market. Get the best possible service without overpaying."
+        />
+        
+      </div>
+      
+      {/* Footer message on quality */}
+      <p className="mt-12 font-bold text-center text-[25px] text-gray-700 border-t pt-4">
+          Easy to Avail, transparent pricing, and quality vehicles for a truly reliable rental experience.
+      </p>
+    </div>
+  </section>
+);
+// --- NEW HELPER: Value Card (Final Vertical/Circle Layout) ---
+const ValueCard: React.FC<{icon?: string, title: string, description: string, imgSrc?: string}> = ({ title, description, imgSrc }) => (
+  // Main Card Wrapper: Ensures it fits nicely in a row
+  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 text-center w-full transform hover:scale-[1.02] transition duration-300">
+    
+    {/* CRITICAL FIX: Image/Icon on TOP (using circular image holder) */}
+    <div className="flex items-center justify-center mb-4">
+      {imgSrc ? (
+        <div className="w-24 h-24 rounded-full overflow-hidden shadow-md">
+          <img 
+            src={imgSrc} 
+            alt={title} 
+            className="w-full h-full object-cover" 
+          />
+        </div>
+      ) : (
+        // Icon Styling: Center the icon and use brand colors
+        <div className="text-5xl flex items-center justify-center w-24 h-24 bg-gray-200 rounded-full text-red-600">
+          
+        </div>
+      )}
+    </div>
+    
+    {/* Text Content (Bottom) */}
+    <div className="p-2 flex flex-col justify-center">
+      <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+      <p className="text-sm text-gray-600">{description}</p>
+    </div>
+  </div>
+);
+
+// --- NEW COMPONENT: ChauffeurCard (Harmonized Look) ---
+interface ChauffeurCardProps {
+  imgSrc: string;
+  title: string;
+  description: string;
+}
+
+export const ChauffeurCard: React.FC<ChauffeurCardProps> = ({ imgSrc, title, description }) => (
+  // 1. Uniform Card Style: Use the same white background, padding, and shadow as ValueCard
+  <div 
+    className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 text-center 
+               w-full transform hover:scale-[1.02] transition duration-300"
+  >
+    {/* Image Section (CRITICAL FIX: Removed h-72 and centered content for better alignment) */}
+    <div className="relative h-48 overflow-hidden flex items-center justify-center bg-gray-50 rounded-lg mb-4">
+      <img 
+        src={imgSrc} 
+        alt={title} 
+        className="object-cover w-full h-full" 
+      />
+    </div>
+    
+    {/* Text Content Section (Bottom Half - Aligned for consistency) */}
+    <div className="text-center">
+      <h3 className="text-2xl font-bold text-gray-900 mb-2">{title}</h3>
+      <p className="text-sm text-gray-600">{description}</p>
+    </div>
+  </div>
+);
+
 // --- 3. Services Component ---
 export const Services = () => (
   <section id="services" className="container mx-auto px-6 py-20">
