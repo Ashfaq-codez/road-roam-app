@@ -2,7 +2,7 @@
 // user-frontend/src/LandingPageComponents.tsx
 
 import React, { useState } from 'react'; 
-import { useInView } from 'react-intersection-observer';
+// import { useInView } from 'react-intersection-observer';
 
 // --- 1. Header Component (Updated with Sub-Logo) ---
 export const Header = () => {
