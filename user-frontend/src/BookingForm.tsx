@@ -159,16 +159,7 @@ export function BookingForm() {
         Reserve Your Vehicle
       </h2>
       
-      {status !== 'idle' && message && (
-          <div className={`p-4 mb-6 rounded-lg font-medium border ${
-              status === 'success' 
-                  ? 'bg-green-100 text-green-700 border-green-400' 
-                  : 'bg-red-100 text-red-700 border-red-400'
-          }`}>
-              {message}
-          </div>
-      )}
-
+      
       <form onSubmit={handleSubmit} className="space-y-6">
           <h3 className="text-xl font-semibold border-b pb-2 mb-4 text-gray-800">Your Contact Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -238,6 +229,16 @@ export function BookingForm() {
           >
             {status === 'loading' ? 'Submitting Reservation...' : 'Submit Reservation'}
           </button>
+          {status !== 'idle' && message && (
+          <div className={`p-4 mb-6 rounded-lg font-medium border ${
+              status === 'success' 
+                  ? 'bg-green-100 text-green-700 border-green-400' 
+                  : 'bg-red-100 text-red-700 border-red-400'
+          }`}>
+              {message}
+          </div>
+      )}
+
       </form>
     </div>
   );
