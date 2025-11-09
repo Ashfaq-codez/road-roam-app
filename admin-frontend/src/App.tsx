@@ -94,7 +94,7 @@ function AdminDashboard() {
         <div className="mb-8">
           <h1 className="text-5xl font-extrabold text-white mb-2">
             <span className="text--200">Road</span>
-            <span className="text-red-600">Roam</span> Admin
+            <span className="text-red-600">Roam </span> - Admin
           </h1>
           <p className="text-lg text-gray-400">
               {bookings.length} Total Bookings - Data Management Console
@@ -118,6 +118,7 @@ function AdminDashboard() {
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Service</th>
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Status</th>
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Booked On</th>
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Pick Up</th>
                   <th className="px-6 py-3 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">Action</th>
                 </tr>
               </thead>
@@ -144,6 +145,9 @@ function AdminDashboard() {
                     
                     {/* Date */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{new Date(booking.created_at).toLocaleDateString()}</td>
+
+                    {/* Pick-Up */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{new Date(booking.pickup_date).toLocaleDateString()}</td>
                     
                     {/* Action Button (Red contrast) */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
@@ -151,7 +155,7 @@ function AdminDashboard() {
                           to={`/booking/${booking.id}`} 
                           className="text-red-500 hover:text-red-400 font-semibold transition"
                         >
-                            View / Edit
+                            View 
                         </Link>
                     </td>
                   </tr>

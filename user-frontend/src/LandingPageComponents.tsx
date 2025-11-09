@@ -110,7 +110,7 @@ export const Hero = () => (
   <div className="relative min-h-[70vh] py-20 flex items-center justify-center overflow-hidden">
   {/* Blurred Background */}
   <div
-    className="absolute inset-0 bg-cover bg-center blur-[5px] scale-105"
+    className="absolute inset-0 bg-cover bg-center blur-[2px] scale-105"
     style={{ backgroundImage: "url('/images/main_1.jpg')" }}
   />
 
