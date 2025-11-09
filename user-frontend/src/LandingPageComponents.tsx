@@ -287,7 +287,7 @@ export const Fleet = () => (
         <FleetCard 
           name="Dzire" 
           description="Comfortable and economical for city rides and small families." 
-          imgSrc="/images/swift.jpg" 
+          imgSrc="/images/dzire.jpg" 
         />
         <FleetCard 
           name="Ciaz" 
@@ -302,12 +302,17 @@ export const Fleet = () => (
         <FleetCard 
           name="Innova" 
           description="Spacious, powerful, and perfect for outstation trips or large groups." 
-          imgSrc="/images/main.jpg" 
+          imgSrc="/images/innova.jpg" 
         />
         <FleetCard 
           name="Crysta" 
           description="Arrive in style. Our luxury fleet is available for the journey." 
           imgSrc="/images/crysta.jpeg" 
+        />
+        <FleetCard 
+          name="Hycross" 
+          description="Arrive in style. Our luxury fleet is available for the journey." 
+          imgSrc="/images/hycross.png" 
         />
       </div>
     </div>

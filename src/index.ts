@@ -92,7 +92,7 @@ app.get('/api/admin/bookings', async (c) => {
     const env = c.env;
     try {
         const { results } = await env.DB.prepare(
-          `SELECT id, full_name, rental_service_name, pickup_date, status, created_at FROM bookings ORDER BY created_at DESC`
+          `SELECT id, full_name, rental_service_name, car_model, pickup_date, status, created_at FROM bookings ORDER BY created_at DESC`
         ).all<BookingRecord>(); 
         return c.json(results); 
     } catch (error) {
@@ -117,7 +117,7 @@ app.patch('/api/admin/bookings/:id', async (c) => {
         const updateData: BookingUpdateData = await c.req.json();
         const existingBooking = await env.DB.prepare(`SELECT * FROM bookings WHERE id = ?`).bind(bookingId).first<BookingRecord>();
         if (!existingBooking) return c.text('Booking Not Found', 404);
-        const updateQuery = `UPDATE bookings SET full_name = ?, email = ?, phone_number = ?, aadhar_number = ?, rental_service_name = ?,car_model = ?, pickup_date = ?, return_date = ?, pickup_location = ?, status = ? WHERE id = ?`;
+        const updateQuery = `UPDATE bookings SET full_name = ?, email = ?, phone_number = ?, aadhar_number = ?, rental_service_name = ?, car_model = ?, pickup_date = ?, return_date = ?, pickup_location = ?, status = ? WHERE id = ?`;
         const result = await env.DB.prepare(updateQuery).bind(
             updateData.fullName ?? existingBooking.full_name, updateData.email ?? existingBooking.email,
             updateData.phoneNumber ?? existingBooking.phone_number, updateData.aadharNumber ?? existingBooking.aadhar_number, 

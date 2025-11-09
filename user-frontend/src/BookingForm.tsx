@@ -28,7 +28,7 @@ const rentalServices = [
 const carModels = [
     "Dzire", "Ciaz",
     "Ertiga", 
-    "Innova", "Crysta"
+    "Innova", "Crysta", "Hycross"
 ];
 
 const initialFormState: BookingRequest = {
@@ -101,17 +101,38 @@ export function BookingForm() {
     e.preventDefault();
     setStatus('loading');
     setMessage('');
+
     try {
-      if (!formData.fullName || !formData.email || !formData.pickupDate) {
+      // 1. Validation (remains the same)
+      if (!formData.fullName || !formData.email || !formData.pickupDate || !formData.carModel) {
         setStatus('error');
         setMessage("❌ Please fill out all required fields.");
         return; 
       }
+
+      // 2. CRITICAL FIX: Explicitly create a clean object for the API payload
+      const payload = {
+        fullName: formData.fullName,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        aadharNumber: formData.aadharNumber,
+        carModel: formData.carModel,
+        pickupDate: formData.pickupDate,
+        returnDate: formData.returnDate,
+        pickupLocation: formData.pickupLocation,
+        rentalServiceName: formData.rentalServiceName,
+      };
+      
+      // 3. API Call: Use the 'body' property of the fetch request
       const response = await fetch(`${API_ROOT}/api/bookings`, { 
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData), 
+        headers: { 
+            'Content-Type': 'application/json' 
+        },
+        // FIX: The payload MUST be stringified and assigned to the 'body' property
+        body: JSON.stringify(payload), 
       });
+
       if (response.ok) { 
         setStatus('success');
         setMessage('✅ Your booking request was successfully submitted! An admin will contact you shortly.');

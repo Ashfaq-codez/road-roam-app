@@ -8,4 +8,6 @@ export default defineConfig({
     react(),
     tailwindcss(), // <-- 2. Add the plugin here
   ],
+  
+  
 })
