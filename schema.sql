@@ -25,6 +25,11 @@
 
 -- road-roam-worker/schema.sql
 
+-- road-roam-worker/schema.sql
+
+-- WARNING: This deletes all data in the bookings table, but guarantees the schema is correct.
+DROP TABLE IF EXISTS bookings;
+
 CREATE TABLE IF NOT EXISTS bookings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     full_name TEXT NOT NULL,
@@ -32,7 +37,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     phone_number TEXT,
     aadhar_number TEXT,
     rental_service_name TEXT NOT NULL, 
-    car_model TEXT NOT NULL, -- This is the missing column
+    car_model TEXT NOT NULL, -- **This is the critical column**
     pickup_date TEXT NOT NULL,
     return_date TEXT NOT NULL,
     pickup_location TEXT,
