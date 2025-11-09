@@ -377,14 +377,14 @@ const DestinationCard: React.FC<{name: string, imgSrc: string}> = ({ name, imgSr
 export const Packages = () => (
   <section id="packages" className="bg-gray-100 px-6 py-20">
     <div className="container mx-auto">
-      <h2 className="text-4xl font-extrabold text-center text-red-600 mb-12">Tour Packages</h2>
+      <h2 className="text-4xl font-extrabold text-center text-red-600 mb-12">Standard Package</h2>
       <div className="flex flex-col md:flex-row justify-center gap-8">
         {/* <PackageCard 
           title="Half-Day City Tour" 
           details="4 Hours / 40 KMs. Covers 2-3 major spots."
         /> */}
         <PackageCard 
-          title="City Transfers" 
+          title="City Rides" 
           // price="₹2,500" 
           details="8 Hours / 80 KMs. Explore all of Bangalore's highlights with our Standard package."
         />

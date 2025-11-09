@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 // --- (Interfaces, consts, API_ROOT, etc. remain the same) ---
-const API_ROOT = import.meta.env.VITE_API_ROOT || 'https://road-roam-api.ashrahman777.workers.dev';
+const API_ROOT = import.meta.env.VITE_API_ROOT || '';
 interface BookingRecord {
   id: number; full_name: string; email: string; phone_number: string; aadhar_number: string | null;
   rental_service_name: string; car_model: string; pickup_date: string; return_date: string; pickup_location: string;

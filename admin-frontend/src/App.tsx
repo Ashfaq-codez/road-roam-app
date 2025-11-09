@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
 // --- PRODUCTION CONFIGURATION ---
-const API_ROOT = import.meta.env.VITE_API_ROOT || 'https://road-roam-api.ashrahman777.workers.dev';
+const API_ROOT = import.meta.env.VITE_API_ROOT || '';
 // --------------------------------
 
 // 1. INTERFACE

@@ -155,8 +155,8 @@ export function BookingForm() {
       id="booking-form"
       className="w-full max-w-4xl mx-auto p-8 md:p-12 bg-white rounded-xl shadow-2xl relative z-20"
     >
-      <h2 className="text-3xl font-bold mb-8 text-center text-gray-900">
-        Reserve Your Vehicle
+      <h2 className="text-[40px] font-bold mb-8 text-center text-gray-900">
+        Book Your Vehicle
       </h2>
       
       

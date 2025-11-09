@@ -2,6 +2,7 @@
 
 import { Hono } from 'hono';
 import { cors } from 'hono/cors'; 
+// import { Resend } from 'resend';
 
 // --- 1. INTERFACES (Must be kept) ---
 interface BookingRequest {
@@ -150,13 +151,47 @@ app.all('*', (c) => {
 // --- 5. Worker Export (Using the most standard export) ---
 export default app;
 
-// --- Separate function for cleaner, readable email logic (Remains the same) ---
+// --- Separate function for cleaner, readable email logic ---
 async function sendAdminNotification(bookingData: BookingRequest, env: Env) {
-    const subject = `NEW ROAD ROAM BOOKING: ${bookingData.rentalServiceName}`;
-    const body = `<h1>New Booking Received!</h1><p>Service: <strong>${bookingData.rentalServiceName}</strong></p><p>Name: ${bookingData.fullName}</p><p>Email: ${bookingData.email}</p><p>Phone: ${bookingData.phoneNumber}</p><p>Dates: ${bookingData.pickupDate} to ${bookingData.returnDate}</p><p>Location: ${bookingData.pickupLocation}</p>${bookingData.aadharNumber ? `<p>Aadhar: ${bookingData.aadharNumber}</p>` : ''}`;
-    await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from: 'bookings@road-roam.com', to: 'admin@road-roam.com', subject: subject, html: body }),
+  const subject = `NEW ROAD ROAM BOOKING: ${bookingData.rentalServiceName}`;
+  const body = `<h1>New Booking Received!</h1>
+    <p>Service: <strong>${bookingData.rentalServiceName}</strong></p>
+    <p>Name: ${bookingData.fullName}</p>
+    <p>Email: ${bookingData.email}</p>
+    <p>Phone: ${bookingData.phoneNumber}</p>
+    <p>Dates: ${bookingData.pickupDate} to ${bookingData.returnDate}</p>
+    <p>Location: ${bookingData.pickupLocation}</p>
+    ${bookingData.aadharNumber ? `<p>Aadhar: ${bookingData.aadharNumber}</p>` : ''}`;
+
+  // defensive checks
+  if (!env.RESEND_API_KEY) {
+    console.error('sendAdminNotification: RESEND_API_KEY is not configured.');
+    return;
+  }
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'roadroamBooking <onboarding@resend.dev>',
+        to: ['roadroamcarrentals@gmail.com'], // test address
+        subject,
+        html: body,
+      }),
     });
+
+    const text = await res.text();
+    if (!res.ok) {
+      console.error(`Resend API returned ${res.status}: ${text}`);
+    } else {
+      // log the response id lightly (don't print secret)
+      console.log('Resend API success:', res.status, text.slice(0, 300));
+    }
+  } catch (err) {
+    console.error('sendAdminNotification: fetch error', err);
+  }
 }
