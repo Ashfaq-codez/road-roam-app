@@ -66,7 +66,7 @@ app.post('/api/bookings', async (c) => {
         const bookingData: BookingRequest = await c.req.json(); 
         const result = await env.DB.prepare(
           `INSERT INTO bookings (full_name, email, phone_number, aadhar_number, rental_service_name, car_model, pickup_date, return_date, pickup_location)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
         ).bind(
           bookingData.fullName,
           bookingData.email,
