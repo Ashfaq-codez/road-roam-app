@@ -2,6 +2,7 @@
 // user-frontend/src/LandingPageComponents.tsx
 
 import React, { useState } from 'react'; 
+import { useInView } from 'react-intersection-observer';
 
 // --- 1. Header Component (Updated with Sub-Logo) ---
 export const Header = () => {
@@ -119,7 +120,7 @@ export const Hero = () => (
         Your Journey, Our <span className="text-red-500">Wheels</span>, Explore With Ease.
       </h1>
       <p className="text-xl md:text-2xl font-light mb-8 drop-shadow-md">
-        Explore Bangalore and beyond with Road Roam's reliable rental fleet.
+        Travel stress-free with Road Roam’s chauffeur-driven rentals
       </p>
       <a 
         href="#booking-form" 
@@ -152,17 +153,28 @@ export const Services = () => (
         title="Corporate Rentals" 
         description="Premium vehicles and professional chauffeurs for your business needs." 
       />
+      <ServiceCard 
+        title="Event Rentals" 
+        description="Premium vehicles and professional chauffeurs for your Event needs." 
+      />
     </div>
   </section>
 );
 
 // Helper for Service Card (Updated with Red Theme)
+// Helper for Service Card (Updated for Hover Animation)
 const ServiceCard: React.FC<{title: string, description: string}> = ({ title, description }) => (
-  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-2xl hover:border-red-500 transition duration-300">
+  <div 
+    // CRITICAL FIX: Added transform, transition, and hover classes
+    className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 
+               transform transition-all duration-300 ease-in-out 
+               hover:shadow-2xl hover:scale-[1.02] hover:border-red-500 cursor-pointer"
+  >
     <h3 className="text-2xl font-bold text-red-600 mb-3">{title}</h3>
     <p className="text-gray-600">{description}</p>
   </div>
 );
+
 
 // --- 4. Fleet Component ---
 export const Fleet = () => (
