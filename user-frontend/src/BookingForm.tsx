@@ -20,8 +20,8 @@ interface BookingRequest {
 }
 
 const rentalServices = [
-  "Airport Pickup", "In-City Rental", "Outstation Rental",
-  "Corporate Rentals", "Event Rentals", "Full-Day City Tour"
+  "Airport Rides", "City Transfers", "Tours & Excursions",
+  "Corporate Rentals", "Event Rentals"
 ];
 
 

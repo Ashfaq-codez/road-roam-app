@@ -136,7 +136,7 @@ export const Hero = () => (
 export const AboutUs = () => (
   <section id="about" className="bg-white px-6 py-20 shadow-inner">
     <div className="container mx-auto max-w-5xl">
-      <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12 border-b pb-4">
+      <h2 className="text-[47px] font-extrabold text-center text-gray-900 mb-12 border-b pb-4">
         Why Choose <span className="text-red-600">Road Roam</span>?
       </h2>
       
@@ -152,7 +152,7 @@ export const AboutUs = () => (
         
         {/* CRITICAL FIX: Use the new ChauffeurCard for this entry */}
         <ChauffeurCard 
-          imgSrc="/images/chauffeur.jpg" 
+          imgSrc="/images/chauffeur.png" 
           title="Expert Chauffeur Driven" 
           description="Travel stress-free with our vetted, professional drivers. Focus on your journey while we handle the traffic and navigation."
         />
@@ -240,11 +240,11 @@ export const Services = () => (
     <h2 className="text-4xl font-extrabold text-center text-yellow-400 mb-12">Our Services</h2>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       <ServiceCard 
-        title="In-City Rentals" 
+        title="City Rides" 
         description="Explore Bangalore at your own pace. Perfect for sightseeing, shopping, or business meetings." 
       />
       <ServiceCard 
-        title="Airport Transfers" 
+        title="Airport Rides" 
         description="Reliable, on-time pickups and drops to Kempegowda International Airport." 
       />
       <ServiceCard 
@@ -284,15 +284,16 @@ export const Fleet = () => (
     <div className="container mx-auto">
       <h2 className="text-4xl font-extrabold text-center text-red-600 mb-12">Our Fleet</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <FleetCard 
-          name="Dzire" 
-          description="Comfortable and economical for city rides and small families." 
-          imgSrc="/images/dzire.jpg" 
-        />
+        
         <FleetCard 
           name="Ciaz" 
           description="Comfortable and economical for city rides and small families." 
           imgSrc="/images/ciaz.png" 
+        />
+        <FleetCard 
+          name="Dzire" 
+          description="Comfortable and economical for city rides and small families." 
+          imgSrc="/images/dzire.jpg" 
         />
         <FleetCard 
           name="Ertiga" 
@@ -300,14 +301,14 @@ export const Fleet = () => (
           imgSrc="/images/ertiga.jpeg" 
         />
         <FleetCard 
-          name="Innova" 
-          description="Spacious, powerful, and perfect for outstation trips or large groups." 
-          imgSrc="/images/innova.jpg" 
-        />
-        <FleetCard 
           name="Crysta" 
           description="Arrive in style. Our luxury fleet is available for the journey." 
           imgSrc="/images/crysta.jpeg" 
+        />
+        <FleetCard 
+          name="Innova" 
+          description="Spacious, powerful, and perfect for outstation trips or large groups." 
+          imgSrc="/images/innova.jpg" 
         />
         <FleetCard 
           name="Hycross" 
@@ -376,16 +377,16 @@ const DestinationCard: React.FC<{name: string, imgSrc: string}> = ({ name, imgSr
 export const Packages = () => (
   <section id="packages" className="bg-gray-100 px-6 py-20">
     <div className="container mx-auto">
-      <h2 className="text-4xl font-extrabold text-center text-red-600 mb-12">City Tour Packages</h2>
+      <h2 className="text-4xl font-extrabold text-center text-red-600 mb-12">Tour Packages</h2>
       <div className="flex flex-col md:flex-row justify-center gap-8">
         {/* <PackageCard 
           title="Half-Day City Tour" 
           details="4 Hours / 40 KMs. Covers 2-3 major spots."
         /> */}
         <PackageCard 
-          title="Full-Day City Tour" 
+          title="City Transfers" 
           // price="₹2,500" 
-          details="8 Hours / 80 KMs. Explore all of Bangalore's highlights."
+          details="8 Hours / 80 KMs. Explore all of Bangalore's highlights with our Standard package."
         />
       </div>
     </div>
