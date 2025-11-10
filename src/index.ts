@@ -112,24 +112,103 @@ app.get('/api/admin/bookings/:id', async (c) => {
     } catch (error) { console.error(`Error fetching booking ${bookingId}:`, error); return c.text('Internal Server Error.', 500); }
 });
 
+// app.patch('/api/admin/bookings/:id', async (c) => {
+//     const env = c.env; const bookingId = parseInt(c.req.param('id')!);
+//     try {
+//         const updateData: BookingUpdateData = await c.req.json();
+//         const existingBooking = await env.DB.prepare(`SELECT * FROM bookings WHERE id = ?`).bind(bookingId).first<BookingRecord>();
+//         if (!existingBooking) return c.text('Booking Not Found', 404);
+//         const updateQuery = `UPDATE bookings SET full_name = ?, email = ?, phone_number = ?, aadhar_number = ?, rental_service_name = ?, car_model = ?, pickup_date = ?, return_date = ?, pickup_location = ?, status = ? WHERE id = ?`;
+//         const result = await env.DB.prepare(updateQuery).bind(
+//             updateData.fullName ?? existingBooking.full_name, updateData.email ?? existingBooking.email,
+//             updateData.phoneNumber ?? existingBooking.phone_number, updateData.aadharNumber ?? existingBooking.aadhar_number, 
+//             updateData.rentalServiceName ?? existingBooking.rental_service_name,
+//             updateData.carModel ?? existingBooking.car_model, updateData.pickupDate ?? existingBooking.pickup_date,
+//             updateData.returnDate ?? existingBooking.return_date, updateData.pickupLocation ?? existingBooking.pickup_location,
+//             updateData.status ?? existingBooking.status, bookingId 
+//         ).run();
+//         if (result.meta.rows_affected === 0) return c.text('No changes made.', 200);
+//         return c.json({ message: `Booking ${bookingId} details updated.` }, 200);
+//     } catch (error) { console.error(`Error updating booking ${bookingId}:`, error); return c.text('Invalid data or update error.', 400); }
+// });
+
 app.patch('/api/admin/bookings/:id', async (c) => {
-    const env = c.env; const bookingId = parseInt(c.req.param('id')!);
+    const env = c.env; 
+    const bookingId = parseInt(c.req.param('id')!);
+    
     try {
         const updateData: BookingUpdateData = await c.req.json();
         const existingBooking = await env.DB.prepare(`SELECT * FROM bookings WHERE id = ?`).bind(bookingId).first<BookingRecord>();
+        
         if (!existingBooking) return c.text('Booking Not Found', 404);
-        const updateQuery = `UPDATE bookings SET full_name = ?, email = ?, phone_number = ?, aadhar_number = ?, rental_service_name = ?, car_model = ?, pickup_date = ?, return_date = ?, pickup_location = ?, status = ? WHERE id = ?`;
+
+        // --- EMAIL LOGIC ---
+        // Check if the status is being changed from PENDING to CONFIRMED
+        const statusChangedToConfirmed = 
+            existingBooking.status === 'PENDING' && 
+            updateData.status === 'CONFIRMED';
+
+        const statusChangedToCancelled = 
+            existingBooking.status !== 'CANCELLED' && 
+            updateData.status === 'CANCELLED';
+        
+        
+        // ---
+
+        const updateQuery = `
+            UPDATE bookings 
+            SET full_name = ?, email = ?, phone_number = ?, aadhar_number = ?, 
+                rental_service_name = ?, car_model = ?, pickup_date = ?, return_date = ?, 
+                pickup_location = ?, status = ?
+            WHERE id = ?
+        `;
+        
         const result = await env.DB.prepare(updateQuery).bind(
-            updateData.fullName ?? existingBooking.full_name, updateData.email ?? existingBooking.email,
-            updateData.phoneNumber ?? existingBooking.phone_number, updateData.aadharNumber ?? existingBooking.aadhar_number, 
+            updateData.fullName ?? existingBooking.full_name, 
+            updateData.email ?? existingBooking.email,
+            updateData.phoneNumber ?? existingBooking.phone_number, 
+            updateData.aadharNumber ?? existingBooking.aadhar_number, 
             updateData.rentalServiceName ?? existingBooking.rental_service_name,
-            updateData.carModel ?? existingBooking.car_model, updateData.pickupDate ?? existingBooking.pickup_date,
-            updateData.returnDate ?? existingBooking.return_date, updateData.pickupLocation ?? existingBooking.pickup_location,
-            updateData.status ?? existingBooking.status, bookingId 
+            updateData.carModel ?? existingBooking.car_model, 
+            updateData.pickupDate ?? existingBooking.pickup_date,
+            updateData.returnDate ?? existingBooking.return_date,
+            updateData.pickupLocation ?? existingBooking.pickup_location,
+            updateData.status ?? existingBooking.status, 
+            bookingId
         ).run();
+        
         if (result.meta.rows_affected === 0) return c.text('No changes made.', 200);
+
+        // --- EMAIL LOGIC ---
+        // If the status was changed, send the confirmation email
+        // if (statusChangedToConfirmed) {
+        //     // We create an updated booking object to pass to the email function
+        //     const confirmedBooking = { ...existingBooking, ...updateData };
+        //     c.executionCtx.waitUntil(sendUserConfirmation(confirmedBooking, env));
+        // }
+        // else if (statusChangedToCancelled) {
+        //     // We create an updated booking object to pass to the email function
+        //     const confirmedBooking = { ...existingBooking, ...updateData };
+        //     c.executionCtx.waitUntil(sendUserCancellation(confirmedBooking, env));
+        // }
+        if (statusChangedToConfirmed) {
+            const confirmedBooking = { ...existingBooking, ...updateData };
+            // We 'await' this so if it fails, the catch block runs
+            await sendUserConfirmation(confirmedBooking, env);
+        }
+        else if (statusChangedToCancelled) {
+            const cancelledBooking = { ...existingBooking, ...updateData };
+            // We 'await' this so if it fails, the catch block runs
+            await sendUserCancellation(cancelledBooking, env);
+        }
+        // ---
+
         return c.json({ message: `Booking ${bookingId} details updated.` }, 200);
-    } catch (error) { console.error(`Error updating booking ${bookingId}:`, error); return c.text('Invalid data or update error.', 400); }
+
+    } catch (error) { 
+        console.error(`Error updating booking ${bookingId}:`, error); 
+        return c.text('Invalid data or update error.', 400); 
+    }
 });
 
 app.delete('/api/admin/bookings/:id', async (c) => {
@@ -194,4 +273,87 @@ async function sendAdminNotification(bookingData: BookingRequest, env: Env) {
   } catch (err) {
     console.error('sendAdminNotification: fetch error', err);
   }
+}
+
+// --- EMAIL FUNCTION 2: Notify User (NEW, uses your robust pattern) ---
+async function sendUserConfirmation(bookingData: BookingRecord, env: Env) {
+    const subject = `Your Road Roam Booking is Confirmed! (ID: ${bookingData.id})`;
+    const body = `<h1>Your Booking is Confirmed!</h1>
+    <p>Hello ${bookingData.full_name},</p>
+    <p>We are happy to confirm your booking for the <strong>${bookingData.rental_service_name}</strong> (${bookingData.car_model}).</p>
+    <p>Your driver will meet you on ${bookingData.pickup_date} at ${bookingData.pickup_location}.</D>
+    <p>Thank you for choosing Road Roam!</p>`;
+
+    if (!env.RESEND_API_KEY) {
+        console.error('sendUserConfirmation: RESEND_API_KEY is not configured.');
+        throw new Error("Email API key is not set up.");
+    }
+
+    try {
+        const res = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${env.RESEND_API_KEY}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                from: 'Road Roam <onboarding@resend.dev>',
+                to: ['roadroamcarrentals@gmail.com'], // <-- Sends to the CUSTOMER's email
+                subject,
+                html: body,
+            }),
+        });
+
+        const text = await res.text();
+        if (!res.ok) {
+            console.error(`sendUserConfirmation: Resend API returned ${res.status}: ${text}`);
+            throw new Error(`Failed to send confirmation email: ${text}`);
+        } else {
+            console.log('sendUserConfirmation: Resend API success:', res.status);
+        }
+    } catch (err) {
+        console.error('sendUserConfirmation: fetch error', err);
+        throw err;
+    }
+}
+
+// --- EMAIL FUNCTION 3: Notify User (NEW, uses your robust pattern) ---
+async function sendUserCancellation(bookingData: BookingRecord, env: Env) {
+    const subject = `Your Road Roam Booking is Cancelled! (ID: ${bookingData.id})`;
+    const body = `<h1>Your Booking is Cancelled!</h1>
+    <p>Hello ${bookingData.full_name},</p>
+    <p>We are sorry to see you go.</p>
+    <p>Thank you. Hope to see you again</p>`;
+
+    if (!env.RESEND_API_KEY) {
+        console.error('sendUserCancellation: RESEND_API_KEY is not configured.');
+        throw new Error("Email API key is not set up.");
+    }
+
+    try {
+        const res = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${env.RESEND_API_KEY}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                from: 'Road Roam <onboarding@resend.dev>',
+                to: ['roadroamcarrentals@gmail.com'], // <-- Sends to the CUSTOMER's email
+                subject,
+                html: body,
+            }),
+        });
+
+        const text = await res.text();
+        if (!res.ok) {
+            console.error(`sendUserCancellation: Resend API returned ${res.status}: ${text}`);
+            throw new Error(`Failed to send confirmation email: ${text}`);
+        } else {
+            console.log('sendUserCancellation: Resend API success:', res.status);
+        }
+    } catch (err) {
+        console.error('sendUserCancellation: fetch error', err);
+        throw err;
+    }
 }
