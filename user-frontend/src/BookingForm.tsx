@@ -13,7 +13,7 @@ interface BookingRequest {
   returnDate: string; pickupLocation: string;
 }
 const rentalServices = [
-  "Airport Ride", "City Travel", "Tours & Excursion",
+  "Airport Transfers", "City Cruise", "Tours & Trips",
   "Corporate Rental", "Event Rental"
 ];
 const carModels = [

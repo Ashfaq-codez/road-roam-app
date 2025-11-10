@@ -90,16 +90,39 @@ function AdminDashboard() {
     <div className="min-h-screen bg-gray-900 p-6 md:p-10">
       <div className="max-w-7xl mx-auto">
         
-        {/* Header section with Logo and Title */}
-        <div className="mb-8">
-          <h1 className="text-5xl font-extrabold text-white mb-2">
-            <span className="text--200">Road</span>
-            <span className="text-red-600">Roam </span> - Admin
-          </h1>
-          <p className="text-lg text-gray-400">
-              {bookings.length} Total Bookings - Data Management Console
-          </p>
+       {/* --- HEADER SECTION (WRAPPED IN FLEX) --- */}
+        {/* CRITICAL FIX: Add this parent flex container */}
+        <div className="flex justify-between items-start mb-8">
+          
+          {/* Column 1: Logo and Title */}
+          <div>
+            <h1 className="text-5xl font-extrabold text-white mb-2">
+              {/* Note: I fixed a typo, text-gray-200 */}
+              <span className="text-gray-200">Road</span>
+              <span className="text-red-600">Roam </span> - Admin
+            </h1>
+            <p className="text-lg text-gray-400">
+                {bookings.length} Total Bookings - Data Management Console
+            </p>
+          </div>
+
+          {/* Column 2: Logout Button */}
+          <div>
+            {/* This 'a' tag points to the special Cloudflare logout URL */}
+            <a 
+              href="https://admin.roadroam.in/cdn-cgi/access/logout"
+              // Added mt-2 for better vertical alignment with the title
+              className="px-6 py-2 bg-gray-600 text-white font-bold rounded-lg shadow hover:bg-gray-700 transition mt-2 flex-shrink-0"
+            >
+              Logout
+            </a>
+            {/* NOTE: If you are testing locally, this button won't work.
+              You'll need to use your .pages.dev URL instead:
+              
+            */}
+          </div>
         </div>
+        {/* --- END HEADER SECTION --- */}
 
         {/* Main Content Card (Dark, sharp edges) */}
         <div className="bg-gray-800 shadow-2xl rounded-lg overflow-hidden border border-gray-700">

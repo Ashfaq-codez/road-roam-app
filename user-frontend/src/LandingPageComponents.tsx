@@ -243,20 +243,20 @@ export const ChauffeurCard: React.FC<ChauffeurCardProps> = ({ imgSrc, title, des
 // --- 3. Services Component ---
 export const Services = () => (
   <section id="services" className="container mx-auto px-6 py-20">
-    <h2 className="text-4xl font-extrabold text-center text-yellow-400 mb-12">Our Services</h2>
+    <h2 className="text-4xl font-extrabold text-center text-white mb-12">Our <span className="text-red-600">Chauffeur</span> Services</h2>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       
       <ServiceCard 
-        title="Airport Rides" 
+        title="Airport Transfers" 
         description="Reliable, on-time pickups and drops to Kempegowda International Airport." 
       />
       <ServiceCard 
-        title="City Rides" 
+        title="City Cruise" 
         description="Explore Bangalore at your own pace. Perfect for sightseeing, shopping, or business meetings." 
       />
       
       <ServiceCard 
-        title="Tours & Excursion" 
+        title="Tours & Trips" 
         description="Plan your weekend getaway. We cover all major destinations from Bangalore." 
       />
       <ServiceCard 
@@ -290,7 +290,7 @@ const ServiceCard: React.FC<{title: string, description: string}> = ({ title, de
 export const Fleet = () => (
   <section id="fleet" className="bg-gray-100 px-6 py-20">
     <div className="container mx-auto">
-      <h2 className="text-4xl font-extrabold text-center text-red-600 mb-12">Our Fleet</h2>
+      <h2 className="text-4xl font-extrabold text-center text-red-600 mb-12"><span className='text-gray-900'>Our</span> Fleet</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         
         <FleetCard 

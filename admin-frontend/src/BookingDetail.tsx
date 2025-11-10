@@ -11,8 +11,8 @@ interface BookingRecord {
   status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED'; created_at: string;
 }
 interface BookingUpdateData extends Partial<BookingRecord> { status?: BookingRecord['status']; }
-const rentalServices = ["Airport Pickup", "In-City Rental", "Outstation Rental", "Corporate Rentals", "Event Rentals"];
-const carModelsList = ["Dzire", "Ciaz", "Ertiga", "Innova", "Crysta"];
+const rentalServices = ["Airport Transfer", "City Cruise", "Tours & Trips", "Corporate Rentals", "Event Rentals"];
+const carModelsList = ["Hycross", "Crysta", "Innova",  "Ertiga", "Ciaz", "Dzire" ];
 const ADMIN_AUTH_HEADER = { 'Authorization': 'Bearer VALID_ADMIN_TOKEN' }; 
 
 const BookingDetail: React.FC = () => {
