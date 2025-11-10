@@ -259,7 +259,7 @@ async function sendAdminNotification(bookingData: BookingRequest, env: Env) {
       },
       body: JSON.stringify({
         from: 'Road Roam <onboarding@resend.dev>',
-        to: [bookingData.email], // test address
+        to: ['roadroamcarrentals@gmail.com'], // test address
         subject,
         html: body,
       }),
@@ -299,7 +299,7 @@ async function sendUserConfirmation(bookingData: BookingRecord, env: Env) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                from: 'Road Roam <onboarding@resend.dev>',
+                from: 'Road Roam <support@roadroam.in>',
                 to: [bookingData.email], // <-- Sends to the CUSTOMER's email
                 subject,
                 html: body,
@@ -340,7 +340,7 @@ async function sendUserCancellation(bookingData: BookingRecord, env: Env) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                from: 'Road Roam <onboarding@resend.dev>',
+                from: 'Road Roam <support@roadroam.in>',
                 to: [bookingData.email], // <-- Sends to the CUSTOMER's email
                 subject,
                 html: body,
