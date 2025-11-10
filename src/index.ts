@@ -258,7 +258,7 @@ async function sendAdminNotification(bookingData: BookingRequest, env: Env) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'roadroamBooking <onboarding@resend.dev>',
+        from: 'Road Roam <onboarding@resend.dev>',
         to: ['roadroamcarrentals@gmail.com'], // test address
         subject,
         html: body,
