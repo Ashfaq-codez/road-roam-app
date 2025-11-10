@@ -43,8 +43,8 @@ export const Header = () => {
         {/* 2. Desktop Navigation (Visible on md screens and up) */}
         <div className="hidden md:flex space-x-4 items-center">
           <NavLink href="#services">Services</NavLink>
-          <NavLink href="#fleet">Our Fleet</NavLink>
-          <NavLink href="#destinations">Destinations</NavLink>
+          <NavLink href="#fleet">Our-Fleet</NavLink>
+          <NavLink href="#destinations">Around-City</NavLink>
           <NavLink href="#contact">Contact</NavLink>
           
           <a 
@@ -67,7 +67,7 @@ export const Header = () => {
         <div className="flex flex-col space-y-6 pt-20">
           <MobileNavLink href="#services" onClick={() => setIsOpen(false)}>Services</MobileNavLink>
           <MobileNavLink href="#fleet" onClick={() => setIsOpen(false)}>Our Fleet</MobileNavLink>
-          <MobileNavLink href="#destinations" onClick={() => setIsOpen(false)}>Destinations</MobileNavLink>
+          <MobileNavLink href="#destinations" onClick={() => setIsOpen(false)}>Around the City</MobileNavLink>
           <MobileNavLink href="#contact" onClick={() => setIsOpen(false)}>Contact</MobileNavLink>
           
           <a 
@@ -163,6 +163,12 @@ export const AboutUs = () => (
           title="Best Value Guaranteed" 
           description="Premium, well-maintained cars at the most competitive rates in the market. Get the best possible service without overpaying."
         />
+
+         <ValueCard 
+          imgSrc="/images/support.png" // Using the direct 
+          title="24/7 Customer Support" 
+          description="Our Team is available for any sort of doubt and support relatede to your car rental, we are available on WhatsApp, Sms and Call +91 7411243463 "
+        />
         
       </div>
       
@@ -239,16 +245,18 @@ export const Services = () => (
   <section id="services" className="container mx-auto px-6 py-20">
     <h2 className="text-4xl font-extrabold text-center text-yellow-400 mb-12">Our Services</h2>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <ServiceCard 
-        title="City Rides" 
-        description="Explore Bangalore at your own pace. Perfect for sightseeing, shopping, or business meetings." 
-      />
+      
       <ServiceCard 
         title="Airport Rides" 
         description="Reliable, on-time pickups and drops to Kempegowda International Airport." 
       />
       <ServiceCard 
-        title="Outstation Trips" 
+        title="City Rides" 
+        description="Explore Bangalore at your own pace. Perfect for sightseeing, shopping, or business meetings." 
+      />
+      
+      <ServiceCard 
+        title="Tours & Excursion" 
         description="Plan your weekend getaway. We cover all major destinations from Bangalore." 
       />
       <ServiceCard 
@@ -286,19 +294,9 @@ export const Fleet = () => (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         
         <FleetCard 
-          name="Ciaz" 
-          description="Comfortable and economical for city rides and small families." 
-          imgSrc="/images/ciaz.png" 
-        />
-        <FleetCard 
-          name="Dzire" 
-          description="Comfortable and economical for city rides and small families." 
-          imgSrc="/images/dzire.jpg" 
-        />
-        <FleetCard 
-          name="Ertiga" 
-          description="Spacious, powerful, and perfect for outstation trips or large groups." 
-          imgSrc="/images/ertiga.jpeg" 
+          name="Hycross" 
+          description="Arrive in style. Our luxury fleet is available for the journey." 
+          imgSrc="/images/hycross.png" 
         />
         <FleetCard 
           name="Crysta" 
@@ -311,10 +309,23 @@ export const Fleet = () => (
           imgSrc="/images/innova.jpg" 
         />
         <FleetCard 
-          name="Hycross" 
-          description="Arrive in style. Our luxury fleet is available for the journey." 
-          imgSrc="/images/hycross.png" 
+          name="Ertiga" 
+          description="Spacious, powerful, and perfect for outstation trips or large groups." 
+          imgSrc="/images/ertiga.jpeg" 
         />
+
+        <FleetCard 
+          name="Ciaz" 
+          description="Comfortable and economical for city rides and small families." 
+          imgSrc="/images/ciaz.png" 
+        />
+        <FleetCard 
+          name="Dzire" 
+          description="Comfortable and economical for city rides and small families." 
+          imgSrc="/images/dzire.jpg" 
+        />
+            
+                
       </div>
     </div>
   </section>
