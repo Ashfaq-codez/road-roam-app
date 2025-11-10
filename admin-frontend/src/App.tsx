@@ -90,14 +90,18 @@ function AdminDashboard() {
     <div className="min-h-screen bg-gray-900 p-6 md:p-10">
       <div className="max-w-7xl mx-auto">
         
-       {/* --- HEADER SECTION (WRAPPED IN FLEX) --- */}
-        {/* CRITICAL FIX: Add this parent flex container */}
-        <div className="flex justify-between items-start mb-8">
+       {/* --- HEADER SECTION (RESPONSIVE FIX) --- */}
+        {/*
+          FIX:
+          - Stacks vertically on mobile (flex-col)
+          - Switches to horizontal on medium screens (md:flex-row)
+          - Adds vertical space on mobile (space-y-4)
+        */}
+        <div className="flex flex-col md:flex-row justify-between mb-8 space-y-4 md:space-y-0 md:items-start">
           
           {/* Column 1: Logo and Title */}
           <div>
             <h1 className="text-5xl font-extrabold text-white mb-2">
-              {/* Note: I fixed a typo, text-gray-200 */}
               <span className="text-gray-200">Road</span>
               <span className="text-red-600">Roam </span> - Admin
             </h1>
@@ -108,17 +112,16 @@ function AdminDashboard() {
 
           {/* Column 2: Logout Button */}
           <div>
-            {/* This 'a' tag points to the special Cloudflare logout URL */}
             <a 
               href="https://admin.roadroam.in/cdn-cgi/access/logout"
-              // Added mt-2 for better vertical alignment with the title
-              className="px-6 py-2 bg-gray-600 text-white font-bold rounded-lg shadow hover:bg-gray-700 transition mt-2 flex-shrink-0"
+              // FIX: Button is full-width on mobile (w-full) and auto-width on desktop (md:w-auto)
+              className="px-6 py-2 bg-gray-600 text-white font-bold rounded-lg shadow hover:bg-gray-700 transition flex-shrink-0 w-full md:w-auto text-center"
             >
               Logout
             </a>
             {/* NOTE: If you are testing locally, this button won't work.
               You'll need to use your .pages.dev URL instead:
-              
+              href="https://road-roam-admin-dashboard.pages.dev/cdn-cgi/access/logout"
             */}
           </div>
         </div>
