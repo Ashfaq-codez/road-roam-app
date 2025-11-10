@@ -194,12 +194,14 @@ app.patch('/api/admin/bookings/:id', async (c) => {
         if (statusChangedToConfirmed) {
             const confirmedBooking = { ...existingBooking, ...updateData };
             // We 'await' this so if it fails, the catch block runs
-            await sendUserConfirmation(confirmedBooking, env);
+            // await sendUserConfirmation(confirmedBooking, env);
+            c.executionCtx.waitUntil(sendUserConfirmation(confirmedBooking, env));
         }
         else if (statusChangedToCancelled) {
             const cancelledBooking = { ...existingBooking, ...updateData };
             // We 'await' this so if it fails, the catch block runs
-            await sendUserCancellation(cancelledBooking, env);
+            // await sendUserCancellation(cancelledBooking, env);
+            c.executionCtx.waitUntil(sendUserCancellation(cancelledBooking, env));
         }
         // ---
 
