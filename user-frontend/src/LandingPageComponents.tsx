@@ -1,7 +1,7 @@
 // user-frontend/src/LandingPageComponents.tsx
-// user-frontend/src/LandingPageComponents.tsx
 
 import React, { useState } from 'react'; 
+
 // import { useInView } from 'react-intersection-observer';
 
 // --- 1. Header Component (Updated with Sub-Logo) ---
@@ -110,12 +110,11 @@ export const Hero = () => (
   <div className="relative min-h-[70vh] py-20 flex items-center justify-center overflow-hidden">
   {/* Blurred Background */}
   <div
-    className="absolute inset-0 bg-cover bg-center blur-[2px] scale-105"
-    style={{ backgroundImage: "url('/images/main_1.jpg')" }}
+    className="absolute inset-0 bg-cover bg-center blur-[3px] scale-105"
+    style={{ backgroundImage: "url('/images/roadroam.png')" }}
   />
-
-    <div className="absolute inset-0 bg-black opacity-60 "></div>
-    <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
+  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-black/30 to-black/80"></div>
+<div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
       <h1 className="text-5xl md:text-7xl font-extrabold mb-4 drop-shadow-lg">
         Your Journey, Our <span className="text-red-500">Wheels</span>, Explore With Ease.
       </h1>
@@ -132,159 +131,150 @@ export const Hero = () => (
   </div>
 );
 
-// --- NEW COMPONENT: About Us Section ---
+
+// --- NEW HELPER: FeatureCard (for Zig-Zag Layout) ---
+interface FeatureCardProps {
+  imgSrc: string;
+  title: string;
+  description: string;
+  // This prop reverses the layout
+  reverse?: boolean; 
+}
+
+const FeatureCard: React.FC<FeatureCardProps> = ({ imgSrc, title, description, reverse = false }) => {
+  // Define the order of columns. 'reverse' flips them.
+  const imageOrder = reverse ? 'md:order-last' : 'md:order-first';
+  const textOrder = reverse ? 'md:order-first' : 'md:order-last';
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+      
+      {/* 1. Image Column */}
+      <div className={`w-full h-80 rounded-xl overflow-hidden shadow-2xl ${imageOrder}`}>
+        <img 
+          src={imgSrc} 
+          alt={title} 
+          className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500 ease-in-out" 
+        />
+      </div>
+      
+      {/* 2. Text Column */}
+      <div className={`w-full ${textOrder}`}>
+        <h3 className="text-3xl font-bold text-red-600 mb-4">{title}</h3>
+        <p className="text-lg text-gray-600 leading-relaxed">{description}</p>
+      </div>
+    </div>
+  );
+};
+
+
+// --- UPDATED: About Us Section (Zig-Zag Layout) ---
 export const AboutUs = () => (
   <section id="about" className="bg-white px-6 py-20 shadow-inner">
-    <div className="container mx-auto max-w-5xl">
-      <h2 className="text-[47px] font-extrabold text-center text-gray-900 mb-12 border-b pb-4">
+    <div className="container mx-auto max-w-6xl"> {/* Made container wider */}
+      <h2 className="text-[47px] font-extrabold text-center text-gray-900 mb-16 border-b pb-4">
         Why Choose <span className="text-red-600">Road Roam</span>?
       </h2>
       
-      {/* Container for the 3 cards (responsive grid) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+      {/* A container for all our feature rows */}
+      <div className="space-y-20">
         
-        {/* Card 1: Certified Safety & Tracking (Remains ValueCard) */}
-        <ValueCard 
+        {/* Row 1: Safety (Image Left, Text Right) */}
+        <FeatureCard 
           imgSrc="/images/certified.jpg" 
           title="Certified Safety & Tracking" 
           description="All vehicles are equipped with real-time GPS tracking. We prioritize the safety of women and solo travelers with 24/7 monitoring."
         />
         
-        {/* CRITICAL FIX: Use the new ChauffeurCard for this entry */}
-        <ChauffeurCard 
+        {/* Row 2: Chauffeur (Text Left, Image Right) */}
+        <FeatureCard 
           imgSrc="/images/chauffeur.png" 
           title="Expert Chauffeur Driven" 
           description="Travel stress-free with our vetted, professional drivers. Focus on your journey while we handle the traffic and navigation."
+          reverse={true} // This flips the layout
         />
         
-        {/* Card 3: Best Value Guaranteed (Remains ValueCard) */}
-        <ValueCard 
-          imgSrc="/images/rupee.jpg" // Using the direct Rupee symbol
+        {/* Row 3: Value (Image Left, Text Right) */}
+        <FeatureCard 
+          imgSrc="/images/rupee.jpg" 
           title="Best Value Guaranteed" 
           description="Premium, well-maintained cars at the most competitive rates in the market. Get the best possible service without overpaying."
         />
 
-         <ValueCard 
-          imgSrc="/images/support.png" // Using the direct 
+        {/* Row 4: Support (Text Left, Image Right) */}
+        <FeatureCard 
+          imgSrc="/images/support.png" 
           title="24/7 Customer Support" 
-          description="Our Team is available for any sort of doubt and support relatede to your car rental, we are available on WhatsApp, Sms and Call +91 7411243463 "
+          description="Our Team is available for any sort of doubt and support related to your car rental, we are available on WhatsApp, Sms and Call +91 7411243463 "
+          reverse={true} // This flips the layout
         />
         
       </div>
       
-      {/* Footer message on quality */}
-      <p className="mt-12 font-bold text-center text-[25px] text-gray-700 border-t pt-4">
+      <p className="mt-20 font-bold text-center text-[25px] text-gray-700 border-t pt-8">
           Easy to Avail, transparent pricing, and quality vehicles for a truly reliable rental experience.
       </p>
     </div>
   </section>
 );
-// --- NEW HELPER: Value Card (Final Vertical/Circle Layout) ---
-const ValueCard: React.FC<{icon?: string, title: string, description: string, imgSrc?: string}> = ({ title, description, imgSrc }) => (
-  // Main Card Wrapper: Ensures it fits nicely in a row
-  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 text-center w-full transform hover:scale-[1.02] transition duration-300">
-    
-    {/* CRITICAL FIX: Image/Icon on TOP (using circular image holder) */}
-    <div className="flex items-center justify-center mb-4">
-      {imgSrc ? (
-        <div className="w-24 h-24 rounded-full overflow-hidden shadow-md">
-          <img 
-            src={imgSrc} 
-            alt={title} 
-            className="w-full h-full object-cover" 
-          />
-        </div>
-      ) : (
-        // Icon Styling: Center the icon and use brand colors
-        <div className="text-5xl flex items-center justify-center w-24 h-24 bg-gray-200 rounded-full text-red-600">
-          
-        </div>
-      )}
-    </div>
-    
-    {/* Text Content (Bottom) */}
-    <div className="p-2 flex flex-col justify-center">
-      <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
-      <p className="text-sm text-gray-600">{description}</p>
-    </div>
-  </div>
-);
 
-// --- NEW COMPONENT: ChauffeurCard (Harmonized Look) ---
-interface ChauffeurCardProps {
-  imgSrc: string;
-  title: string;
-  description: string;
-}
-
-export const ChauffeurCard: React.FC<ChauffeurCardProps> = ({ imgSrc, title, description }) => (
-  // 1. Uniform Card Style: Use the same white background, padding, and shadow as ValueCard
-  <div 
-    className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 text-center 
-               w-full transform hover:scale-[1.02] transition duration-300"
-  >
-    {/* Image Section (CRITICAL FIX: Removed h-72 and centered content for better alignment) */}
-    <div className="relative h-48 overflow-hidden flex items-center justify-center bg-gray-50 rounded-lg mb-4">
-      <img 
-        src={imgSrc} 
-        alt={title} 
-        className="object-cover w-full h-full" 
-      />
-    </div>
-    
-    {/* Text Content Section (Bottom Half - Aligned for consistency) */}
-    <div className="text-center">
-      <h3 className="text-2xl font-bold text-gray-900 mb-2">{title}</h3>
-      <p className="text-sm text-gray-600">{description}</p>
-    </div>
-  </div>
-);
 
 // --- 3. Services Component ---
 export const Services = () => (
   <section id="services" className="container mx-auto px-6 py-20">
-    <h2 className="text-4xl font-extrabold text-center text-white mb-12">Our <span className="text-red-600">Chauffeur</span> Services</h2>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <h2 className="text-4xl font-extrabold text-center text-gray-200 mb-12">Our <span className="text-red-600">Chauffeur</span> Services</h2>
+    
+    {/* CRITICAL FIX: Use a 3-column grid for the dynamic layout */}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
       
+      {/* Row 1 */}
       <ServiceCard 
         title="Airport Transfers" 
         description="Reliable, on-time pickups and drops to Kempegowda International Airport." 
+        className="md:col-span-1" // Square
       />
       <ServiceCard 
         title="City Cruise" 
         description="Explore Bangalore at your own pace. Perfect for sightseeing, shopping, or business meetings." 
+        className="md:col-span-2" // Rectangle
       />
       
+      {/* Row 2 */}
       <ServiceCard 
         title="Tours & Trips" 
         description="Plan your weekend getaway. We cover all major destinations from Bangalore." 
+        className="md:col-span-2" // Rectangle
       />
       <ServiceCard 
         title="Corporate Rentals" 
         description="Premium vehicles and professional chauffeurs for your business needs." 
+        className="md:col-span-1" // Square
       />
+
+      {/* Row 3 (Optional) - You can add more cards here */}
       <ServiceCard 
         title="Event Rentals" 
         description="Premium vehicles and professional chauffeurs for your Event needs." 
+        className="md:col-span-3" // Full-width Rectangle
       />
     </div>
   </section>
 );
 
 
-// Helper for Service Card (Updated for Hover Animation)
-const ServiceCard: React.FC<{title: string, description: string}> = ({ title, description }) => (
+// Helper for Service Card (Updated to accept className)
+const ServiceCard: React.FC<{title: string, description: string, className?: string}> = ({ title, description, className = '' }) => (
   <div 
-    // CRITICAL FIX: Added transform, transition, and hover classes
-    className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 
+    // CRITICAL FIX: Added h-full and applied the passed-in className
+    className={`bg-white p-6 rounded-xl shadow-lg border border-gray-100 
                transform transition-all duration-300 ease-in-out 
-               hover:shadow-2xl hover:scale-[1.02] hover:border-red-500 cursor-pointer"
+               hover:shadow-2xl hover:scale-[1.02] hover:border-red-500 cursor-pointer
+               h-full ${className}`} // Ensures cards in a row are same height
   >
     <h3 className="text-2xl font-bold text-red-600 mb-3">{title}</h3>
     <p className="text-gray-600">{description}</p>
   </div>
 );
-
 
 // --- 4. Fleet Component ---
 export const Fleet = () => (
@@ -306,7 +296,7 @@ export const Fleet = () => (
         <FleetCard 
           name="Innova" 
           description="Spacious, powerful, and perfect for outstation trips or large groups." 
-          imgSrc="/images/innova.jpg" 
+          imgSrc="/images/innova.png" 
         />
         <FleetCard 
           name="Ertiga" 
@@ -353,35 +343,94 @@ const FleetCard: React.FC<{name: string, description: string, imgSrc: string}> =
   </div>
 );
 
-// --- 5. Destinations (Bangalore) Component ---
+// --- 5. Destinations (Bangalore) Component (UPDATED 2+1 LAYOUT with Image) ---
 export const Destinations = () => (
   <section id="destinations" className="container mx-auto px-6 py-20">
     <h2 className="text-4xl font-extrabold text-center text-yellow-400 mb-4">Explore Bangalore</h2>
-    <p className="text-xl text-center text-gray-300 mb-12">Must visit places for your City Cruise.</p>
+    <p className="text-xl text-center text-gray-600 mb-12">Must visit places for your in city cruise.</p>
+    
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
       <DestinationCard 
         name="Bangalore Palace" 
         imgSrc="/images/palace.jpg" 
+        description="A stunning example of Tudor architecture in the heart of the city, featuring elegant woodcarvings and beautiful gardens."
       />
+      {/* The updated "View More" card with Cubbon Park image */}
+      <ViewMoreCard imgSrc="/images/a.jpg" />
+
       <DestinationCard 
         name="Lalbagh Botanical Garden" 
         imgSrc="/images/Lalbagh-Bangalore.jpg" 
+        description="A historic garden with a rare collection of tropical plants, a famous glass house, and a serene lake."
       />
-      <DestinationCard 
-        name="Cubbon Park" 
-        imgSrc="/images/cubbon-park.jpg" 
-      />
+       
     </div>
   </section>
 );
 
-// Helper for Destination Card
-const DestinationCard: React.FC<{name: string, imgSrc: string}> = ({ name, imgSrc }) => (
-  <div className="relative rounded-xl shadow-lg overflow-hidden h-64 group">
-    <img src={imgSrc} alt={name} className="w-full h-full object-cover transform group-hover:scale-110 transition duration-300" />
-    <div className="absolute inset-0 bg-black opacity-40 group-hover:opacity-60 transition duration-300"></div>
-    <h3 className="absolute bottom-4 left-4 text-2xl font-bold text-white drop-shadow-md group-hover:text-red-500 transition-colors">{name}</h3>
-  </div>
+// Helper for Destination Card (REVERTED TO CLICK-TO-FLIP)
+const DestinationCard: React.FC<{name: string, imgSrc: string, description: string}> = ({ name, imgSrc, description }) => {
+  // 1. Add state back to track if the card is flipped
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  return (
+    // 2. Main container: Sets up the 3D perspective and click/tap handler
+    <div 
+      className="bg-transparent rounded-xl h-64 w-full [perspective:1000px] cursor-pointer"
+      onClick={() => setIsFlipped(!isFlipped)} // Toggles state on click/tap
+    >
+      {/* 3. Inner container: Applies the flip animation based on state */}
+      <div 
+        className={`relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] ${
+          isFlipped ? '[transform:rotateY(180deg)]' : '' // Flips if isFlipped is true
+        }`}
+      >
+        {/* 4. The Front Side (Image) */}
+        <div className="absolute w-full h-full [backface-visibility:hidden]">
+          <img src={imgSrc} alt={name} className="w-full h-full object-cover rounded-xl shadow-lg" />
+          <div className="absolute inset-0 bg-black opacity-40 rounded-xl"></div>
+          <h3 className="absolute bottom-4 left-4 text-2xl font-bold text-white drop-shadow-md">{name}</h3>
+        </div>
+
+        {/* 5. The Back Side (Text) */}
+        <div className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-white rounded-xl shadow-lg p-6 overflow-auto">
+          <h4 className="text-xl font-bold text-red-600 mb-2">{name}</h4>
+          <p className="text-sm text-gray-700">{description}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const ViewMoreCard: React.FC<{ imgSrc: string }> = ({ imgSrc }) => (
+  <a 
+    href="/destinations" 
+    className="relative flex flex-col items-center justify-center rounded-xl shadow-lg h-64 w-full
+               transform transition-all duration-300 ease-in-out 
+               hover:shadow-2xl hover:scale-[1.02] group overflow-hidden" // Added overflow-hidden
+  >
+    {/* 1. Background Image (z-0, at the bottom) */}
+    {/* No blur, but will zoom on hover */}
+    <img 
+      src={imgSrc} 
+      alt="Explore More Destinations" 
+      className="absolute inset-0 w-full h-full object-cover 
+                 group-hover:scale-110 transition-transform duration-500 ease-in-out z-0" 
+    />
+    
+    {/* 2. Dark Gradient Overlay (z-10, in the middle) */}
+    {/* This provides the dark tint for text readability */}
+    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+    
+    {/* 3. Content (z-20, on top, stays sharp) */}
+    <div className="relative z-20 text-white flex flex-col items-center justify-center p-4">
+      <div className="text-6xl mb-4 transition-transform duration-300 group-hover:scale-110">
+        →
+      </div>
+      <h3 className="text-2xl font-bold text-center">View More Places</h3>
+      <p className="text-gray-200 text-center">Discover all fun spots</p>
+    </div>
+  </a>
 );
 
 // --- 6. Packages Component (Updated with Red Theme) ---
@@ -390,10 +439,7 @@ export const Packages = () => (
     <div className="container mx-auto">
       <h2 className="text-4xl font-extrabold text-center text-red-600 mb-12">Standard Package</h2>
       <div className="flex flex-col md:flex-row justify-center gap-8">
-        {/* <PackageCard 
-          title="Half-Day City Tour" 
-          details="4 Hours / 40 KMs. Covers 2-3 major spots."
-        /> */}
+        
         <PackageCard 
           title="City Rides" 
           // price="₹2,500" 

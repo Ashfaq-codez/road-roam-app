@@ -1,0 +1,120 @@
+// user-frontend/src/DestinationsPage.tsx
+
+import React, { useState } from 'react'; // 1. Import useState
+// We reuse the Header and Footer for a consistent look
+import { Header, Footer } from './LandingPageComponents';
+
+
+// --- Sample Data: Places within 80km of Bangalore ---
+// 3. ADDED 'layout' PROPERTY TO EACH OBJECT
+const places = [
+  {
+    name: 'Nandi Hills',
+    description: 'A perfect spot for sunrise views and trekking, this ancient hill fortress is a popular quick getaway.',
+    imgSrc: '/images/nandiHills.jpeg',
+    layout: 'md:col-span-1' // Square
+  },
+  {
+    name: 'Bannerghatta National Park',
+    description: 'A large biological park with a zoo, a butterfly park, and a popular safari, all on the outskirts of the city.',
+    imgSrc: '/images/nationalPark.jpg',
+    layout: 'md:col-span-2' // Rectangle
+  },
+  {
+    name: 'Savandurga',
+    description: 'One of the largest monolith hills in Asia. It offers challenging climbs and stunning views of the surrounding landscape.',
+    imgSrc: '/images/savandurga.jpg',
+    layout: 'md:col-span-2' // Rectangle
+  },
+  {
+    name: 'Skandagiri',
+    description: 'Famous for its "walk above the clouds," this night trek is a favorite for adventure seekers wanting to see a sea of clouds at dawn.',
+    imgSrc: '/images/Skandagiri.jpg',
+    layout: 'md:col-span-1' // Square
+  },
+  {
+    name: 'Mall of Asia',
+    description: 'Phoenix Mall Of Asia in North Bengaluru is Indias first luxury retail mall to usher in a new age of shopping and leisure. ',
+    imgSrc: '/images/mallofasia.jpg',
+    layout: 'md:col-span-1' // Square
+  },
+  {
+    name: 'Ramanagara(Mekedatu-Sangama)',
+    description: "Mekedatu is a scenic spot on the Kaveri River, with a narrow gorge. Its remote, and most visitors travel by bus. The name means `Goat's Leap`.",
+    imgSrc: '/images/Mekedatu-Sangama.jpg',
+    layout: 'md:col-span-2' // Rectangle
+  },
+];
+// ----------------------------------------------------
+
+
+// The new page component
+export default function DestinationsPage() {
+  return (
+    <div className="font-poppins overflow-x-hidden"> 
+      
+      <Header />
+
+      <main>
+        {/* Page Title */}
+        <section className="bg-black text-white py-16">
+          <div className="container mx-auto px-6 text-center">
+            <h1 className="text-5xl text-yellow-400 font-extrabold mb-4">Destinations Near Bangalore</h1>
+            <p className="text-xl text-gray-300">Fun places to travel around for your Tours & Trips.</p>
+          </div>
+        </section>
+
+        {/* Grid of Places */}
+        <section className="container mx-auto px-6 py-20">
+          {/* 4. This 3-column grid is now dynamic */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {places.map((place) => (
+              // 5. Pass the 'layout' as a 'className'
+              <PlaceCard 
+                key={place.name}
+                name={place.name} 
+                description={place.description} 
+                imgSrc={place.imgSrc}
+                className={place.layout} 
+              />
+            ))}
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
+
+// --- 6. CRITICAL FIX: Update PlaceCard to accept and apply the className ---
+const PlaceCard: React.FC<{name: string, description: string, imgSrc: string, className?: string}> = ({ name, description, imgSrc, className = "" }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  return (
+    // 7. The className (e.g., "md:col-span-2") is applied HERE
+    <div 
+      className={`bg-transparent rounded-xl h-64 w-full [perspective:1000px] cursor-pointer ${className}`}
+      onClick={() => setIsFlipped(!isFlipped)} // Toggles state on click/tap
+    >
+      <div 
+        className={`relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] ${
+          isFlipped ? '[transform:rotateY(180deg)]' : ''
+        }`}
+      >
+        {/* Front Side (Image) */}
+        <div className="absolute w-full h-full [backface-visibility:hidden]">
+          <img src={imgSrc} alt={name} className="w-full h-full object-cover rounded-xl shadow-lg" />
+          <div className="absolute inset-0 bg-black opacity-40 rounded-xl"></div>
+          <h3 className="absolute bottom-4 left-4 text-2xl font-bold text-white drop-shadow-md">{name}</h3>
+        </div>
+
+        {/* Back Side (Text) */}
+        <div className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-white rounded-xl shadow-lg p-6 overflow-auto">
+          <h4 className="text-xl font-bold text-red-600 mb-2">{name}</h4>
+          <p className="text-sm text-gray-700">{description}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
