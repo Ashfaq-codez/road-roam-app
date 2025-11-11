@@ -167,7 +167,7 @@ export function BookingForm() {
         className="w-full max-w-4xl mx-auto p-8 md:p-12 bg-white rounded-xl shadow-2xl relative z-20"
       >
         <h2 className="text-[40px] font-bold mb-8 text-center text-gray-900">
-          Book Your Vehicle
+          Book Your <span className='text-red-600' >Vehicle</span>
         </h2>
         
         <form onSubmit={handleSubmit} className="space-y-6">

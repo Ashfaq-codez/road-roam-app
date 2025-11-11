@@ -271,7 +271,7 @@ export const Services = () => (
   </section>
 );
 
-// Helper for Service Card (Updated with Red Theme)
+
 // Helper for Service Card (Updated for Hover Animation)
 const ServiceCard: React.FC<{title: string, description: string}> = ({ title, description }) => (
   <div 
@@ -331,7 +331,7 @@ export const Fleet = () => (
   </section>
 );
 
-// Helper for Fleet Card
+
 // Helper for Fleet Card (Updated for Aspect Ratio)
 const FleetCard: React.FC<{name: string, description: string, imgSrc: string}> = ({ name, description, imgSrc }) => (
   <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
@@ -357,7 +357,7 @@ const FleetCard: React.FC<{name: string, description: string, imgSrc: string}> =
 export const Destinations = () => (
   <section id="destinations" className="container mx-auto px-6 py-20">
     <h2 className="text-4xl font-extrabold text-center text-yellow-400 mb-4">Explore Bangalore</h2>
-    <p className="text-xl text-center text-gray-300 mb-12">Must-visit places for your in-city tour.</p>
+    <p className="text-xl text-center text-gray-300 mb-12">Must visit places for your City Cruise.</p>
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
       <DestinationCard 
         name="Bangalore Palace" 

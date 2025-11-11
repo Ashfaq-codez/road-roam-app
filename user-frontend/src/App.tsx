@@ -27,25 +27,25 @@ function App() {
         {/* 2. Full-screen Hero Image */}
         <Hero />
         
-        {/* 2. NEW: About Us / Value Proposition */}
-        <AboutUs />
-        
-        {/* 3. Our Services Section */}
-        <Services />
-        
-        {/* 4. Car Fleet Section */}
-        <Fleet />
-        
-        {/* 5. Bangalore Destinations Section */}
-        <Destinations />
-        
-        {/* 6. Tour Packages Section */}
-        <Packages />
-
         {/* 7. The Booking Form */}
         <section className="bg-gray-100 py-20">
           <BookingForm />
         </section>
+
+        {/* 2. NEW: About Us / Value Proposition */}
+        <AboutUs />
+
+        {/* 3. Our Services Section */}
+        <Services />
+
+        {/* 6. Tour Packages Section */}
+        <Packages />
+
+        {/* 5. Bangalore Destinations Section */}
+        <Destinations />
+        
+        {/* 4. Car Fleet Section */}
+        <Fleet />
 
         {/* 8. Contact Info */}
         <Contact />
