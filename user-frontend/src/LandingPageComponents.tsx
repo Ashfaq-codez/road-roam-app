@@ -111,7 +111,7 @@ export const Hero = () => (
   {/* Blurred Background */}
   <div
     className="absolute inset-0 bg-cover bg-center blur-[3px] scale-105"
-    style={{ backgroundImage: "url('/images/roadroam.webp')" }}
+    style={{ backgroundImage: "url('/images/roadroam.avif')" }}
   />
   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-black/30 to-black/80"></div>
 <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
@@ -437,11 +437,11 @@ export const ViewMoreCard: React.FC<{ imgSrc: string }> = ({ imgSrc }) => (
 export const Packages = () => (
   <section id="packages" className="bg-gray-100 px-6 py-20">
     <div className="container mx-auto">
-      <h2 className="text-4xl font-extrabold text-center text-red-600 mb-12">Standard Package</h2>
+      <h2 className="text-4xl font-extrabold text-center text-red-600 mb-12">Standard <span className='text-gray-900'>Package</span></h2>
       <div className="flex flex-col md:flex-row justify-center gap-8">
         
         <PackageCard 
-          title="City Rides" 
+          title="City Cruise" 
           // price="₹2,500" 
           details="8 Hours / 80 KMs. Explore all of Bangalore's highlights with our Standard package."
         />
@@ -470,28 +470,42 @@ const PackageCard: React.FC<{title: string, details: string}> = ({ title, detail
 
 export const Contact = () => (
   <section id="contact" className="container mx-auto px-6 py-20 text-center">
-    <h2 className="text-4xl font-extrabold text-gray-300 mb-8">Get in Touch</h2>
+    <h2 className="text-4xl font-extrabold text-gray-300 mb-8">Get <span className='text-red-600'>in</span> Touch</h2>
     <p className="text-xl text-gray-500 mb-4">Have questions? We're here to help.</p>
     
     {/* FIX: Use 'break-words' and 'text-wrap' to force long URLs/emails to break */}
     <p className="text-[20px] font-semibold text-red-600 break-words text-wrap">
-      Email: roadroamcarrentals@gmail.com
+      <span className='text-white'>Email: </span> roadroamcarrentals@gmail.com
     </p>
     
     <p className="text-[20px] font-semibold text-red-600 break-words text-wrap">
-      phone: +91 7411243463
+      <span className='text-white'>phone: </span> +91 7411243463
     </p>
   </section>
 );
 
-// --- 8. Footer Component (Updated with Red/Black Theme) ---
+// --- 8. Footer Component (Updated with new logo structure) ---
 export const Footer = () => (
   <footer className="text-center py-8 bg-black">
-    <div className="text-2xl font-extrabold mb-2">
-        <span className="text-white">Road</span>
-        <span className="text-red-600">Roam</span>
+    
+    {/* --- CRITICAL FIX: New Logo Structure --- */}
+    <div className="flex items-baseline justify-center mb-2">
+      <span className="text-2xl font-extrabold text-white">Road</span>
+      
+      <div className="flex flex-col -ml-0.5">
+        <span className="text-2xl font-extrabold text-red-600">Roam</span>
+        <span className="text-[9px] font-semibold tracking-tight -mt-1 self-end text-gray-400">
+          Car Rentals
+        </span>
+      </div>
     </div>
-    <p className="text-gray-400 text-sm">A professional service for your travel needs.</p>
-    <p className="text-gray-500 text-xs mt-4">© 2025 Road Roam. All rights reserved.</p>
+    {/* --- End Logo Structure --- */}
+
+    <p className="text-gray-400 text-sm">A Chauffeured service for your travel needs.</p>
+    <p className="text-gray-500 text-xs mt-4">© 2025, Road Roam - Car Rentals. All rights reserved.</p>
   </footer>
 );
+
+
+
+ 
