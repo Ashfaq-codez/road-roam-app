@@ -14,12 +14,16 @@ import {
   Contact, 
   Footer 
 } from './LandingPageComponents';
+import FloatingContact from './FloatingContact';
 
 function App() {
   return (
     // FINAL FIX: Add overflow-x-hidden to prevent the horizontal scroll bar on mobile
     <div className="font-poppins overflow-x-hidden"> 
       
+      {/* Add Floating Contact Component --- */}
+      <FloatingContact />
+
       {/* 1. Sticky Header */}
       <Header />
 

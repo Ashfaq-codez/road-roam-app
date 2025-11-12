@@ -204,7 +204,7 @@ function AdminDashboard() {
                     });
                 }}
                 href="#" // Changed href to '#'
-                className="px-6 py-2 bg-gray-600 text-white font-bold rounded-lg shadow hover:bg-gray-700 transition flex-shrink-0 text-center cursor-pointer"
+                className="px-6 py-2 bg-red-600 text-white font-bold rounded-lg shadow hover:bg-gray-700 transition flex-shrink-0 text-center cursor-pointer"
               >
                 Logout
               </a>
