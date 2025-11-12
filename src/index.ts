@@ -102,6 +102,53 @@ app.get('/api/admin/bookings', async (c) => {
     }
 });
 
+// NEW: ADMIN ROUTE: GET /api/admin/export (Export CSV)
+app.get('/api/admin/export', async (c) => {
+    const env = c.env;
+    try {
+        // 1. Fetch all booking records
+        const { results } = await env.DB.prepare(
+            `SELECT * FROM bookings ORDER BY created_at DESC`
+        ).all<BookingRecord>(); 
+
+        if (!results || results.length === 0) {
+            return c.text("No bookings to export.", 404);
+        }
+
+        // 2. Convert JSON results to CSV string
+        // Get the column headers (keys of the first object)
+        const headers = Object.keys(results[0]!).join(',');
+
+        // Map over results to create rows
+        const csvRows = results.map(row => {
+            // Ensure all values are quoted and separated by commas
+            return Object.values(row).map(value => {
+                // Handle null and ensure values are treated as strings
+                const safeValue = value === null ? '' : String(value).replace(/"/g, '""');
+                // Wrap value in quotes to handle commas within the data (e.g., location addresses)
+                return `"${safeValue}"`;
+            }).join(',');
+        });
+
+        // 3. Combine headers and rows
+        const csv = [headers, ...csvRows].join('\n');
+
+        // 4. Return as a downloadable file
+        return new Response(csv, {
+            status: 200,
+            headers: {
+                'Content-Type': 'text/csv; charset=utf-8',
+                // This header forces the browser to download the file
+                'Content-Disposition': `attachment; filename="roadroam_bookings_${new Date().toISOString().split('T')[0]}.csv"`,
+            },
+        });
+
+    } catch (error) {
+        console.error("Error generating CSV export:", error);
+        return c.text("Internal Server Error during export.", 500);
+    }
+});
+
 // C. ADMIN ROUTES: Dynamic GET, PATCH, DELETE
 app.get('/api/admin/bookings/:id', async (c) => {
     const env = c.env; const bookingId = c.req.param('id');
