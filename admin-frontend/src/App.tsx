@@ -74,6 +74,25 @@ function AdminDashboard() {
     fetchBookings();
   }, [fetchBookings]); 
 
+  // --- CRITICAL SECURITY FIX: Disable BF Cache ---
+useEffect(() => {
+    // This listener fires when the page loads or is restored from the back/forward cache.
+    const handlePageShow = (event: PageTransitionEvent) => {
+        // 'event.persisted' is true when the page is loaded from the BF Cache (e.g., Back button)
+        if (event.persisted) {
+            // Force a hard reload. This clears the cached memory and forces the browser
+            // to validate the session cookie with Cloudflare Zero Trust, which will fail.
+            window.location.reload(); 
+        }
+    };
+
+    window.addEventListener('pageshow', handlePageShow);
+    
+    // Clean up the event listener when the component unmounts
+    return () => window.removeEventListener('pageshow', handlePageShow);
+}, []); // Runs once on mount
+// --- END SECURITY FIX ---
+
   // Polished Loading State
   if (loading) return (
     <div className="flex justify-center items-center min-h-screen bg-gray-900">
