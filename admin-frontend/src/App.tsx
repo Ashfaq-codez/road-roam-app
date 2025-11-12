@@ -111,7 +111,7 @@ function AdminDashboard() {
             </h2>
             
             <p className="text-gray-300 text-md mb-6">
-                Please confirm your action. This operation cannot be easily undone.
+                Please confirm your action. This operation cannot be undone.
             </p>
 
             <div className="flex justify-end space-x-3">
@@ -188,7 +188,7 @@ function AdminDashboard() {
                   href="#" 
                   className="px-6 py-2 bg-green-600 text-white font-bold rounded-lg shadow hover:bg-green-700 transition flex-shrink-0 text-center cursor-pointer"
               >
-                  Export to Excel
+                  Export to Excel 📄
               </a>
 
               
