@@ -111,7 +111,7 @@ export const Hero = () => (
   {/* Blurred Background */}
   <div
     className="absolute inset-0 bg-cover bg-center blur-[3px] scale-105"
-    style={{ backgroundImage: "url('/images/roadroam.png')" }}
+    style={{ backgroundImage: "url('/images/roadroam.webp')" }}
   />
   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-black/30 to-black/80"></div>
 <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
@@ -181,14 +181,14 @@ export const AboutUs = () => (
         
         {/* Row 1: Safety (Image Left, Text Right) */}
         <FeatureCard 
-          imgSrc="/images/certified.jpg" 
+          imgSrc="/images/certified.webp" 
           title="Certified Safety & Tracking" 
           description="All vehicles are equipped with real-time GPS tracking. We prioritize the safety of women and solo travelers with 24/7 monitoring."
         />
         
         {/* Row 2: Chauffeur (Text Left, Image Right) */}
         <FeatureCard 
-          imgSrc="/images/chauffeur.png" 
+          imgSrc="/images/chauffeur.webp" 
           title="Expert Chauffeur Driven" 
           description="Travel stress-free with our vetted, professional drivers. Focus on your journey while we handle the traffic and navigation."
           reverse={true} // This flips the layout
@@ -196,14 +196,14 @@ export const AboutUs = () => (
         
         {/* Row 3: Value (Image Left, Text Right) */}
         <FeatureCard 
-          imgSrc="/images/rupee.jpg" 
+          imgSrc="/images/rupee.webp" 
           title="Best Value Guaranteed" 
           description="Premium, well-maintained cars at the most competitive rates in the market. Get the best possible service without overpaying."
         />
 
         {/* Row 4: Support (Text Left, Image Right) */}
         <FeatureCard 
-          imgSrc="/images/support.png" 
+          imgSrc="/images/support.webp" 
           title="24/7 Customer Support" 
           description="Our Team is available for any sort of doubt and support related to your car rental, we are available on WhatsApp, Sms and Call +91 7411243463 "
           reverse={true} // This flips the layout
@@ -286,33 +286,33 @@ export const Fleet = () => (
         <FleetCard 
           name="Hycross" 
           description="Arrive in style. Our luxury fleet is available for the journey." 
-          imgSrc="/images/hycross.png" 
+          imgSrc="/images/hycross.webp" 
         />
         <FleetCard 
           name="Crysta" 
           description="Arrive in style. Our luxury fleet is available for the journey." 
-          imgSrc="/images/crysta.jpeg" 
+          imgSrc="/images/crysta.webp" 
         />
         <FleetCard 
           name="Innova" 
           description="Spacious, powerful, and perfect for outstation trips or large groups." 
-          imgSrc="/images/innova.png" 
+          imgSrc="/images/innova.webp" 
         />
         <FleetCard 
           name="Ertiga" 
           description="Spacious, powerful, and perfect for outstation trips or large groups." 
-          imgSrc="/images/ertiga.jpeg" 
+          imgSrc="/images/ertiga.webp" 
         />
 
         <FleetCard 
           name="Ciaz" 
           description="Comfortable and economical for city rides and small families." 
-          imgSrc="/images/ciaz.png" 
+          imgSrc="/images/ciaz.webp" 
         />
         <FleetCard 
           name="Dzire" 
           description="Comfortable and economical for city rides and small families." 
-          imgSrc="/images/dzire.jpg" 
+          imgSrc="/images/dzire.webp" 
         />
             
                 
@@ -352,15 +352,15 @@ export const Destinations = () => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
       <DestinationCard 
         name="Bangalore Palace" 
-        imgSrc="/images/palace.jpg" 
+        imgSrc="/images/palace.webp" 
         description="A stunning example of Tudor architecture in the heart of the city, featuring elegant woodcarvings and beautiful gardens."
       />
       {/* The updated "View More" card with Cubbon Park image */}
-      <ViewMoreCard imgSrc="/images/a.jpg" />
+      <ViewMoreCard imgSrc="/images/a.webp" />
 
       <DestinationCard 
         name="Lalbagh Botanical Garden" 
-        imgSrc="/images/Lalbagh-Bangalore.jpg" 
+        imgSrc="/images/Lalbagh-Bangalore.webp" 
         description="A historic garden with a rare collection of tropical plants, a famous glass house, and a serene lake."
       />
        

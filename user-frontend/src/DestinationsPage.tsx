@@ -11,37 +11,37 @@ const places = [
   {
     name: 'Nandi Hills',
     description: 'A perfect spot for sunrise views and trekking, this ancient hill fortress is a popular quick getaway.',
-    imgSrc: '/images/nandiHills.jpeg',
+    imgSrc: '/images/nandiHills.webp',
     layout: 'md:col-span-1' // Square
   },
   {
     name: 'Bannerghatta National Park',
     description: 'A large biological park with a zoo, a butterfly park, and a popular safari, all on the outskirts of the city.',
-    imgSrc: '/images/nationalPark.jpg',
+    imgSrc: '/images/nationalPark.webp',
     layout: 'md:col-span-2' // Rectangle
   },
   {
     name: 'Savandurga',
     description: 'One of the largest monolith hills in Asia. It offers challenging climbs and stunning views of the surrounding landscape.',
-    imgSrc: '/images/savandurga.jpg',
+    imgSrc: '/images/savandurga.webp',
     layout: 'md:col-span-2' // Rectangle
   },
   {
     name: 'Skandagiri',
     description: 'Famous for its "walk above the clouds," this night trek is a favorite for adventure seekers wanting to see a sea of clouds at dawn.',
-    imgSrc: '/images/Skandagiri.jpg',
+    imgSrc: '/images/Skandagiri.webp',
     layout: 'md:col-span-1' // Square
   },
   {
     name: 'Mall of Asia',
     description: 'Phoenix Mall Of Asia in North Bengaluru is Indias first luxury retail mall to usher in a new age of shopping and leisure. ',
-    imgSrc: '/images/mallofasia.jpg',
+    imgSrc: '/images/mallofasia.webp',
     layout: 'md:col-span-1' // Square
   },
   {
     name: 'Ramanagara(Mekedatu-Sangama)',
     description: "Mekedatu is a scenic spot on the Kaveri River, with a narrow gorge. Its remote, and most visitors travel by bus. The name means `Goat's Leap`.",
-    imgSrc: '/images/Mekedatu-Sangama.jpg',
+    imgSrc: '/images/Mekedatu-Sangama.webp',
     layout: 'md:col-span-2' // Rectangle
   },
 ];
