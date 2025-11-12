@@ -65,6 +65,8 @@ app.post('/api/bookings', async (c) => {
     const env = c.env; 
     try {
         const bookingData: BookingRequest = await c.req.json(); 
+        // CRITICAL FIX: Run Server-Side Validation before DB insertion
+        validateBookingData(bookingData);
         const result = await env.DB.prepare(
           `INSERT INTO bookings (full_name, email, phone_number, aadhar_number, rental_service_name, car_model, pickup_date, return_date, pickup_location)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
@@ -83,8 +85,12 @@ app.post('/api/bookings', async (c) => {
         c.executionCtx.waitUntil(sendAdminNotification(bookingData, env));
         return c.json({ id: result.meta.last_row_id, message: "Booking received." }, 201);
     } catch (error) {
-        console.error("Booking submission error:", error);
-        return c.json({ message: "Invalid booking data submitted.", status: "error" }, 400);
+        // FIX: Ensure error.message is safely returned in the 400 response
+        console.error("Validation failed:", error); 
+        return c.json({ 
+            message: error instanceof Error ? error.message : "Invalid submission data.", 
+            status: "error" 
+        }, 400);
     }
 });
 
@@ -295,6 +301,34 @@ async function sendAdminNotification(bookingData: BookingRequest, env: Env) {
     console.error('sendAdminNotification: fetch error', err);
   }
 }
+
+// --- NEW HELPER: Validation Function ---
+function validateBookingData(data: BookingRequest): boolean {
+    // Helper to check if a string is composed purely of digits
+    const isNumeric = (str: string) => /^\d+$/.test(str);
+
+    // 1. Full Name (String length check: 2 to 25 characters)
+    if (data.fullName.length > 25 || data.fullName.length < 3) {
+        throw new Error("Name must be between 3 and 25 characters.");
+    }
+
+    // 2. Phone Number (Exactly 10 digits and numeric)
+    if (!data.phoneNumber || data.phoneNumber.length !== 10 || !isNumeric(data.phoneNumber)) {
+        throw new Error("Phone number must be exactly 10 digits.");
+    }
+
+    // 3. Aadhar Number (Optional, but if present, exactly 12 digits and numeric)
+    if (data.aadharNumber && data.aadharNumber.length > 0) {
+        if (data.aadharNumber.length !== 12 || !isNumeric(data.aadharNumber)) {
+            throw new Error("Aadhar number must be exactly 12 digits.");
+        }
+    }
+    
+    // Note: Email format validation is usually handled by the browser/API itself.
+
+    return true; // Validation passed
+}
+
 
 // --- EMAIL FUNCTION 2: Notify User (NEW, uses your robust pattern) ---
 async function sendUserConfirmation(bookingData: BookingRecord, env: Env) {

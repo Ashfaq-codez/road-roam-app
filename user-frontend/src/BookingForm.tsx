@@ -1,7 +1,6 @@
-// user-frontend/src/BookingForm.tsx
-// Includes professional modal with BLURRED background.
 
-import { useState } from 'react';
+
+import { useState, useRef, useEffect } from 'react'; // <-- useRef and useEffect are essential for Maps
 import DatePicker from 'react-datepicker';
 import { format } from 'date-fns';
 import "react-datepicker/dist/react-datepicker.css";
@@ -10,7 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 interface BookingRequest {
   fullName: string; email: string; phoneNumber: string; aadharNumber?: string; 
   rentalServiceName: string; carModel: string; pickupDate: string;
-  returnDate: string; pickupLocation: string;
+  returnDate: string; pickupLocation: string; // <-- This field is now tied to Maps API
 }
 const rentalServices = [
   "Airport Transfers", "City Cruise", "Tours & Trips",
@@ -30,8 +29,7 @@ const API_ROOT = import.meta.env.VITE_API_ROOT || '';
 // --- (End of setup) ---
 
 
-// --- Helper Component: Date Input ---
-// (This component remains unchanged)
+// --- Helper Component 1: Date Input (Remains the same) ---
 const DateInput: React.FC<{ label: string; name: keyof BookingRequest; value: string; onChange: (date: Date | null, name: string) => void; required?: boolean }> = ({ label, name, value, onChange, required }) => {
     const selectedDate = value ? new Date(value.replace(/-/g, '/')) : null;
     return (
@@ -52,6 +50,69 @@ const DateInput: React.FC<{ label: string; name: keyof BookingRequest; value: st
     );
   };
 // --------------------------------------
+
+// --- Helper Component 2: Google Maps Autocomplete Input (CRITICAL FIX) ---
+interface AutocompleteProps {
+  label: string;
+  name: keyof BookingRequest;
+  value: string;
+  onChange: (value: string, name: string) => void;
+}
+
+const GooglePlacesAutocomplete: React.FC<AutocompleteProps> = ({ label, name, value, onChange }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  
+  // FIX: Local state (inputValue) is DELETED, as it was causing the conflict.
+
+  useEffect(() => {
+    // Check if the Google Maps API has loaded the 'places' library
+    if (window.google && window.google.maps && window.google.maps.places) {
+      const autocomplete = new window.google.maps.places.Autocomplete(
+        inputRef.current!, 
+        { types: ['address'], componentRestrictions: { country: 'in' } }
+      );
+
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        const finalAddress = place.formatted_address || place.name || '';
+        
+        // CRITICAL FIX: Only update the parent state ONCE, when a PLACE IS SELECTED.
+        // The Maps API handles all typing directly in the inputRef.current.
+        onChange(finalAddress, name);
+      });
+      
+      // OPTIONAL: Add a listener to update parent state if the user manually deletes everything
+      // (This prevents the database from getting a NULL value if the user types, then deletes.)
+      inputRef.current?.addEventListener('change', (e) => {
+          onChange((e.target as HTMLInputElement).value, name);
+      });
+    }
+    
+  // Note: We remove the [onChange, name] dependencies here because the listener is only added once.
+  }, []); 
+
+  return (
+    <div>
+      <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
+        {label}
+      </label>
+      <input
+        ref={inputRef}
+        id={name}
+        type="text"
+        name={name}
+        // CRITICAL FIX: Use defaultValue instead of value to make the input 'uncontrolled'
+        // This stops React from fighting the Google Maps API for every keystroke.
+        defaultValue={value} 
+        
+        // DELETE: We remove the onChange handler entirely to let Maps control typing
+        
+        placeholder="Search for Pick-up Address (e.g., Koramangala, Bangalore)..."
+        className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 transition duration-150"
+      />
+    </div>
+  );
+};
 
 
 // Main Component
@@ -83,7 +144,7 @@ export function BookingForm() {
     setModalInfo(null); 
 
     try {
-      if (!formData.fullName || !formData.email || !formData.pickupDate || !formData.carModel) {
+      if (!formData.fullName || !formData.email || !formData.pickupDate || !formData.carModel || !formData.pickupLocation) {
         throw new Error("Please fill out all required fields.");
       }
 
@@ -118,7 +179,7 @@ export function BookingForm() {
       }
     } catch (error) {
       setModalInfo({
-          title: "Submission Error",
+          title: "Input Validation Error", 
           message: error instanceof Error ? error.message : 'Unknown network error.',
           type: 'error'
       });
@@ -126,18 +187,16 @@ export function BookingForm() {
         setStatus('idle');
     }
   };
-  
   const buttonDisabled = status === 'loading';
 
 
   return (
     <>
-      {/* --- THE MODAL COMPONENT --- */}
+      {/* --- THE MODAL COMPONENT (Remains the same) --- */}
       {modalInfo && (
         <div 
-          // --- CRITICAL FIX: Replaced black overlay with a blurred backdrop ---
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/30 backdrop-blur-sm"
-          onClick={() => setModalInfo(null)} // Click background to close
+          onClick={() => setModalInfo(null)}
         >
           <div 
             className="bg-white rounded-lg shadow-2xl p-8 max-w-sm w-full"
@@ -150,7 +209,7 @@ export function BookingForm() {
             </h2>
             <p className="text-gray-700 mb-6">{modalInfo.message}</p>
             <button
-              onClick={() => setModalInfo(null)} // Close button
+              onClick={() => setModalInfo(null)}
               className={`w-full py-3 rounded-lg text-white font-bold ${
                 modalInfo.type === 'success' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'
               }`}
@@ -227,7 +286,15 @@ export function BookingForm() {
                 required 
               />
             </div>
-            <InputField label="Pick-up Location" type="text" name="pickupLocation" value={formData.pickupLocation} onChange={handleChange} />
+            
+            {/* --- CRITICAL FIX: USE AUTOCOMPLETE HERE --- */}
+            <GooglePlacesAutocomplete 
+              label="Pick-up Location *" 
+              name="pickupLocation" 
+              value={formData.pickupLocation} 
+              // Autocomplete passes value/name, so we need a simplified handler
+              onChange={(value, fieldName) => handleChange({ target: { name: fieldName, value } } as React.ChangeEvent<HTMLInputElement>)}
+            />
 
             <button
               type="submit"
