@@ -15,12 +15,42 @@ import {
   Footer 
 } from './LandingPageComponents';
 import FloatingContact from './FloatingContact';
+import ScrollToTopButton from './ScrollToTopButton';
+import React, { useState, useEffect } from 'react';
 
 function App() {
+  // 1. New State for button visibility
+  const [showButton, setShowButton] = useState(false);
+
+  // 2. Logic to track the Contact section visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      // Find the element by its ID
+      const contactSection = document.getElementById('contact');
+      
+      if (contactSection) {
+        // Get the position of the top of the contact section relative to the viewport
+        const contactRect = contactSection.getBoundingClientRect();
+        
+        // Show the button once the user scrolls past the top of the contact section
+        if (contactRect.top < window.innerHeight) {
+          setShowButton(true);
+        } else {
+          setShowButton(false);
+        }
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []); // Run only once on mount
+
   return (
     // FINAL FIX: Add overflow-x-hidden to prevent the horizontal scroll bar on mobile
     <div className="font-poppins overflow-x-hidden"> 
       
+      <ScrollToTopButton isVisible={showButton} />
+
       {/* Add Floating Contact Component --- */}
       <FloatingContact />
 

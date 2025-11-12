@@ -474,6 +474,7 @@ export const Contact = () => (
     <p className="text-xl text-gray-500 mb-4">Have questions? We're here to help.</p>
     
     {/* FIX: Use 'break-words' and 'text-wrap' to force long URLs/emails to break */}
+    <div className='mb-10'>
     <p className="text-[20px] font-semibold text-red-600 break-words text-wrap">
       <span className='text-white'>Email: </span> roadroamcarrentals@gmail.com
     </p>
@@ -481,6 +482,14 @@ export const Contact = () => (
     <p className="text-[20px] font-semibold text-red-600 break-words text-wrap">
       <span className='text-white'>phone: </span> +91 7411243463
     </p>
+    </div>
+    <a 
+      href="#booking-form" 
+      className="inline-block bg-red-600 text-white font-bold py-3 px-10 text-lg rounded-lg shadow-xl 
+                 hover:bg-red-700 transition duration-300 transform hover:scale-105"
+    >
+      Book Now
+    </a>
   </section>
 );
 
