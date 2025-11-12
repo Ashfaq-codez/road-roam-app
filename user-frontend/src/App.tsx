@@ -16,7 +16,7 @@ import {
 } from './LandingPageComponents';
 import FloatingContact from './FloatingContact';
 import ScrollToTopButton from './ScrollToTopButton';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 function App() {
   // 1. New State for button visibility
