@@ -14,41 +14,48 @@ const FloatingContact: React.FC = () => {
       
       {/* --- 1. WHATSAPP BUTTON (Fixed Left, Bottom Aligned) --- */}
       <div className="fixed left-3 bottom-8 z-50"> 
-        <div className="relative"> {/* Use relative for absolute positioning of pop-out */}
+        <div className="relative">
           {/* WhatsApp Icon (The trigger - FIXED SIZE) */}
           <button 
             type="button" 
-            // Toggle the chat pop-out
             onClick={() => setShowWhatsappChat(!showWhatsappChat)}
             className="p-3 bg-green-600 rounded-full shadow-2xl transition duration-200 hover:bg-green-700 relative z-20 w-14 h-14 flex items-center justify-center"
           >
             <img src={WHATSAPP_ICON_SRC} alt="WhatsApp" className="w-7 h-7" />
           </button>
           
-          {/* --- NEW: WhatsApp Chat Pop-Out Box --- */}
+          {/* --- NEW: WhatsApp Chat Pop-Out Box (ENHANCED STYLING) --- */}
           {showWhatsappChat && (
             <div 
-              // Positioned absolutely above the button
-              className="absolute bottom-full left-0 mb-3 bg-white rounded-xl shadow-lg p-4 text-center transform origin-bottom-left animate-chat-pop-in"
-              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+              // Removed absolute positioning from the close button's container
+              className="absolute bottom-full left-0 mb-3 w-60 bg-white rounded-xl shadow-lg p-4 text-center transform origin-bottom-left animate-chat-pop-in"
+              onClick={(e) => e.stopPropagation()}
             >
-              <p className="text-gray-800 text-sm font-semibold mb-2">Chat with us on WhatsApp!</p>
+              {/* CRITICAL FIX: Close button is now inside the main div */}
+              <div className="flex justify-between items-start mb-3">
+                <p className="text-gray-900 text-md font-bold">Booking or Need Help?</p>
+                <button
+                  onClick={() => setShowWhatsappChat(false)}
+                  // Style the button to be small and discreet
+                  className="text-gray-500 hover:text-gray-800 transition duration-150 p-0"
+                  style={{ lineHeight: 1 }}
+                >
+                  ✕
+                </button>
+              </div>
+
+              <p className="text-gray-600 text-xs mb-4 text-left">Chat with us directly on WhatsApp for support or bookings.</p>
+              
               <a 
                 href={WHATSAPP_LINK} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                onClick={() => setShowWhatsappChat(false)} // Close pop-out after clicking link
-                className="inline-flex items-center px-4 py-2 bg-green-500 text-white text-sm font-bold rounded-lg hover:bg-green-600 transition"
-              >
-                Start Chat
-              </a>
-              {/* Close button for the chat pop-out */}
-              <button
                 onClick={() => setShowWhatsappChat(false)}
-                className="absolute -top-2 -right-2 bg-gray-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-gray-800 transition"
+                className="inline-flex items-center justify-center px-4 py-2 bg-green-500 text-white text-sm font-bold rounded-lg hover:bg-green-600 transition w-full"
               >
-                ✕
-              </button>
+                <img src={WHATSAPP_ICON_SRC} alt="WhatsApp" className="w-4 h-4 mr-2" />
+                Start Chat Now
+              </a>
             </div>
           )}
         </div>
