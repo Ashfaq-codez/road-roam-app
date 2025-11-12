@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 const PHONE_NUMBER = '+917411243463';
 const WHATSAPP_LINK = `https://wa.me/${PHONE_NUMBER.replace(/\s/g, '')}`; 
-const WHATSAPP_ICON_SRC = '/images/whatsapp-icon.svg'; 
+const WHATSAPP_ICON_SRC = '/images/whatsapp_icon.svg'; 
 
 const FloatingContact: React.FC = () => {
   const [showPhone, setShowPhone] = useState(false);

@@ -3,6 +3,8 @@
 import React, { useState } from 'react'; // 1. Import useState
 // We reuse the Header and Footer for a consistent look
 import { Header, Footer } from './LandingPageComponents';
+import ScrollToTopButton from './ScrollToTopButton'; // <-- NEW IMPORT
+import FloatingContact from './FloatingContact';
 
 
 // --- Sample Data: Places within 80km of Bangalore ---
@@ -53,7 +55,10 @@ export default function DestinationsPage() {
   return (
     <div className="font-poppins overflow-x-hidden"> 
       
+      <ScrollToTopButton isVisible={false} /> 
+      <FloatingContact />
       <Header />
+
 
       <main>
         {/* Page Title */}
