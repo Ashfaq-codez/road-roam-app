@@ -1,10 +1,11 @@
 // user-frontend/src/ScrollToTopButton.tsx
 
-import React from 'react'; // Remove useState, useEffect
+import React, { useState, useEffect } from 'react';
 
-const ScrollToTopButton: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
-  
-  // Function to scroll to the top of the page smoothly
+const ScrollToTopButton: React.FC = () => {
+  // Internal state for visibility
+  const [showButton, setShowButton] = useState(false); 
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -12,16 +13,36 @@ const ScrollToTopButton: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     });
   };
 
+  const toggleVisibility = () => {
+    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollDepth = window.pageYOffset / totalHeight;
+
+    // Show button if scrolled past 200px AND past 25% of the content depth
+    if (window.pageYOffset > 200 && scrollDepth > 0.25) { 
+      setShowButton(true);
+    } else {
+      setShowButton(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', toggleVisibility);
+    
+    // CRITICAL FIX: Run initial check on mount
+    toggleVisibility(); 
+    
+    return () => window.removeEventListener('scroll', toggleVisibility);
+  }, []);
+
   return (
     <button
       onClick={scrollToTop}
-      // CRITICAL FIX: Visibility controlled by isVisible prop
+      // Visibility is controlled by internal state
       className={`fixed bottom-24 right-3 z-40 p-2.5 bg-red-600 text-white rounded-full shadow-2xl transition-opacity duration-300 transform hover:scale-110 ${
-        isVisible ? 'opacity-100 scale-100' : 'opacity-0 pointer-events-none'
+        showButton ? 'opacity-100 scale-100' : 'opacity-0 pointer-events-none'
       }`}
       aria-label="Scroll to top"
     >
-      {/* Up Arrow Icon */}
       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
       </svg>
