@@ -27,13 +27,6 @@ function App() {
       <main>
         {/* 2. Page Content (These sections load immediately) */}
         <Hero />
-        <AboutUs /> 
-        <Services />
-        <Fleet />
-        <Destinations />
-        <Packages />
-        <Contact />
-
         {/* 3. CRITICAL FIX: Lazy-Loaded Booking Form Section */}
         {/* This Suspense boundary ensures the form loads only when visible (or shortly after) */}
         <section className="bg-gray-100 py-20">
@@ -48,6 +41,12 @@ function App() {
             <LazyBookingForm />
           </Suspense>
         </section>
+        <AboutUs /> 
+        <Services />
+        <Packages />
+        <Destinations />
+        <Fleet />
+        <Contact />
 
       </main>
 
