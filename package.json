@@ -11,7 +11,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20251106.1",
     "@types/bun": "latest",
-    "wrangler": "^4.46.0"
+    "wrangler": "^4.48.0"
   },
   "peerDependencies": {
     "typescript": "^5"

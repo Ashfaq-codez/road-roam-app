@@ -1,10 +1,10 @@
 // user-frontend/src/ScrollToTopButton.tsx
+// This component manages its own state internally and takes NO props.
 
 import React, { useState, useEffect } from 'react';
 
-const ScrollToTopButton: React.FC = () => {
-  // Internal state for visibility
-  const [showButton, setShowButton] = useState(false); 
+const ScrollToTopButton: React.FC = () => { // Removed prop type here
+  const [showButton, setShowButton] = useState(false); // Internal state
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -17,7 +17,6 @@ const ScrollToTopButton: React.FC = () => {
     const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
     const scrollDepth = window.pageYOffset / totalHeight;
 
-    // Show button if scrolled past 200px AND past 25% of the content depth
     if (window.pageYOffset > 200 && scrollDepth > 0.25) { 
       setShowButton(true);
     } else {
@@ -27,8 +26,6 @@ const ScrollToTopButton: React.FC = () => {
 
   useEffect(() => {
     window.addEventListener('scroll', toggleVisibility);
-    
-    // CRITICAL FIX: Run initial check on mount
     toggleVisibility(); 
     
     return () => window.removeEventListener('scroll', toggleVisibility);
@@ -37,7 +34,7 @@ const ScrollToTopButton: React.FC = () => {
   return (
     <button
       onClick={scrollToTop}
-      // Visibility is controlled by internal state
+      // CRITICAL FIX: Visibility driven by internal state
       className={`fixed bottom-24 right-3 z-40 p-2.5 bg-red-600 text-white rounded-full shadow-2xl transition-opacity duration-300 transform hover:scale-110 ${
         showButton ? 'opacity-100 scale-100' : 'opacity-0 pointer-events-none'
       }`}
