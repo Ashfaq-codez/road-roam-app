@@ -18,7 +18,7 @@ function App() {
     <div className="font-poppins overflow-x-hidden">
       
       {/* --- Floating Components --- */}
-      <ScrollToTopButton /> 
+      <ScrollToTopButton isVisible={false} />
       <FloatingContact /> 
       
       {/* 1. Header */}

@@ -3,8 +3,8 @@
 
 import React, { useState, useEffect } from 'react';
 
-const ScrollToTopButton: React.FC = () => { // Removed prop type here
-  const [showButton, setShowButton] = useState(false); // Internal state
+const ScrollToTopButton: React.FC<{ isVisible: boolean }> = ({  }) => { // Correct component signature (no props)
+  const [isVisible, setIsVisible] = useState(false); // Internal state
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -13,19 +13,23 @@ const ScrollToTopButton: React.FC = () => { // Removed prop type here
     });
   };
 
+  // Function to determine when the button should be visible (past 200px and 25% depth)
   const toggleVisibility = () => {
     const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
     const scrollDepth = window.pageYOffset / totalHeight;
 
+    // Show button if scrolled past 200px AND past 25% of the content depth
     if (window.pageYOffset > 200 && scrollDepth > 0.25) { 
-      setShowButton(true);
+      setIsVisible(true);
     } else {
-      setShowButton(false);
+      setIsVisible(false);
     }
   };
 
   useEffect(() => {
+    // Add scroll listener
     window.addEventListener('scroll', toggleVisibility);
+    // Run initial check on mount
     toggleVisibility(); 
     
     return () => window.removeEventListener('scroll', toggleVisibility);
@@ -34,9 +38,9 @@ const ScrollToTopButton: React.FC = () => { // Removed prop type here
   return (
     <button
       onClick={scrollToTop}
-      // CRITICAL FIX: Visibility driven by internal state
+      // CRITICAL FIX: Visibility driven by internal state (isVisible)
       className={`fixed bottom-24 right-3 z-40 p-2.5 bg-red-600 text-white rounded-full shadow-2xl transition-opacity duration-300 transform hover:scale-110 ${
-        showButton ? 'opacity-100 scale-100' : 'opacity-0 pointer-events-none'
+        isVisible ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
       aria-label="Scroll to top"
     >
