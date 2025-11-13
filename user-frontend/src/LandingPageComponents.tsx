@@ -1,6 +1,7 @@
 // user-frontend/src/LandingPageComponents.tsx
 
 import React, { useState } from 'react'; 
+import { Link } from 'react-router-dom';
 
 // import { useInView } from 'react-intersection-observer';
 
@@ -12,8 +13,9 @@ export const Header = () => {
     <header className="bg-white shadow-md sticky top-0 z-50">
       <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
         
+        
         {/* NEW LOGO STRUCTURE (FIXED: Alignment) */}
-        <div className="flex flex-col h-10 -space-y-1 z-50">
+        <Link to="/" className="flex flex-col h-10 -space-y-1 z-50">
           <div className="text-3xl font-extrabold flex">
             
             {/* CRITICAL FIX: Add conditional class here */}
@@ -27,7 +29,7 @@ export const Header = () => {
           <span className="text-gray-600 text-xs font-semibold tracking-tight self-end mr-0.5">
             Car Rentals
           </span>
-        </div>
+        </Link>
         
         {/* ... (Mobile Menu Button Logic) ... */}
         <button 
@@ -498,7 +500,7 @@ export const Footer = () => (
   <footer className="text-center py-8 bg-black">
     
     {/* --- CRITICAL FIX: New Logo Structure --- */}
-    <div className="flex items-baseline justify-center mb-2">
+    <Link to="/" className="flex items-baseline justify-center mb-2">
       <span className="text-2xl font-extrabold text-white">Road</span>
       
       <div className="flex flex-col -ml-0.5">
@@ -507,7 +509,7 @@ export const Footer = () => (
           Car Rentals
         </span>
       </div>
-    </div>
+    </Link>
     {/* --- End Logo Structure --- */}
 
     <p className="text-gray-400 text-sm">A Chauffeured service for your travel needs.</p>

@@ -74,24 +74,22 @@ function AdminDashboard() {
     fetchBookings();
   }, [fetchBookings]); 
 
-  // --- CRITICAL SECURITY FIX: Disable BF Cache ---
+// --- CRITICAL SECURITY FIX: Disable BF Cache on ALL mobile returns ---
+// admin-frontend/src/App.tsx (Inside the security useEffect hook)
+
 useEffect(() => {
-    // This listener fires when the page loads or is restored from the back/forward cache.
     const handlePageShow = (event: PageTransitionEvent) => {
-        // 'event.persisted' is true when the page is loaded from the BF Cache (e.g., Back button)
-        if (event.persisted) {
-            // Force a hard reload. This clears the cached memory and forces the browser
-            // to validate the session cookie with Cloudflare Zero Trust, which will fail.
+        // We only check event.persisted, which is the primary indicator of BF Cache hit
+        if (event.persisted) { 
+            // Force a hard reload to invalidate the session
             window.location.reload(); 
         }
     };
 
     window.addEventListener('pageshow', handlePageShow);
     
-    // Clean up the event listener when the component unmounts
     return () => window.removeEventListener('pageshow', handlePageShow);
-}, []); // Runs once on mount
-// --- END SECURITY FIX ---
+}, []);
 
   // Polished Loading State
   if (loading) return (
