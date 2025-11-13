@@ -77,19 +77,32 @@ function AdminDashboard() {
 // --- CRITICAL SECURITY FIX: Disable BF Cache on ALL mobile returns ---
 // admin-frontend/src/App.tsx (Inside the security useEffect hook)
 
+// --- CRITICAL SECURITY FIX: Aggressive BF Cache Check ---
 useEffect(() => {
-    const handlePageShow = (event: PageTransitionEvent) => {
-        // We only check event.persisted, which is the primary indicator of BF Cache hit
-        if (event.persisted) { 
-            // Force a hard reload to invalidate the session
-            window.location.reload(); 
+    
+    // Function that runs every time the page becomes visible (from cache or new load)
+    const handleVisibilityChange = () => {
+        // Check if the page visibility state has changed to 'visible' 
+        // AND check if the page was loaded from the back/forward cache.
+        if (document.visibilityState === 'visible') {
+            // Force a check of the security token by re-fetching data.
+            // If the session is dead (logged out), fetchBookings will fail with a 403,
+            // and the user will be redirected by Cloudflare Access.
+            fetchBookings(); 
         }
     };
-
-    window.addEventListener('pageshow', handlePageShow);
     
-    return () => window.removeEventListener('pageshow', handlePageShow);
-}, []);
+    // Add event listeners for both visibility change (for tab switching) and page load
+    window.addEventListener('pageshow', handleVisibilityChange);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Clean up listeners
+    return () => {
+        window.removeEventListener('pageshow', handleVisibilityChange);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+}, [fetchBookings]); // Depend on fetchBookings to run the security check
+// --- END SECURITY FIX ---
 
   // Polished Loading State
   if (loading) return (
