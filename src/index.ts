@@ -74,7 +74,7 @@ app.post('/api/bookings', async (c) => {
         // CRITICAL FIX: Run Server-Side Validation before DB insertion
         validateBookingData(bookingData);
         const result = await env.DB.prepare(
-          `INSERT INTO bookings (full_name, email, phone_number, aadhar_number, rental_service_name, car_model, pickup_date, return_date, pickup_location, pickup_lat, pickup_lng, passangers)
+          `INSERT INTO bookings (full_name, email, phone_number, aadhar_number, rental_service_name, car_model, pickup_date, return_date, pickup_location, pickup_lat, pickup_lng, passengers)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)` // Total 11 placeholders now!
     ).bind(
           bookingData.fullName,

@@ -1,91 +1,57 @@
-// user-frontend/src/App.tsx
+// user-frontend/src/App.tsx (Final Code with Code Splitting)
 
-// import React from 'react';
-// BookingForm is used for the booking section logic
-import { BookingForm } from './BookingForm'; 
-import { 
-  Header, 
-  Hero, 
-  AboutUs,
-  Services, 
-  Fleet, 
-  Destinations, 
-  Packages, 
-  Contact, 
-  Footer 
-} from './LandingPageComponents';
+import React, { Suspense } from 'react'; // 1. Import Suspense
+import {
+  Header, Hero, Services, Fleet, Destinations, Packages, Contact, Footer, AboutUs
+} from './LandingPageComponents'; // Ensure all static components are imported
 import FloatingContact from './FloatingContact';
 import ScrollToTopButton from './ScrollToTopButton';
-import  { useState, useEffect } from 'react';
+
+// --- CRITICAL FIX: LAZY LOAD COMPONENT DEFINITION ---
+// 2. Use React.lazy for the BookingForm component
+const LazyBookingForm = React.lazy(() => import('./BookingForm'));
+// --- -------------------------------------------- ---
+
 
 function App() {
-  // 1. New State for button visibility
-  const [showButton, setShowButton] = useState(false);
-
-  // 2. Logic to track the Contact section visibility
-  useEffect(() => {
-    const handleScroll = () => {
-      // Find the element by its ID
-      const contactSection = document.getElementById('contact');
-      
-      if (contactSection) {
-        // Get the position of the top of the contact section relative to the viewport
-        const contactRect = contactSection.getBoundingClientRect();
-        
-        // Show the button once the user scrolls past the top of the contact section
-        if (contactRect.top < window.innerHeight) {
-          setShowButton(true);
-        } else {
-          setShowButton(false);
-        }
-      }
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []); // Run only once on mount
-
   return (
-    // FINAL FIX: Add overflow-x-hidden to prevent the horizontal scroll bar on mobile
-    <div className="font-poppins overflow-x-hidden"> 
+    <div className="font-poppins overflow-x-hidden">
       
-      <ScrollToTopButton isVisible={showButton} />
-
-      {/* Add Floating Contact Component --- */}
-      <FloatingContact />
-
-      {/* 1. Sticky Header */}
+      {/* --- Floating Components --- */}
+      <ScrollToTopButton isVisible={false} /> 
+      <FloatingContact /> 
+      
+      {/* 1. Header */}
       <Header />
 
       <main>
-        {/* 2. Full-screen Hero Image */}
+        {/* 2. Page Content (These sections load immediately) */}
         <Hero />
-        
-        {/* 7. The Booking Form */}
+        <AboutUs /> 
+        <Services />
+        <Fleet />
+        <Destinations />
+        <Packages />
+        <Contact />
+
+        {/* 3. CRITICAL FIX: Lazy-Loaded Booking Form Section */}
+        {/* This Suspense boundary ensures the form loads only when visible (or shortly after) */}
         <section className="bg-gray-100 py-20">
-          <BookingForm />
+          <Suspense 
+            fallback={
+              <div className="text-center py-20 text-gray-700 font-bold">
+                Loading Booking Form...
+              </div>
+            }
+          >
+            {/* The actual component call */}
+            <LazyBookingForm />
+          </Suspense>
         </section>
 
-        {/* 2. NEW: About Us / Value Proposition */}
-        <AboutUs />
-
-        {/* 3. Our Services Section */}
-        <Services />
-
-        {/* 6. Tour Packages Section */}
-        <Packages />
-
-        {/* 5. Bangalore Destinations Section */}
-        <Destinations />
-        
-        {/* 4. Car Fleet Section */}
-        <Fleet />
-
-        {/* 8. Contact Info */}
-        <Contact />
       </main>
 
-      {/* 9. Footer */}
+      {/* 4. Footer */}
       <Footer />
 
     </div>
