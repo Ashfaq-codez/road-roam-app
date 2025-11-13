@@ -198,7 +198,7 @@ const LocationMapPicker: React.FC<LocationPickerProps> = ({ label, name, value, 
 };
 
 // Main Component
-export function BookingForm() {
+export default function BookingForm() {
   const [formData, setFormData] = useState<BookingRequest>(initialFormState);
   const [status, setStatus] =  useState<'idle' | 'loading'>('idle'); 
   const [modalInfo, setModalInfo] = useState<{ title: string, message: string, type: 'success' | 'error' } | null>(null);
