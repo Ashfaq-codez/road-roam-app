@@ -41,6 +41,9 @@ CREATE TABLE IF NOT EXISTS bookings (
     pickup_date TEXT NOT NULL,
     return_date TEXT NOT NULL,
     pickup_location TEXT,
+    pickup_lat REAL, 
+    pickup_lng REAL,
+    passengers REAL,
     status TEXT NOT NULL DEFAULT 'PENDING',
     created_at TIMESTAMP DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'now'))
 );

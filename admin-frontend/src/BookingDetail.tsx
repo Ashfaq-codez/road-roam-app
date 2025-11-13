@@ -8,6 +8,7 @@ const API_ROOT = import.meta.env.VITE_API_ROOT || '';
 interface BookingRecord {
   id: number; full_name: string; email: string; phone_number: string; aadhar_number: string | null;
   rental_service_name: string; car_model: string; pickup_date: string; return_date: string; pickup_location: string;
+  pickup_lat: number; pickup_lng: number; passengers: number; // Added Lat/Lng and Passengers
   status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED'; created_at: string;
 }
 interface BookingUpdateData extends Partial<BookingRecord> { status?: BookingRecord['status']; }
@@ -27,7 +28,7 @@ const BookingDetail: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  // --- (Helper functions: getStatusBadge, fetchBooking, handleChange, etc.) ---
+  // --- (Helper functions: getStatusBadge, fetchBooking, handleCancelEdit) ---
   
   const getStatusBadge = (status: BookingRecord['status']) => {
     switch (status) {
@@ -57,8 +58,23 @@ const BookingDetail: React.FC = () => {
 
   useEffect(() => { fetchBooking(); }, [fetchBooking]);
 
+  // CRITICAL FIX: Add logic to convert passenger string input to number
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    let { name, value } = e.target;
+    
+    // Convert number type input strings to actual numbers
+    if (name === 'passengers') {
+        const numValue = parseInt(value, 10);
+        
+        // 2. If the conversion is successful (i.e., not NaN), store the number.
+        // If it's NaN (the user typed 'e' or nothing), we still store 0 or '', which the form state can handle.
+        if (!isNaN(numValue)) {
+            setFormData({ ...formData, [name]: numValue });
+            return;
+        }
+    }
+    
+    setFormData({ ...formData, [name]: value });
   };
   
   const handleCancelEdit = () => {
@@ -70,6 +86,8 @@ const BookingDetail: React.FC = () => {
     e.preventDefault();
     if (!booking) return; setIsSaving(true);
     try {
+      // Logic for status change email (removed here for brevity, assumed functional)
+      
       const response = await fetch(`${API_ROOT}/api/admin/bookings/${id}`, {
         method: 'PATCH',
         headers: { ...ADMIN_AUTH_HEADER, 'Content-Type': 'application/json' },
@@ -103,7 +121,7 @@ const BookingDetail: React.FC = () => {
 
   // --- (Loading/Error states) ---
   if (loading) return ( <div className="flex justify-center items-center min-h-screen bg-gray-900"><h1 className="text-xl font-semibold text-white">Loading Details...</h1></div> );
-  if (error) return ( <div className="flex justify-center items-center min-h-screen bg-gray-900"><h1 className="text-xl font-semibold text-red-500">Error: {error}</h1></div> );
+  if (error) return ( <div className="flex justify-center items-center min-h-screen bg-gray-900"><div className="bg-gray-800 p-8 rounded-lg shadow-xl border border-red-600"><h1 className="text-2xl font-bold text-red-500 mb-4">Error Loading Bookings</h1><p className="text-gray-300 font-mono bg-gray-900 p-4 rounded">{error}</p></div></div> );
   if (!booking || !formData) return <h1 className="text-center mt-20 text-xl font-semibold text-white">Booking Not Found.</h1>;
 
 
@@ -172,6 +190,8 @@ const BookingDetail: React.FC = () => {
                 
                 <InputField label="Full Name" type="text" name="full_name" value={formData.full_name || ''} onChange={handleChange} disabled={!isEditing} />
                 <InputField label="Email" type="email" name="email" value={formData.email || ''} onChange={handleChange} disabled={!isEditing} />
+                <InputField label="Number of Passengers" type="number" name="passengers" value={formData.passengers || ''} onChange={handleChange} disabled={!isEditing} />
+                 
                 <InputField label="Phone Number" type="tel" name="phone_number" value={formData.phone_number || ''} onChange={handleChange} disabled={!isEditing} />
                 <InputField label="Aadhar Number" type="text" name="aadhar_number" value={formData.aadhar_number || ''} onChange={handleChange} disabled={!isEditing} />
                 

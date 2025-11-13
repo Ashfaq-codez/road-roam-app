@@ -15,6 +15,9 @@ interface BookingRequest {
   pickupDate: string;
   returnDate: string;
   pickupLocation: string;
+  pickupLat: number; 
+  pickupLng: number;
+  passengers: number;
 }
 
 interface BookingRecord {
@@ -28,6 +31,9 @@ interface BookingRecord {
   pickup_date: string;
   return_date: string;
   pickup_location: string;
+  pickup_lat: number; // Default Latitude
+  pickup_lng: number; // Default Longitude
+  passengers: number;
   status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
   created_at: string;
 }
@@ -68,9 +74,9 @@ app.post('/api/bookings', async (c) => {
         // CRITICAL FIX: Run Server-Side Validation before DB insertion
         validateBookingData(bookingData);
         const result = await env.DB.prepare(
-          `INSERT INTO bookings (full_name, email, phone_number, aadhar_number, rental_service_name, car_model, pickup_date, return_date, pickup_location)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
-        ).bind(
+          `INSERT INTO bookings (full_name, email, phone_number, aadhar_number, rental_service_name, car_model, pickup_date, return_date, pickup_location, pickup_lat, pickup_lng, passangers)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)` // Total 11 placeholders now!
+    ).bind(
           bookingData.fullName,
           bookingData.email,
           bookingData.phoneNumber,
@@ -79,7 +85,10 @@ app.post('/api/bookings', async (c) => {
           bookingData.carModel, // <-- NEW BINDING
           bookingData.pickupDate,
           bookingData.returnDate,
-          bookingData.pickupLocation
+          bookingData.pickupLocation,
+          bookingData.pickupLat, // <-- NEW BINDING
+          bookingData.pickupLng,  // <-- NEW BINDING
+          bookingData.passengers
         ).run();
         
         c.executionCtx.waitUntil(sendAdminNotification(bookingData, env));
@@ -194,7 +203,7 @@ app.patch('/api/admin/bookings/:id', async (c) => {
             UPDATE bookings 
             SET full_name = ?, email = ?, phone_number = ?, aadhar_number = ?, 
                 rental_service_name = ?, car_model = ?, pickup_date = ?, return_date = ?, 
-                pickup_location = ?, status = ?
+                pickup_location = ?, pickup_lat = ?, pickup_lng = ?, passengers = ?, status = ?
             WHERE id = ?
         `;
         
@@ -208,6 +217,9 @@ app.patch('/api/admin/bookings/:id', async (c) => {
             updateData.pickupDate ?? existingBooking.pickup_date,
             updateData.returnDate ?? existingBooking.return_date,
             updateData.pickupLocation ?? existingBooking.pickup_location,
+            updateData.pickupLat ?? existingBooking.pickup_lat, // New Lat
+            updateData.pickupLng ?? existingBooking.pickup_lng, // New Lng
+            updateData.passengers ?? existingBooking.passengers, // Passengers
             updateData.status ?? existingBooking.status, 
             bookingId
         ).run();
@@ -219,14 +231,14 @@ app.patch('/api/admin/bookings/:id', async (c) => {
         if (statusChangedToConfirmed) {
             const confirmedBooking = { ...existingBooking, ...updateData };
             // We 'await' this so if it fails, the catch block runs
-            // await sendUserConfirmation(confirmedBooking, env);
-            c.executionCtx.waitUntil(sendUserConfirmation(confirmedBooking, env));
+            await sendUserConfirmation(confirmedBooking, env);
+            // c.executionCtx.waitUntil(sendUserConfirmation(confirmedBooking, env));
         }
         else if (statusChangedToCancelled) {
             const cancelledBooking = { ...existingBooking, ...updateData };
             // We 'await' this so if it fails, the catch block runs
-            // await sendUserCancellation(cancelledBooking, env);
-            c.executionCtx.waitUntil(sendUserCancellation(cancelledBooking, env));
+            await sendUserCancellation(cancelledBooking, env);
+            // c.executionCtx.waitUntil(sendUserCancellation(cancelledBooking, env));
         }
         // ---
 
@@ -322,6 +334,9 @@ function validateBookingData(data: BookingRequest): boolean {
         if (data.aadharNumber.length !== 12 || !isNumeric(data.aadharNumber)) {
             throw new Error("Aadhar number must be exactly 12 digits.");
         }
+    }
+    if (typeof data.passengers !== 'number' || data.passengers < 1 || data.passengers > 7) {
+        throw new Error("Passenger count must be a valid number between 1 and 7.");
     }
     
     // Note: Email format validation is usually handled by the browser/API itself.
