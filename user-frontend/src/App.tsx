@@ -7,6 +7,7 @@ import {
 import FloatingContact from './FloatingContact';
 import ScrollToTopButton from './ScrollToTopButton';
 
+
 // --- CRITICAL FIX: LAZY LOAD COMPONENT DEFINITION ---
 // 2. Use React.lazy for the BookingForm component
 const LazyBookingForm = React.lazy(() => import('./BookingForm'));
@@ -16,6 +17,7 @@ const LazyBookingForm = React.lazy(() => import('./BookingForm'));
 function App() {
   return (
     <div className="font-poppins overflow-x-hidden">
+      
       
       {/* --- Floating Components --- */}
       <ScrollToTopButton isVisible={false} />

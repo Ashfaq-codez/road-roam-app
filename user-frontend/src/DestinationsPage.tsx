@@ -1,11 +1,12 @@
 // user-frontend/src/DestinationsPage.tsx
 
-import React, { useState } from 'react'; // 1. Import useState
+import React, { useState } from 'react';
 // We reuse the Header and Footer for a consistent look
-import { Header, Footer } from './LandingPageComponents';
-import ScrollToTopButton from './ScrollToTopButton'; // <-- NEW IMPORT
-import FloatingContact from './FloatingContact';
-
+import { Header, Footer } from './LandingPageComponents'; // <-- Fixed the imports
+import ScrollToTopButton from './ScrollToTopButton.tsx'; 
+import FloatingContact from './FloatingContact.tsx';
+import { Link } from 'react-router-dom';
+import './index.css';
 
 // --- Sample Data: Places within 80km of Bangalore ---
 // 3. ADDED 'layout' PROPERTY TO EACH OBJECT
@@ -62,8 +63,12 @@ export default function DestinationsPage() {
 
       <main>
         {/* Page Title */}
-        <section className="bg-black text-white py-16">
+        <section className="bg-gray-900 ext-white py-16 relative">
           <div className="container mx-auto px-6 text-center">
+            {/* CRITICAL FIX: The Back Button */}
+            <Link to="/" className="absolute left-6 top-8 text-white hover:text-red-500 font-semibold flex items-center space-x-2 transition-colors">
+               ⬅  Back to Home
+            </Link>
             <h1 className="text-5xl text-yellow-400 font-extrabold mb-4">Destinations Near Bangalore</h1>
             <p className="text-xl text-gray-300">Fun places to travel around for your Tours & Trips.</p>
           </div>
