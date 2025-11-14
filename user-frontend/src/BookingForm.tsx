@@ -40,17 +40,18 @@ const API_ROOT = import.meta.env.VITE_API_ROOT || '';
 
 
 // --- Helper Component 1: Date Input (Remains the same) ---
-const DateInput: React.FC<{ label: string; name: keyof BookingRequest; value: string; onChange: (date: Date | null, name: string) => void; required?: boolean }> = ({ label, name, value, onChange, required }) => {
+const DateInput: React.FC<{ label: string; name: keyof BookingRequest; value: string; onChange: (date: Date | null, name: string) => void; required?: boolean; minDateProp?: Date }> = ({ label, name, value, onChange, required, minDateProp }) => {
     const selectedDate = value ? new Date(value.replace(/-/g, '/')) : null;
     return (
       <div>
-        <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+        <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">{label}{RequiredAsterisk(required)}</label>
         <DatePicker
           selected={selectedDate}
           onChange={(date: Date | null) => onChange(date, name)}
           dateFormat="dd/MM/yyyy"
           required={required}
-          minDate={new Date()}
+          // CRITICAL FIX: Use the passed minDateProp or default to today
+          minDate={minDateProp || new Date()} 
           placeholderText="DD/MM/YYYY"
           showTimeSelect={false}
           className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 transition duration-150"
@@ -59,7 +60,6 @@ const DateInput: React.FC<{ label: string; name: keyof BookingRequest; value: st
       </div>
     );
   };
-// --------------------------------------
 
 // --- Helper Component 2: Location Map Picker (NEW) ---
 interface LocationPickerProps {
@@ -156,6 +156,7 @@ const LocationMapPicker: React.FC<LocationPickerProps> = ({ label, name, value, 
     <div>
       <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
         {label}
+        {RequiredAsterisk(true)}
       </label>
       
       {/* NEW: Text Input Field for Search */}
@@ -197,6 +198,12 @@ const LocationMapPicker: React.FC<LocationPickerProps> = ({ label, name, value, 
   );
 };
 
+const RequiredAsterisk = (required?: boolean) => {
+    // Only return the red asterisk if the 'required' prop is true
+    return required ? (
+        <span className="text-red-600 ml-1">*</span>
+    ) : null;
+};
 // Main Component
 export default function BookingForm() {
   const [formData, setFormData] = useState<BookingRequest>(initialFormState);
@@ -285,6 +292,8 @@ export default function BookingForm() {
   };
   const buttonDisabled = status === 'loading';
 
+  const pickupDateObject = formData.pickupDate ? new Date(formData.pickupDate.replace(/-/g, '/')) : new Date();
+
 
   return (
     <>
@@ -328,16 +337,16 @@ export default function BookingForm() {
         <form onSubmit={handleSubmit} className="space-y-6">
             <h3 className="text-xl font-semibold border-b pb-2 mb-4 text-gray-800">Your Contact Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <InputField label="Full Name *" type="text" name="fullName" value={formData.fullName} onChange={handleChange} required />
-                <InputField label="Email *" type="email" name="email" value={formData.email} onChange={handleChange} required />
-                <InputField label="Phone Number" type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
+                <InputField label="Full Name " type="text" name="fullName" value={formData.fullName} onChange={handleChange} required />
+                <InputField label="Email " type="email" name="email" value={formData.email} onChange={handleChange} required />
+                <InputField label="Phone Number " type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required/>
                 <InputField label="Aadhar Number" type="text" name="aadharNumber" value={formData.aadharNumber} onChange={handleChange} />
             </div>
             
             <h3 className="text-xl font-semibold border-b pb-2 mb-4 pt-4 text-gray-800">Rental Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <InputField 
-        label="Number of Passengers *" 
+        label="Number of Passengers " 
         type="number" 
         name="passengers" 
         value={formData.passengers} 
@@ -357,7 +366,7 @@ export default function BookingForm() {
         }}
     />
             <div>
-              <label htmlFor="rentalServiceName" className="block text-sm font-medium text-gray-700 mb-1">Rental Service *</label>
+              <label htmlFor="rentalServiceName" className="block text-sm font-medium text-gray-700 mb-1">Rental Service<span className='text-red-600'>*</span> </label>
               <select
                 id="rentalServiceName"
                 name="rentalServiceName"
@@ -374,7 +383,7 @@ export default function BookingForm() {
             </div>
 
             <div>
-              <label htmlFor="carModel" className="block text-sm font-medium text-gray-700 mb-1">Car Model *</label>
+              <label htmlFor="carModel" className="block text-sm font-medium text-gray-700 mb-1">Car Model<span className='text-red-600'>*</span></label>
               <select
                 id="carModel"
                 name="carModel"
@@ -390,18 +399,20 @@ export default function BookingForm() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <DateInput 
-                label="Pick-up Date *" 
+                label="Pick-up Date " 
                 name="pickupDate" 
                 value={formData.pickupDate} 
                 onChange={handleDateChange} 
                 required 
+                minDateProp={new Date()}
               />
               <DateInput 
-                label="Return Date *" 
+                label="Return Date " 
                 name="returnDate" 
                 value={formData.returnDate} 
                 onChange={handleDateChange} 
                 required 
+                minDateProp={pickupDateObject}
               />
             </div>
             
@@ -441,19 +452,25 @@ interface InputFieldProps {
   required?: boolean;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ label, type, name, value, onChange, required }) => (
-  <div>
-    <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
-      {label}
-    </label>
-    <input
-      id={name}
-      type={type}
-      name={name}
-      value={value || ''}
-      onChange={onChange}
-      required={required}
-      className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 transition duration-150"
-    />
-  </div>
-);
+const InputField: React.FC<InputFieldProps> = ({ label, type, name, value, onChange, required }) => {
+  
+  
+  return (
+    <div>
+      <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
+        {label}
+        
+        {RequiredAsterisk(required)}
+      </label>
+      <input
+        id={name}
+        type={type}
+        name={name}
+        value={value || ''}
+        onChange={onChange}
+        required={required}
+        className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 transition duration-150"
+      />
+    </div>
+  );
+};
