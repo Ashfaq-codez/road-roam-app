@@ -133,14 +133,37 @@ const NavBtn: React.FC<{ onClick: () => void; children: React.ReactNode }> = ({
 const MobileNavBtn: React.FC<{ onClick: () => void; children: React.ReactNode }> = ({
   onClick,
   children,
-}) => (
-  <button
-    onClick={onClick}
-    className="text-white text-3xl font-extrabold hover:text-red-500 transition-colors block border-b border-gray-700 pb-3 text-left bg-transparent"
-  >
-    {children}
-  </button>
-);
+}) => {const [isTapped, setIsTapped] = useState(false);
+
+  // Function to handle the navigation and close the menu (same as goAndClose logic)
+  const handleTap = () => {
+    // This runs on mouse down or touch start
+    setIsTapped(true);
+    
+    // This runs after a tiny delay, ensuring the red flash is visible before navigating
+    setTimeout(() => {
+      setIsTapped(false); // Reset state
+      onClick(); // Execute the navigation (goAndClose)
+    }, 150); // Flash duration
+  };
+
+  return (
+    <button
+      onClick={handleTap}
+      // Apply the active red class instantly when state is true
+      className={`text-white text-3xl font-extrabold transition-colors block border-b border-gray-700 pb-3 text-left bg-transparent ${
+        isTapped ? 'text-red-500 bg-gray-900' : 'hover:text-red-500' // Use red on tap
+      }`}
+      // Ensure the button is fully active when touched/clicked
+      onTouchStart={() => setIsTapped(true)}
+      onTouchEnd={() => setIsTapped(false)}
+      onMouseDown={() => setIsTapped(true)}
+      onMouseUp={() => setIsTapped(false)}
+    >
+      {children}
+    </button>
+  );
+};
 
 // ----------------------
 // Hero Component

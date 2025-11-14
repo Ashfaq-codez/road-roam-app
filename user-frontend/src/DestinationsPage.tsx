@@ -58,7 +58,7 @@ export default function DestinationsPage() {
         <section className="bg-gray-900 ext-white py-16 relative">
           <div className="container mx-auto px-6 text-center">
             <Link to="/" className="absolute left-6 top-8 text-white hover:text-red-500 font-semibold flex items-center space-x-2 transition-colors">
-              ↩ Back to Home
+                ◄ Back to Home
             </Link>
             <h1 className="text-5xl text-yellow-400 font-extrabold mb-4">Destinations Near Bangalore</h1>
             <p className="text-xl text-gray-300">Fun places to travel around for your Tours & Trips.</p>
