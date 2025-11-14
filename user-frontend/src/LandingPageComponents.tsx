@@ -372,7 +372,7 @@ const DestinationCard: React.FC<{ name: string; imgSrc: string; description: str
 };
 
 export const ViewMoreCard: React.FC<{ imgSrc: string }> = ({ imgSrc }) => (
-  <HashLink to="/#destinations"
+  <a href="/destinations"
     className="relative flex flex-col items-center justify-center rounded-xl shadow-lg h-64 w-full transform transition-all duration-300 ease-in-out hover:shadow-2xl hover:scale-[1.02] group overflow-hidden"
   >
     <img src={imgSrc} alt="Explore More Destinations" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out z-0" />
@@ -382,7 +382,7 @@ export const ViewMoreCard: React.FC<{ imgSrc: string }> = ({ imgSrc }) => (
       <h3 className="text-2xl font-bold text-center">View More Places</h3>
       <p className="text-gray-200 text-center">Discover all fun spots</p>
     </div>
-  </HashLink>
+  </a>
 );
 
 // ----------------------
