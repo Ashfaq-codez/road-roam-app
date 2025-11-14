@@ -11,7 +11,7 @@ interface BookingRecord {
   pickup_lat: number; pickup_lng: number; passengers: number; // Added Lat/Lng and Passengers
   status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED'; created_at: string;
 }
-interface BookingUpdateData extends Partial<BookingRecord> { status?: BookingRecord['status']; }
+// interface BookingUpdateData extends Partial<BookingRecord> { status?: BookingRecord['status']; }
 const rentalServices = ["Airport Transfer", "City Cruise", "Tours & Trips", "Corporate Rentals", "Event Rentals"];
 const carModelsList = ["Hycross", "Crysta", "Innova",  "Ertiga", "Ciaz", "Dzire" ];
 const ADMIN_AUTH_HEADER = { 'Authorization': 'Bearer VALID_ADMIN_TOKEN' }; 
@@ -57,6 +57,44 @@ const BookingDetail: React.FC = () => {
   }, [id]);
 
   useEffect(() => { fetchBooking(); }, [fetchBooking]);
+
+  // --- CRITICAL SECURITY FIX: Aggressive BF Cache Check (FINAL FIX) ---
+useEffect(() => {
+    
+    // 1. Listener for 'pageshow' (Used to detect Back/Forward Cache restore)
+    // This listener correctly receives the PageTransitionEvent object
+    const handlePageShow = (event: PageTransitionEvent) => {
+        // If the page is loaded from the BF Cache (event.persisted is true), force reload.
+        if (event.persisted) { 
+            console.log("SECURITY: BF Cache detected. Forcing reload.");
+            window.location.reload(); 
+        }
+    };
+    
+    // 2. Listener for 'visibilitychange' (Used to detect tab switching)
+    // This listener correctly receives the generic Event object
+    const handleVisibilityChange = () => {
+        if (document.visibilityState === 'visible') {
+            // Check session status if the tab becomes visible
+            fetchBooking(); 
+        }
+    };
+
+
+    // Add event listeners using the specific window/document methods
+    // We add the pageshow listener to the window object
+    window.addEventListener('pageshow', handlePageShow);
+    
+    // We add the visibilitychange listener to the document object
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Clean up listeners
+    return () => {
+        window.removeEventListener('pageshow', handlePageShow);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+}, [fetchBooking]); // Depend on fetchBookings to run the security check
+// --- END SECURITY FIX ---
 
   // CRITICAL FIX: Add logic to convert passenger string input to number
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

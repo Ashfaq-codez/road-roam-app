@@ -1,6 +1,6 @@
 // admin-frontend/src/App.tsx
 
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
 // --- PRODUCTION CONFIGURATION ---
@@ -91,7 +91,7 @@ useEffect(() => {
         }
     };
 
-    window.addEventListener('pageshow', handlePageShow);
+    window.addEventListener('pageshow', handlePageShow );
     
     // Clean up listeners
     return () => {
