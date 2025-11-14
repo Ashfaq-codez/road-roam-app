@@ -91,7 +91,7 @@ useEffect(() => {
         }
     };
 
-    window.addEventListener('pageshow', handlePageShow );
+    window.addEventListener('pageshow', handlePageShow);
     
     // Clean up listeners
     return () => {
@@ -116,9 +116,16 @@ useEffect(() => {
       </div>
     </div>
   );
+  
+  // --- FINAL JS LOGOUT HANDLER ---
+  const handleLogout = () => {
+    // This uses the replace method to destroy the history stack, achieving the 'skip' effect
+    window.location.replace("https://admin.roadroam.in/cdn-cgi/access/logout");
+  };
+
 
   return (
-    // Check if the cache was restored. If so, return a blank screen instantly.
+    // We wrap everything in a Fragment so the modal can be a sibling
     <>
      {/* --- NEW GLOBAL CONFIRMATION MODAL (ENHANCED STYLING) --- */}
       {showConfirmModal && (
@@ -137,7 +144,7 @@ useEffect(() => {
             </h2>
             
             <p className="text-gray-300 text-md mb-6">
-                Please confirm your action. This operation cannot be easily undone.
+                Please confirm your action. This operation cannot be undone.
             </p>
 
             <div className="flex justify-end space-x-3">
@@ -220,15 +227,14 @@ useEffect(() => {
                 </a>
 
                 
-                {/* Logout Button with Confirmation Modal */}
+                {/* Logout Button with Confirmation Modal (FINAL FIX) */}
                 <a 
                   onClick={() => {
                       setShowConfirmModal({
                           message: "Are you sure you want to securely log out of the dashboard?",
                           type: 'danger',
-                          onConfirm: () => {
-                              window.location.href = "https://admin.roadroam.in/cdn-cgi/access/logout";
-                          }
+                          // CRITICAL FIX: Call the history destruction handler
+                          onConfirm: handleLogout,
                       });
                   }}
                   href="#" 
