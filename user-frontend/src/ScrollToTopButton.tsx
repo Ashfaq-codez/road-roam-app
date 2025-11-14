@@ -39,7 +39,7 @@ const ScrollToTopButton: React.FC<{ isVisible: boolean }> = ({  }) => { // Corre
     <button
       onClick={scrollToTop}
       // CRITICAL FIX: Visibility driven by internal state (isVisible)
-      className={`fixed bottom-24 right-3 z-40 p-2.5 bg-red-600 text-white rounded-full shadow-2xl transition-opacity duration-300 transform hover:scale-110 ${
+      className={`fixed bottom-24 right-2 z-40 p-2.5 bg-red-600 text-white rounded-full shadow-2xl transition-opacity duration-300 transform hover:scale-110 ${
         isVisible ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
       aria-label="Scroll to top"
