@@ -196,6 +196,9 @@ app.patch('/api/admin/bookings/:id', async (c) => {
             existingBooking.status !== 'CANCELLED' && 
             updateData.status === 'CANCELLED';
         
+        const statusChangedToCompleted = 
+            existingBooking.status === 'CONFIRMED' && 
+            updateData.status === 'COMPLETED';
         
         // ---
 
@@ -238,6 +241,12 @@ app.patch('/api/admin/bookings/:id', async (c) => {
             const cancelledBooking = { ...existingBooking, ...updateData };
             // We 'await' this so if it fails, the catch block runs
             await sendUserCancellation(cancelledBooking, env);
+            // c.executionCtx.waitUntil(sendUserCancellation(cancelledBooking, env));
+        }
+        else if (statusChangedToCompleted) {
+            const completedBooking = { ...existingBooking, ...updateData };
+            // We 'await' this so if it fails, the catch block runs
+            await sendUserCompletion(completedBooking, env);
             // c.executionCtx.waitUntil(sendUserCancellation(cancelledBooking, env));
         }
         // ---
@@ -424,6 +433,47 @@ async function sendUserCancellation(bookingData: BookingRecord, env: Env) {
         }
     } catch (err) {
         console.error('sendUserCancellation: fetch error', err);
+        throw err;
+    }
+}
+
+// --- EMAIL FUNCTION 3: Notify User (NEW, uses your robust pattern) ---
+async function sendUserCompletion(bookingData: BookingRecord, env: Env) {
+    const subject = `Your Road Roam Journey is Completed! (ID: ${bookingData.id})`;
+    const body = `<h1>Your Booking is Completed!</h1>
+    <p>Hello ${bookingData.full_name},</p>
+    <p></p>
+    <p>Thank you. Hope to see you again</p>`;
+
+    if (!env.RESEND_API_KEY) {
+        console.error('sendUserCompletion: RESEND_API_KEY is not configured.');
+        throw new Error("Email API key is not set up.");
+    }
+
+    try {
+        const res = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${env.RESEND_API_KEY}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                from: 'Road Roam <support@roadroam.in>',
+                to: [bookingData.email], // <-- Sends to the CUSTOMER's email
+                subject,
+                html: body,
+            }),
+        });
+
+        const text = await res.text();
+        if (!res.ok) {
+            console.error(`sendUserCompletion: Resend API returned ${res.status}: ${text}`);
+            throw new Error(`Failed to send confirmation email: ${text}`);
+        } else {
+            console.log('sendUserCompletion: Resend API success:', res.status);
+        }
+    } catch (err) {
+        console.error('sendUserCompletion: fetch error', err);
         throw err;
     }
 }

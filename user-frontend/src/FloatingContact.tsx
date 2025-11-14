@@ -33,7 +33,7 @@ const FloatingContact: React.FC = () => {
             >
               {/* CRITICAL FIX: Close button is now inside the main div */}
               <div className="flex justify-between items-start mb-3">
-                <p className="text-gray-900 text-md font-bold">Booking or Need Help?</p>
+                <p className="text-gray-900 text-md font-bold">For Booking & Help!</p>
                 <button
                   onClick={() => setShowWhatsappChat(false)}
                   // Style the button to be small and discreet
