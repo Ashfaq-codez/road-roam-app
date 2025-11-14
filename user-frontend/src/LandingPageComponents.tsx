@@ -35,6 +35,22 @@ export const useHashNavigation = () => {
   return goTo;
 };
 
+export const HashLink: React.FC<
+  React.PropsWithChildren<{ to: string; className?: string; onClick?: () => void }>
+> = ({ to, children, className = "", onClick }) => {
+  // lazy hook usage: works when this component is used inside components mounted under Router
+  const goTo = useHashNavigation();
+  const handle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    goTo(to);
+    onClick?.();
+  };
+  return (
+    <button onClick={handle} className={className} aria-label={`Go to ${to}`}>
+      {children}
+    </button>
+  );
+};
 // ----------------------
 // Header (converted)
 // ----------------------
@@ -160,19 +176,13 @@ export const Hero: React.FC = () => (
       <p className="text-xl md:text-2xl font-light mb-8 drop-shadow-md">
         Travel stress-free with Road Roam’s chauffeur-driven rentals
       </p>
-      <a
-        href="#booking-form"
-        onClick={(e) => {
-          // keep anchor for accessibility fallback but prevent default to use our navigation
-          e.preventDefault();
-          // We'll navigate using the hook by dispatching a synthetic click - better approach:
-          // As a small helper we can locate the root and scroll but simplest is to use plain location
-          window.location.hash = "booking-form";
-        }}
-        className="bg-red-600 text-white font-bold py-4 px-10 text-lg rounded-lg hover:bg-red-700 transition duration-300 transform hover:scale-105"
-      >
-        Reserve Your Car Today
-      </a>
+      <HashLink
+  to="/#booking-form"
+  className="bg-red-600 text-white font-bold py-4 px-10 text-lg rounded-lg hover:bg-red-700 transition duration-300 transform hover:scale-105 inline-block text-center"
+>
+  Reserve Your Car Today
+</HashLink>
+
     </div>
   </div>
 );
@@ -362,8 +372,7 @@ const DestinationCard: React.FC<{ name: string; imgSrc: string; description: str
 };
 
 export const ViewMoreCard: React.FC<{ imgSrc: string }> = ({ imgSrc }) => (
-  <a
-    href="/destinations"
+  <HashLink to="/#destinations"
     className="relative flex flex-col items-center justify-center rounded-xl shadow-lg h-64 w-full transform transition-all duration-300 ease-in-out hover:shadow-2xl hover:scale-[1.02] group overflow-hidden"
   >
     <img src={imgSrc} alt="Explore More Destinations" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out z-0" />
@@ -373,7 +382,7 @@ export const ViewMoreCard: React.FC<{ imgSrc: string }> = ({ imgSrc }) => (
       <h3 className="text-2xl font-bold text-center">View More Places</h3>
       <p className="text-gray-200 text-center">Discover all fun spots</p>
     </div>
-  </a>
+  </HashLink>
 );
 
 // ----------------------
@@ -394,9 +403,13 @@ const PackageCard: React.FC<{ title: string; details: string }> = ({ title, deta
   <div className="bg-white p-8 rounded-xl shadow-lg border-2 border-red-600 text-center w-full md:w-96 transform hover:scale-105 transition duration-300">
     <h3 className="text-2xl font-bold text-gray-900 mb-3">{title}</h3>
     <p className="text-gray-600 mb-6">{details}</p>
-    <a href="#booking-form" className="bg-red-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-red-700 transition duration-300">
-      Book This Package
-    </a>
+    <HashLink
+  to="/#booking-form"
+  className="bg-red-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-red-700 transition duration-300 inline-block text-center"
+>
+  Book This Package
+</HashLink>
+
   </div>
 );
 
@@ -417,15 +430,13 @@ export const Contact: React.FC = () => (
         <span className="text-white">phone: </span> +91 7411243463
       </p>
     </div>
-    <button
-      onClick={() => {
-        // fallback - use location.hash; ideally user clicks nav to use hook
-        window.location.hash = "booking-form";
-      }}
-      className="inline-block bg-red-600 text-white font-bold py-3 px-10 text-lg rounded-lg shadow-xl hover:bg-red-700 transition duration-300 transform hover:scale-105"
-    >
-      Book Now
-    </button>
+    <HashLink
+  to="/#booking-form"
+  className="inline-block bg-red-600 text-white font-bold py-3 px-10 text-lg rounded-lg shadow-xl hover:bg-red-700 transition duration-300 transform hover:scale-105"
+>
+  Book Now
+</HashLink>
+
   </section>
 );
 
