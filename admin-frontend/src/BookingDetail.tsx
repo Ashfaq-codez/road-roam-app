@@ -156,6 +156,34 @@ useEffect(() => {
       setIsSaving(false);
     }
   };
+  // --- NEW: Payment Link Handler ---
+  // const handleSendPaymentLink = async () => {
+  //   if (!booking) return;
+
+  //   const confirmed = window.confirm(`Generate a new payment link for ${booking.full_name} and email it now?`);
+  //   if (!confirmed) return;
+
+  //   setIsSaving(true);
+  //   try {
+  //       // CRITICAL: Call the new Worker endpoint
+  //       const response = await fetch(`${API_ROOT}/api/admin/payment/${id}`, {
+  //           method: 'POST',
+  //           headers: { ...ADMIN_AUTH_HEADER }, // Authentication header
+  //       });
+
+  //       if (!response.ok) {
+  //           const errorText = await response.text();
+  //           throw new Error(`Failed to generate link: ${errorText}`);
+  //       }
+
+  //       alert("✅ Payment link successfully sent to customer's email!");
+
+  //   } catch (e) {
+  //       alert(`Payment failed: ${e instanceof Error ? e.message : 'Unknown error'}`);
+  //   } finally {
+  //       setIsSaving(false);
+  //   }
+  // };
 
   // --- (Loading/Error states) ---
   if (loading) return ( <div className="flex justify-center items-center min-h-screen bg-gray-900"><h1 className="text-xl font-semibold text-white">Loading Details...</h1></div> );
@@ -167,21 +195,15 @@ useEffect(() => {
     <div className="min-h-screen bg-gray-900 p-6 md:p-10">
       <div className="max-w-4xl mx-auto bg-gray-800 shadow-2xl rounded-xl p-8 border border-gray-700">
       
-        <div className="flex justify-between items-center mb-6">
-          {/* Back Button */}
+        {/* --- CRITICAL FIX: The Main Header/Button Row --- */}
+        <div className="flex flex-col md:flex-row justify-between items-start mb-6 space-y-3 md:space-y-0">
+          
+          {/* Back Button (Stays Left) */}
           <button onClick={() => navigate('/')} className="text-gray-400 hover:text-white font-medium transition flex items-center space-x-1">
               &larr; Back to Dashboard
           </button>
           
-          {/* Edit Button (Only shows in View mode) */}
-          {!isEditing && (
-            <button 
-              onClick={() => setIsEditing(true)}
-              className="px-6 py-2 bg-red-600 text-white font-bold rounded-lg shadow hover:bg-red-700 transition"
-            >
-              Edit Booking
-            </button>
-          )}
+          
         </div>
 
       
@@ -194,7 +216,35 @@ useEffect(() => {
             </h1>
             <p className="text-sm text-gray-500">Booking ID: {booking.id} | Booked On: {new Date(booking.created_at).toLocaleString()}</p>
         </div>
-        
+
+        {/* Action Buttons (CRITICAL FIX: Stacks on mobile, switches to row on desktop) */}
+         <div className="flex flex-col md:flex-row justify-between items-start mb-6 space-y-3 md:space-y-0">
+           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 w-full md:w-auto">
+            
+            {/* Edit Button (Only shows in View mode) */}
+            {!isEditing && (
+              <button 
+                onClick={() => setIsEditing(true)}
+                // Added w-full for stacking
+                className="w-full md:w-auto px-6 py-2 bg-red-600 text-white font-bold rounded-lg shadow hover:bg-red-700 transition"
+              >
+                Edit Booking
+              </button>
+            )}
+
+            {/* Payment Link Button (Visible when Confirmed and NOT editing)
+            {booking?.status === 'CONFIRMED' && !isEditing && (
+              <button
+                onClick={handleSendPaymentLink}
+                // Added w-full for stacking
+                className="w-full md:w-auto px-6 py-2 bg-indigo-600 text-white font-bold rounded-lg shadow hover:bg-indigo-700 transition"
+              >
+                Send Payment Link
+              </button>
+            )} */}
+          </div>
+        </div>
+
         {/* Status Management */}
         <div className="flex items-center justify-between p-4 mb-8 bg-gray-900 border-l-4 border-red-600 rounded-lg shadow-inner">
           <h2 className="text-xl font-semibold text-white">
@@ -295,6 +345,8 @@ useEffect(() => {
                   >
                       Delete
                   </button>
+
+                  
 
                   {/* Save Button */}
                   <button

@@ -4,6 +4,7 @@ declare global {
   interface Window {
     google: typeof google;
   }
+  
 }
 
 // CRITICAL FIX: Explicitly define all missing Google Maps classes and types

@@ -35,6 +35,7 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # Cloudflare / Sensitive Files
 .dev.vars
+.env
 
 # Dependency folders
 /node_modules

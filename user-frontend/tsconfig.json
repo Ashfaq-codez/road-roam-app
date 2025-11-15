@@ -25,7 +25,7 @@
     
     // --- Environment Types ---
     // This allows TypeScript to find types for fetch, Worker environment, and Vite
-    "types": ["vite/client"] 
+    "types": ["vite/client", "google.maps"] 
   },
   
   // Define what files to include for compilation/checking
