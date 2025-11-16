@@ -6,6 +6,7 @@ import {
 } from './LandingPageComponents'; // Ensure all static components are imported
 import FloatingContact from './FloatingContact';
 import ScrollToTopButton from './ScrollToTopButton';
+import MovingCar from './MovingCar';
 
 
 // --- CRITICAL FIX: LAZY LOAD COMPONENT DEFINITION ---
@@ -18,6 +19,7 @@ function App() {
   return (
     <div className="font-poppins overflow-x-hidden">
       
+      <MovingCar />
       
       {/* --- Floating Components --- */}
       <ScrollToTopButton isVisible={false} />

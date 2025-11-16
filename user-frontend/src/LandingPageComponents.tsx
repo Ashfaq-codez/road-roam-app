@@ -70,6 +70,7 @@ export const Header: React.FC = () => {
         {/* NEW LOGO STRUCTURE */}
         <button
           onClick={() => goAndClose("/")}
+          id="main-logo"
           className="flex flex-col h-10 -space-y-1 z-50 bg-transparent border-0 cursor-pointer"
         >
           <div className="text-3xl font-extrabold flex">
