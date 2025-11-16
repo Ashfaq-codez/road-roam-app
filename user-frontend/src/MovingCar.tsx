@@ -132,7 +132,7 @@ const MovingCar: React.FC = () => {
   return (
     <img
       ref={carRef}
-      src="/images/car.gif" 
+      src="/car.gif" 
       alt="Vroom"
       style={{
         position: 'fixed',
