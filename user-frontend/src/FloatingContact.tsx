@@ -10,8 +10,8 @@ const FloatingContact: React.FC = () => {
   const [showWhatsappChat, setShowWhatsappChat] = useState(false); // New state for chat pop-out
 
   return (
-    <div className="md:hidden"> 
-      
+    <div className="lg:hidden"> 
+      {/* // <div> */}
       {/* --- 1. WHATSAPP BUTTON (Fixed Left, Bottom Aligned) --- */}
       <div className="fixed left-3 bottom-8 z-50"> 
         <div className="relative">
