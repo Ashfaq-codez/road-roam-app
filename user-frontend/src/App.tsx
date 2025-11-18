@@ -12,6 +12,9 @@ import MovingCar from './MovingCar';
 // --- CRITICAL FIX: LAZY LOAD COMPONENT DEFINITION ---
 // 2. Use React.lazy for the BookingForm component
 const LazyBookingForm = React.lazy(() => import('./BookingForm'));
+// const LazyMovingCar = React.lazy(() => import('./MovingCar.tsx')); // <-- NEW
+// const LazyFloatingContact = React.lazy(() => import('./FloatingContact.tsx')); // <-- NEW
+// const LazyScrollToTop = React.lazy(() => import('./ScrollToTopButton.tsx')); // <-- NEW
 // --- -------------------------------------------- ---
 
 
@@ -34,6 +37,11 @@ function App() {
         {/* 3. CRITICAL FIX: Lazy-Loaded Booking Form Section */}
         {/* This Suspense boundary ensures the form loads only when visible (or shortly after) */}
         <section className="bg-gray-100 py-20">
+          {/* <Suspense fallback={null}>
+        <LazyScrollToTop isVisible={false} /> 
+        <LazyFloatingContact />
+        <LazyMovingCar />
+      </Suspense> */}
           <Suspense 
             fallback={
               <div className="text-center py-20 text-gray-700 font-bold">
