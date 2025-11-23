@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Tell Google where your sitemap is
+Sitemap: https://roadroam.in/sitemap.xml

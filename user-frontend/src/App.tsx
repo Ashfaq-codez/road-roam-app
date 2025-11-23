@@ -7,6 +7,7 @@ import {
 import FloatingContact from './FloatingContact';
 import ScrollToTopButton from './ScrollToTopButton';
 import MovingCar from './MovingCar';
+import { Helmet } from 'react-helmet-async';
 
 
 // --- CRITICAL FIX: LAZY LOAD COMPONENT DEFINITION ---
@@ -22,6 +23,17 @@ function App() {
   return (
     <div className="font-poppins overflow-x-hidden">
       
+      
+      {/* SEO TAGS */}
+      <Helmet>
+        <title>Road Roam | Premium Chauffeur Driven Car Rentals in Bangalore</title>
+        <meta name="description" content="Book reliable chauffeur-driven cars in Bangalore for airport transfers, outstation trips, and city tours. Luxury and budget options available. 24/7 Support." />
+        <meta name="keywords" content="car rental bangalore, chauffeur driven cars, airport taxi bangalore, innova crysta rental, outstation cabs" />
+        <link rel="canonical" href="https://roadroam.in/" />
+      </Helmet>
+
+
+
       <MovingCar />
       
       {/* --- Floating Components --- */}

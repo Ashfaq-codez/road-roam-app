@@ -26,7 +26,7 @@ import {
 import App from './App.tsx'; // Your Homepage
 import DestinationsPage from './DestinationsPage.tsx'; // Your New Page
 import './index.css';
-
+import { HelmetProvider } from 'react-helmet-async';
 // 3. Define your routes
 const router = createBrowserRouter([
   {
@@ -42,6 +42,8 @@ const router = createBrowserRouter([
 // 4. Tell React to use the router
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <HelmetProvider>
+      <RouterProvider router={router} />
+    </HelmetProvider>
   </React.StrictMode>,
 )
