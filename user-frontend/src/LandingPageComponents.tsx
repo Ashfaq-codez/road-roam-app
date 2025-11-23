@@ -168,8 +168,8 @@ export const Hero: React.FC = () => (
     <img
       src="/images/roadroam.avif"
       alt="Road Roam Car Rental Hero"
-      fetchPriority="high" // Hints the browser to load this image ASAP
-      className="absolute inset-0 w-full h-full object-cover blur-[3px] scale-105 z-0"
+      // fetchPriority="high" // Hints the browser to load this image ASAP
+      // className="absolute inset-0 w-full h-full object-cover blur-[3px] scale-105 z-0"
     />
     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-black/30 to-black/80"></div>
     <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
