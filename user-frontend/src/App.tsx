@@ -6,7 +6,7 @@ import {
 } from './LandingPageComponents'; // Ensure all static components are imported
 import FloatingContact from './FloatingContact';
 import ScrollToTopButton from './ScrollToTopButton';
-import MovingCar from './MovingCar';
+// import MovingCar from './MovingCar';
 import { Helmet } from 'react-helmet-async';
 
 
@@ -34,7 +34,7 @@ function App() {
 
 
 
-      <MovingCar />
+      {/* <MovingCar /> */}
       
       {/* --- Floating Components --- */}
       <ScrollToTopButton isVisible={false} />
