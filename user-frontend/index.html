@@ -4,47 +4,90 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- SEO: Crawling and Indexing Directives -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="https://roadroam.in/" />
+
+    <!-- Favicon and App Icons -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
-<!-- <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png"> -->
-
-
-    
     <link rel="apple-touch-icon" href="/Roadroam-logo.png" />
 
+    <!-- Performance: Preload Critical Assets -->
     <link rel="preload" as="image" href="/images/roadroam.avif" fetchpriority="high">
 
-    <title>Road Roam - Chauffeured Car Rentals Bangalore</title>
-    <meta name="description" content="Premium chauffeur-driven car rental service in Bangalore. Book safe, reliable, and affordable rides for outstation trips and city tours.">
+    <!-- Primary Meta Tags -->
+    <title>Road Roam - Chauffeured Car Rentals, Outstation Cabs & Airport Taxi Bangalore</title>
+    <meta name="title" content="Road Roam - Chauffeured Car Rentals, Outstation Cabs & Airport Taxi Bangalore">
+    <meta name="description" content="Book premium chauffeur-driven car rentals in Bangalore. Safe, reliable, and affordable cabs for outstation trips, airport transfers, and local city tours. 24/7 service.">
     
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Road Roam - Premium Car Rentals in Bangalore" />
-    <meta property="og:description" content="Book top-rated chauffeur-driven cars for local and outstation trips. Safety certified and GPS tracked." />
-    <meta property="og:image" content="https://roadroam.in/Roadroam-logo.png" />
     <meta property="og:url" content="https://roadroam.in/" />
+    <meta property="og:title" content="Road Roam - Premium Car Rentals & Outstation Cabs in Bangalore" />
+    <meta property="og:description" content="Book top-rated chauffeur-driven cars for local city tours, airport transfers, and outstation trips. Safety certified and GPS tracked." />
+    <meta property="og:image" content="https://roadroam.in/Roadroam-logo.png" />
     
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://roadroam.in/" />
+    <meta name="twitter:title" content="Road Roam - Premium Car Rentals & Outstation Cabs in Bangalore" />
+    <meta name="twitter:description" content="Book top-rated chauffeur-driven cars for local city tours, airport transfers, and outstation trips. Safety certified and GPS tracked." />
     <meta name="twitter:image" content="https://roadroam.in/Roadroam-logo.png" />
 
+    <!-- Schema.org JSON-LD Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "CarRental",
       "name": "Road Roam",
       "image": [
-        "https://roadroam.in/images/roadroam.avif"
+        "https://roadroam.in/images/roadroam.avif",
+        "https://roadroam.in/Roadroam-logo.png"
       ],
-      "description": "Premium chauffeur-driven car rental service in Bangalore.",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Bangalore",
-        "addressRegion": "KA",
-        "addressCountry": "IN"
-      },
+      "description": "Premium chauffeur-driven car rental service in Bangalore providing outstation cabs, airport transfers, and local city tours.",
       "url": "https://roadroam.in",
       "telephone": "+917411243463",
       "priceRange": "₹₹",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Bangalore",
+        "addressLocality": "Bangalore",
+        "addressRegion": "KA",
+        "postalCode": "560001",
+        "addressCountry": "IN"
+      },
+      "areaServed": {
+        "@type": "City",
+        "name": "Bangalore"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Car Rental Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Outstation Cabs"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Airport Transfers"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Local City Tours"
+            }
+          }
+        ]
+      },
       "openingHoursSpecification": {
         "@type": "OpeningHoursSpecification",
         "dayOfWeek": [
@@ -62,8 +105,10 @@
     }
     </script>
 
+    <!-- Google Maps API -->
     <script 
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBl3ZpSlTXOCzQUYJQJjObIkVkIRssUJn8&libraries=places,geometry" 
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBl3ZpSlTXOCzQUYJQJjObIkVkIRssUJn8&libraries=places,geometry&loading=async&callback=initMap" 
+      async 
       defer
     ></script>
   </head>
