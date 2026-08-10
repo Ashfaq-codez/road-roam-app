@@ -1,7 +1,7 @@
 // user-frontend/src/FloatingContact.tsx
 import React, { useState } from 'react';
 
-const PHONE_NUMBER = '+917411243463';
+const PHONE_NUMBER = '+918105880756';
 const WHATSAPP_LINK = `https://wa.me/${PHONE_NUMBER.replace(/\s/g, '')}`; 
 const WHATSAPP_ICON_SRC = '/images/whatsapp_icon.svg'; 
 
