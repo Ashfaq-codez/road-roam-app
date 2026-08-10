@@ -430,7 +430,7 @@ export const Contact: React.FC = () => (
       </p>
 
       <p className="text-[20px] font-semibold text-red-600 break-words text-wrap">
-        <span className="text-white">phone: </span> +91 7411243463
+        <span className="text-white">phone: </span> +91 81058 80756
       </p>
     </div>
     <HashLink
