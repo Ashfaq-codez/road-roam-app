@@ -203,6 +203,48 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ imgSrc, title, description, r
   );
 };
 
+// export const AboutUs: React.FC = () => (
+//   <section id="about" className="bg-white px-6 py-20 shadow-inner">
+//     <div className="container mx-auto max-w-6xl">
+//       <h2 className="text-[47px] font-extrabold text-center text-gray-900 mb-16 border-b pb-4">
+//         Why Choose <span className="text-red-600">Road Roam</span>?
+//       </h2>
+
+//       <div className="space-y-20">
+//         <FeatureCard
+//           imgSrc="/images/certified.webp"
+//           title="Certified Safety & Tracking"
+//           description="All vehicles are equipped with real-time GPS tracking. We prioritize the safety of women and solo travelers with 24/7 monitoring."
+//         />
+
+//         <FeatureCard
+//           imgSrc="/images/chauffeur.webp"
+//           title="Expert Chauffeur Driven"
+//           description="Travel stress-free with our vetted, professional drivers. Focus on your journey while we handle the traffic and navigation."
+//           reverse={true}
+//         />
+
+//         <FeatureCard
+//           imgSrc="/images/rupee.webp"
+//           title="Best Value Guaranteed"
+//           description="Premium, well-maintained cars at the most competitive rates in the market. Get the best possible service without overpaying."
+//         />
+
+//         <FeatureCard
+//           imgSrc="/images/support.webp"
+//           title="24/7 Customer Support"
+//           description="Our Team is available for any sort of doubt and support related to your car rental, we are available on WhatsApp, Sms and Call +91 8105880756 "
+//           reverse={true}
+//         />
+//       </div>
+
+//       <p className="mt-20 font-bold text-center text-[25px] text-gray-700 border-t pt-8">
+//         Easy to Avail, transparent pricing, and quality vehicles for a truly reliable rental experience.
+//       </p>
+//     </div>
+//   </section>
+// );
+
 export const AboutUs: React.FC = () => (
   <section id="about" className="bg-white px-6 py-20 shadow-inner">
     <div className="container mx-auto max-w-6xl">
@@ -238,8 +280,19 @@ export const AboutUs: React.FC = () => (
         />
       </div>
 
-      <p className="mt-20 font-bold text-center text-[25px] text-gray-700 border-t pt-8">
-        Easy to Avail, transparent pricing, and quality vehicles for a truly reliable rental experience.
+      
+      {/* UPDATED PARAGRAPH WITH CONTEXTUAL BACKLINK (NO UNDERLINE) */}
+      <p className="mt-20 font-bold text-center text-[25px] text-gray-700 border-t pt-8 leading-relaxed">
+        Easy to avail, transparent pricing, and quality vehicles for a truly reliable rental experience. Whether you need local city tours or specialized{' '}
+        <a 
+          href="https://chaufferservicesinbangalore.com" 
+          target="_blank" 
+          rel="noopener noreferrer nofollow" 
+          className="text-red-600 font-semibold hover:text-red-800 transition-colors"
+        >
+          chauffeur services in Bangalore
+        </a>
+        , we ensure your journey is safe and comfortable.
       </p>
     </div>
   </section>
