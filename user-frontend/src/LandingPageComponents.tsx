@@ -157,8 +157,8 @@ export const Hero: React.FC = () => (
     <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
       
       {/* SEO Eyebrow Keyword */}
-      <span className="text-red-500 font-bold uppercase tracking-widest text-xs md:text-sm mb-3 block drop-shadow-md">
-        Best Chauffeur Services in Bangalore
+      <span className="text-white font-bold uppercase tracking-widest text-sm md:text-lg mb-3 block drop-shadow-md">
+        Best<span style={{ color: '#fb2c36' }}> Chauffeur</span>  Services <span style={{ color: '#fb2c36' }}>in</span> Bangalore
       </span>
 
       <h1 className="text-5xl md:text-7xl font-extrabold mb-4 drop-shadow-lg">
