@@ -67,8 +67,9 @@ export const Header: React.FC = () => {
           </span>
         </button>
 
+        {/* FIX 1: Change md:hidden to lg:hidden */}
         <button
-          className="md:hidden text-2xl p-2 focus:outline-none focus:ring-2 focus:ring-red-500 rounded z-50"
+          className="lg:hidden text-2xl p-2 focus:outline-none focus:ring-2 focus:ring-red-500 rounded z-50"
           onClick={() => setIsOpen(!isOpen)}
         >
           <span className={isOpen ? "text-white" : "text-gray-800"}>
@@ -76,7 +77,8 @@ export const Header: React.FC = () => {
           </span>
         </button>
 
-        <div className="hidden md:flex space-x-4 items-center">
+        {/* FIX 2: Change hidden md:flex to hidden lg:flex */}
+        <div className="hidden lg:flex space-x-4 items-center">
           <NavBtn onClick={() => goTo("/#services")}>Services</NavBtn>
           <NavBtn onClick={() => goTo("/#fleet")}>Our-Fleet</NavBtn>
           <NavBtn onClick={() => goTo("/#destinations")}>Around-City</NavBtn>
@@ -92,8 +94,9 @@ export const Header: React.FC = () => {
         </div>
       </nav>
 
+      {/* FIX 3: Change md:hidden to lg:hidden in the overlay container */}
       <div
-        className={`fixed top-0 left-0 w-full h-full bg-black transition-transform duration-300 transform md:hidden ${
+        className={`fixed top-0 left-0 w-full h-full bg-black transition-transform duration-300 transform lg:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } z-40 p-6`}
         style={{ overflowY: "auto" }}
