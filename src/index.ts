@@ -357,29 +357,31 @@ function validateBookingData(data: BookingRequest): boolean {
 // --- EMAIL FUNCTION 2: Notify User (NEW, uses your robust pattern) ---
 async function sendUserConfirmation(bookingData: BookingRecord, env: Env) {
     const subject = `Your Road Roam Booking is Confirmed! (ID: ${bookingData.id})`;
-    const body = `<h1>Your Booking is Confirmed!</h1>
+    const body = `
+    <h1>Your Booking is Confirmed!</h1>
     <p>Hello ${bookingData.full_name},</p>
     <p>We are happy to confirm your booking for the <strong>${bookingData.rental_service_name}</strong> (${bookingData.car_model}).</p>
-    <p>Your driver will meet you on ${bookingData.pickup_date} at ${bookingData.pickup_location}.</D>
-    <p>We want to ensure that your car rental experience with us is seamless and enjoyable. To that end, we've included some important information to help you get started:
+    <p>Your driver will meet you on ${bookingData.pickup_date} at ${bookingData.pickup_location}.</p>
+    
+    <p>We want to ensure that your car rental experience with us is seamless and enjoyable. To that end, we've included some important information to help you get started:</p>
 
-Safety Measures: Your safety is our top priority. Rest assured, all our vehicles undergo regular maintenance and sanitation procedures to ensure a clean and safe driving experience, in compliance with the latest health and safety guidelines.
+    <p><strong>Safety Measures:</strong> Your safety is our top priority. Rest assured, all our vehicles undergo regular maintenance and sanitation procedures to ensure a clean and safe driving experience, in compliance with the latest health and safety guidelines.</p>
 
-Customer Support: Should you have any questions or require assistance during your rental period, our dedicated customer support team is available 24/7 to assist you. You can reach us at +91 7337776950 or roadroamcarrentals@gmail.com.
+    <p><strong>Customer Support:</strong> Should you have any questions or require assistance during your rental period, our dedicated customer support team is available 24/7 to assist you. You can reach us at +91 7337776950 or roadroamcarrentals@gmail.com.</p>
 
-Additional Services: Looking to enhance your journey? We offer a range of additional services such as outstation, weekly rentals, and monthly rentals. Feel free to inquire about these options.
+    <p><strong>Additional Services:</strong> Looking to enhance your journey? We offer a range of additional services such as outstation, weekly rentals, and monthly rentals. Feel free to inquire about these options.</p>
 
-We hope this information helps you prepare for your upcoming rental. If you have any special requests or specific preferences, please don't hesitate to let us know, and we will do our best to accommodate your needs.
+    <p>We hope this information helps you prepare for your upcoming rental. If you have any special requests or specific preferences, please don't hesitate to let us know, and we will do our best to accommodate your needs.</p>
 
-Once again, thank you for choosing ROAD ROAM Car Rentals. We're excited to be a part of your travel plans and look forward to providing you with an exceptional rental experience.
+    <p>Once again, thank you for choosing ROAD ROAM Car Rentals. We're excited to be a part of your travel plans and look forward to providing you with an exceptional rental experience.</p>
 
-Safe travels! 
-YOUR JOURNEY, OUR WHEELS-EXPLORE WITH EASE
+    <p>Safe travels!<br>
+    <em>YOUR JOURNEY, OUR WHEELS-EXPLORE WITH EASE</em></p>
 
- Warm regards,
- Founder
- Mohammed Kaif R D</p>
-    <p>Thank you for choosing Road Roam!</p>`;
+    <p>Warm regards,<br>
+    Founder<br>
+    Mohammed Kaif R D</p>
+    `;
 
     if (!env.RESEND_API_KEY) {
         console.error('sendUserConfirmation: RESEND_API_KEY is not configured.');
