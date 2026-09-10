@@ -367,7 +367,7 @@ async function sendUserConfirmation(bookingData: BookingRecord, env: Env) {
 
     <p><strong>Safety Measures:</strong> Your safety is our top priority. Rest assured, all our vehicles undergo regular maintenance and sanitation procedures to ensure a clean and safe driving experience, in compliance with the latest health and safety guidelines.</p>
 
-    <p><strong>Customer Support:</strong> Should you have any questions or require assistance during your rental period, our dedicated customer support team is available 24/7 to assist you. You can reach us at +91 7337776950 or roadroamcarrentals@gmail.com.</p>
+    <p><strong>Customer Support:</strong> Should you have any questions or require assistance during your rental period, our dedicated customer support team is available 24/7 to assist you. You can reach us at +91 8105880756 or roadroamcarrentals@gmail.com.</p>
 
     <p><strong>Additional Services:</strong> Looking to enhance your journey? We offer a range of additional services such as outstation, weekly rentals, and monthly rentals. Feel free to inquire about these options.</p>
 
