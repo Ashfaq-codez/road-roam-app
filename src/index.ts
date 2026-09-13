@@ -45,6 +45,7 @@ interface BookingUpdateData extends Partial<BookingRequest> {
 interface Env {
   DB: D1Database;
   RESEND_API_KEY: string;
+  ADMIN_API_SECRET: string;
 }
 
 // --- 2. Hono Setup ---
@@ -59,8 +60,17 @@ app.use('*', cors({
     maxAge: 600,
 }));
 
-// --- 4. Hono Routing (Specific routes MUST come first) ---
+// --- NEW: Admin Security Middleware ---
+app.use('/api/admin/*', async (c, next) => {
+    const authHeader = c.req.header('Authorization');
+    if (!authHeader || authHeader !== `Bearer ${c.env.ADMIN_API_SECRET}`) {
+        console.warn(`Blocked unauthorized access to ${c.req.path}`);
+        return c.text('Unauthorized: Invalid or missing admin token', 401);
+    }
+    await next();
+});
 
+// --- 4. Hono Routing (Specific routes MUST come first) ---
 // Handler for the base path
 app.get('/', (c) => {
     return c.text('Road Roam API is running.', 200);

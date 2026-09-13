@@ -18,7 +18,8 @@ interface BookingSummary {
 }
 
 // Placeholder for Admin Auth Header
-const ADMIN_AUTH_HEADER = { 'Authorization': 'Bearer VALID_ADMIN_TOKEN' }; 
+// const ADMIN_AUTH_HEADER = { 'Authorization': 'Bearer VALID_ADMIN_TOKEN' }; 
+const ADMIN_AUTH_HEADER = { 'Authorization': 'Bearer rr_admin_secure_2026!' };
 
 function AdminDashboard() {
   const [bookings, setBookings] = useState<BookingSummary[]>([]);
