@@ -610,6 +610,7 @@ export default function BookingForm() {
             <InputField label="Full Name " type="text" name="fullName" value={formData.fullName} onChange={handleChange} required />
             <InputField label="Email " type="email" name="email" value={formData.email} onChange={handleChange} required />
             <InputField label="Phone Number " type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required/>
+            {/* <InputField label="Aadhar Number" type="text" name="aadharNumber" value={formData.aadharNumber} onChange={handleChange} /> */}
             <InputField 
               label="Aadhar Number (Optional)" 
               type="text" 
