@@ -14,7 +14,7 @@ interface BookingRecord {
 // interface BookingUpdateData extends Partial<BookingRecord> { status?: BookingRecord['status']; }
 const rentalServices = ["Airport Transfer", "City Cruise", "Tours & Trips", "Corporate Rentals", "Event Rentals"];
 const carModelsList = ["Hycross", "Crysta", "Innova",  "Ertiga", "Ciaz", "Dzire" ];
-const ADMIN_AUTH_HEADER = { 'Authorization': 'Bearer VALID_ADMIN_TOKEN' }; 
+const ADMIN_AUTH_HEADER = { 'Authorization': `Bearer ${import.meta.env.VITE_ADMIN_API_SECRET}` };
 
 const BookingDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
