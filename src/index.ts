@@ -86,27 +86,37 @@ app.post('/api/bookings', async (c) => {
     const env = c.env; 
     try {
         const bookingData: BookingRequest = await c.req.json(); 
-        // CRITICAL FIX: Run Server-Side Validation before DB insertion
         validateBookingData(bookingData);
+
+        // 1. Create the masked version
+        let safeAadhaar = null;
+        if (bookingData.aadharNumber && bookingData.aadharNumber.length === 12) {
+            safeAadhaar = `XXXX-XXXX-${bookingData.aadharNumber.slice(-4)}`;
+        }
+
+        // 2. Insert into the database using safeAadhaar
         const result = await env.DB.prepare(
           `INSERT INTO bookings (full_name, email, phone_number, aadhar_number, rental_service_name, car_model, pickup_date, return_date, pickup_location, pickup_lat, pickup_lng, passengers)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)` // Total 11 placeholders now!
-    ).bind(
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        ).bind(
           bookingData.fullName,
           bookingData.email,
           bookingData.phoneNumber,
-          bookingData.aadharNumber || null, 
+          safeAadhaar, // <-- Replaced bookingData.aadharNumber with safeAadhaar
           bookingData.rentalServiceName,
-          bookingData.carModel, // <-- NEW BINDING
+          bookingData.carModel, 
           bookingData.pickupDate,
           bookingData.returnDate,
           bookingData.pickupLocation,
-          bookingData.pickupLat, // <-- NEW BINDING
-          bookingData.pickupLng,  // <-- NEW BINDING
+          bookingData.pickupLat, 
+          bookingData.pickupLng,  
           bookingData.passengers
         ).run();
         
-        c.executionCtx.waitUntil(sendAdminNotification(bookingData, env));
+        // 3. Temporarily overwrite the payload so the email also gets the masked version
+        const safeEmailPayload = { ...bookingData, aadharNumber: safeAadhaar || undefined };
+        c.executionCtx.waitUntil(sendAdminNotification(safeEmailPayload, env));
+        
         return c.json({ id: result.meta.last_row_id, message: "Booking received." }, 201);
     } catch (error) {
         // FIX: Ensure error.message is safely returned in the 400 response

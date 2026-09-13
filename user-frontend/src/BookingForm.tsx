@@ -610,7 +610,17 @@ export default function BookingForm() {
             <InputField label="Full Name " type="text" name="fullName" value={formData.fullName} onChange={handleChange} required />
             <InputField label="Email " type="email" name="email" value={formData.email} onChange={handleChange} required />
             <InputField label="Phone Number " type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required/>
-            <InputField label="Aadhar Number" type="text" name="aadharNumber" value={formData.aadharNumber} onChange={handleChange} />
+            <InputField 
+              label="Aadhar Number (Optional)" 
+              type="text" 
+              name="aadharNumber" 
+              value={formData.aadharNumber} 
+              onChange={(e) => {
+                // Only allow digits and restrict to 12 characters
+                const val = e.target.value.replace(/\D/g, '').slice(0, 12);
+                setFormData(prev => ({ ...prev, aadharNumber: val }));
+              }} 
+            />
           </div>
           
           <h3 className="text-xl font-semibold border-b pb-2 mb-4 pt-4 text-gray-800">Rental Details</h3>
