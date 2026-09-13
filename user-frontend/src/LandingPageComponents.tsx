@@ -554,6 +554,9 @@ export const FAQ: React.FC = () => {
 // ----------------------
 // Contact
 // ----------------------
+// ----------------------
+// Contact
+// ----------------------
 export const Contact: React.FC = () => (
   <section id="contact" className="container mx-auto px-6 py-20 text-center">
     <h2 className="text-4xl font-extrabold text-gray-300 mb-8">Get <span className="text-red-600">in</span> Touch</h2>
@@ -569,14 +572,16 @@ export const Contact: React.FC = () => (
       </p>
     </div>
 
-    {/* SEO Map Iframe Container */}
+    {/* Clean SEO Map Iframe Container */}
     <div className="w-full max-w-4xl mx-auto h-[400px] mb-12 rounded-xl shadow-lg overflow-hidden border border-gray-800">
       <iframe 
-        src="https://storage.googleapis.com/maps-solutions-44iadkfmpt/locator-plus/n6wh/locator-plus.html"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.7499909137237!2d77.60770229678954!3d13.05157939999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae17d915a92b8b%3A0xcfb4c3ba15366620!2sRoad%20Roam%20Car%20Rentals!5e0!3m2!1sen!2sin!4v1789283926803!5m2!1sen!2sin"
         width="100%" 
         height="100%"
         style={{ border: 0 }}
+        allowFullScreen={true}
         loading="lazy"
+        referrerPolicy="strict-origin-when-cross-origin"
         title="Road Roam Location Map"
       ></iframe>
     </div>
@@ -597,7 +602,6 @@ export const Contact: React.FC = () => (
         className="inline-flex items-center justify-center bg-[#25D366] text-white font-bold py-3 px-10 text-lg rounded-lg shadow-xl hover:bg-[#0e5529] transition duration-300 transform hover:scale-105 w-64"
       >
         Book On 
-        {/* Inline SVG for the WhatsApp Icon */}
         <svg 
           className="w-6 h-6 ml-2 fill-current" 
           viewBox="0 0 24 24" 
