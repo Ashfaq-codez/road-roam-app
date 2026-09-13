@@ -54,7 +54,12 @@ const app = new Hono<HonoEnv>();
 
 // --- 3. CORS Middleware (Must be first) ---
 app.use('*', cors({
-    origin: '*', 
+    // Replace origin: '*' with an array of strictly allowed domains
+    origin: [
+        'https://roadroam.in', 
+        'https://admin.roadroam.in', 
+        'http://localhost:5173' // Required for your local Vite development
+    ], 
     allowMethods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],
     maxAge: 600,
