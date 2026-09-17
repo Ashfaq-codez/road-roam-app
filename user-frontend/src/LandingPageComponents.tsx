@@ -336,7 +336,7 @@ export const Fleet: React.FC = () => (
         <FleetCard name="Hycross" description="Arrive in style. Our luxury fleet is available for the journey." imgSrc="/images/hycross.webp" />
         <FleetCard name="Crysta" description="Arrive in style. Our luxury fleet is available for the journey." imgSrc="/images/crysta.webp" />
         <FleetCard name="Innova" description="Spacious, powerful, and perfect for outstation trips or large groups." imgSrc="/images/innova.webp" />
-        <FleetCard name="Urbania" description="premium, next-generation van for luxury group travel, family & commercial touring, corporate mobility" imgSrc="/images/urbania.webp" />
+        <FleetCard name="Urbania" description="premium, next-generation van for luxury family & commercial touring and corporate mobility" imgSrc="/images/urbania.webp" />
         <FleetCard name="Ertiga" description="Spacious, powerful, and perfect for outstation trips or large groups." imgSrc="/images/ertiga.webp" />
         <FleetCard name="Ciaz" description="Comfortable and economical for city rides and small families." imgSrc="/images/ciaz.webp" />
         <FleetCard name="Dzire" description="Comfortable and economical for city rides and small families." imgSrc="/images/dzire.webp" />
