@@ -25,7 +25,7 @@ const rentalServices = [
   "Airport Transfers", "City Cruise", "Tours & Trips",
   "Corporate Rental", "Event Rental"
 ];
-const carModels = ["Hycross", "Crysta", "Innova", "Ertiga", "Ciaz", "Dzire"];
+const carModels = ["Hycross", "Crysta", "Innova", "Urbania", "Ertiga", "Ciaz", "Dzire"];
 
 const initialFormState: BookingRequest = {
   fullName: '',
